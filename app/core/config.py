@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     SUPABASE_PASSWORD: str | None
     SUPABASE_ANON_KEY: str | None
     SUPABASE_SERVICE_ROLE_KEY: str | None
+    BUCKET_NAME: str | None
 
     class Config:
         env_file = ".env"

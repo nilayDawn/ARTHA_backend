@@ -5,7 +5,7 @@ from app.schemas.finance import (
     BudgetCreate, BudgetResponse,
     GoalCreate, GoalResponse
 )
-from app.core.database import supabase
+from app.core.database import supabase_admin
 from app.core.security import get_current_user
 
 router = APIRouter(tags=["Finance"])
@@ -20,7 +20,7 @@ def create_transaction(transaction: TransactionCreate, current_user: dict = Depe
     data["date"] = data["date"].isoformat()
     
     try:
-        res = supabase.table("transactions").insert(data).execute()
+        res = supabase_admin.table("transactions").insert(data).execute()
         return res.data[0]
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -28,7 +28,7 @@ def create_transaction(transaction: TransactionCreate, current_user: dict = Depe
 @router.get("/transactions", response_model=List[TransactionResponse])
 def get_transactions(current_user: dict = Depends(get_current_user)):
     try:
-        res = supabase.table("transactions").select("*").eq("user_id", current_user["id"]).order("date", desc=True).execute()
+        res = supabase_admin.table("transactions").select("*").eq("user_id", current_user["id"]).order("date", desc=True).execute()
         return res.data
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -41,7 +41,7 @@ def create_budget(budget: BudgetCreate, current_user: dict = Depends(get_current
     data["user_id"] = current_user["id"]
     
     try:
-        res = supabase.table("budgets").insert(data).execute()
+        res = supabase_admin.table("budgets").insert(data).execute()
         return res.data[0]
     except Exception as e:
         # Catch unique constraint violations (user_id, category, month)
@@ -50,7 +50,7 @@ def create_budget(budget: BudgetCreate, current_user: dict = Depends(get_current
 @router.get("/budgets", response_model=List[BudgetResponse])
 def get_budgets(current_user: dict = Depends(get_current_user)):
     try:
-        res = supabase.table("budgets").select("*").eq("user_id", current_user["id"]).execute()
+        res = supabase_admin.table("budgets").select("*").eq("user_id", current_user["id"]).execute()
         return res.data
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -65,7 +65,7 @@ def create_goal(goal: GoalCreate, current_user: dict = Depends(get_current_user)
         data["deadline"] = data["deadline"].isoformat()
         
     try:
-        res = supabase.table("goals").insert(data).execute()
+        res = supabase_admin.table("goals").insert(data).execute()
         return res.data[0]
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -73,7 +73,7 @@ def create_goal(goal: GoalCreate, current_user: dict = Depends(get_current_user)
 @router.get("/goals", response_model=List[GoalResponse])
 def get_goals(current_user: dict = Depends(get_current_user)):
     try:
-        res = supabase.table("goals").select("*").eq("user_id", current_user["id"]).execute()
+        res = supabase_admin.table("goals").select("*").eq("user_id", current_user["id"]).execute()
         return res.data
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
