@@ -9,7 +9,11 @@ class Settings(BaseSettings):
     SUPABASE_SERVICE_ROLE_KEY: str | None
     BUCKET_NAME: str | None
 
+    GEMINI_API_KEY: str | None = None
+    QDRANT_URL: str | None = None
+    QDRANT_API_KEY: str | None = None
     class Config:
         env_file = ".env"
+        extra = "ignore"
 
 settings = Settings()
