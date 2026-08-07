@@ -10,7 +10,7 @@ Welcome to the **FinPilot AI** backend, the internal engine of a personal financ
 - A **FastAPI backend** (this repo) that talks to **Supabase** (Postgres + Auth + Storage).
 - A **frontend dashboard** (React + Vite) — see `frontend/`.
 - An **AI brain** (LangGraph + Gemini 2.5 Flash + Qdrant vector memory) — implemented.
-- A **Telegram integration** — planned for a future phase.
+- A **Telegram integration** — implemented (account linking, receipt/PDF import, and AI chat via the FinPilot AI bot).
 
 The goal is to let users track transactions, budgets, and savings goals, upload receipts/statements, and chat with an AI about their finances.
 
@@ -54,7 +54,8 @@ backend/
     │       ├── auth.py     # /auth endpoints
     │       ├── finance.py  # /transactions, /budgets, /goals
     │       ├── documents.py# /documents endpoints (upload w/ OCR)
-    │       └── chat.py     # /chat endpoint (AI agent)
+    │       ├── chat.py     # /chat endpoint (AI agent)
+    │       └── telegram.py # /telegram endpoints (webhook + account linking)
     ├── agent/
     │   ├── graph.py        # LangGraph workflow (3-node financial agent)
     │   ├── state.py        # AgentState TypedDict
@@ -72,7 +73,8 @@ backend/
     │   └── chat.py         # Chat request/response models
     ├── services/
     │   ├── memory.py       # Qdrant memory save/search (embeddings)
-    │   └── ocr.py          # Gemini 2.5 Flash Vision receipt extraction
+    │   ├── ocr.py          # Gemini 2.5 Flash Vision receipt + PDF statement extraction
+    │   └── telegram_auth.py# In-memory single-use Telegram link codes (FP-XXXX)
     └── utils/              # (empty placeholder)
 ```
 
@@ -116,6 +118,7 @@ Uses `pydantic-settings` `BaseSettings` to load environment variables from a `.e
 | `GEMINI_API_KEY` | Google AI Studio key — used for Gemini 2.5 Flash (LLM + Vision) and embeddings |
 | `QDRANT_URL` | Qdrant cloud/self-hosted URL for vector memory |
 | `QDRANT_API_KEY` | Qdrant API key |
+| `TELEGRAM_BOT_TOKEN` | Bot token from Telegram's BotFather — used for the webhook + sending messages |
 
 All nullable (`str | None`) so the app boots even before `.env` is fully populated.
 
@@ -178,7 +181,17 @@ Handles all Qdrant vector memory operations:
 ### 8. OCR / Vision Service — `app/services/ocr.py`
 
 - **`process_receipt_with_gemini(image_bytes, mime_type)`** — sends raw image bytes to Gemini 2.5 Flash with **structured JSON output** (schema = `ExtractedTransaction`), temperature `0.1`, to extract `merchant`, `amount`, `category`, `date`, and optional `description`.
-- Returns an `ExtractedTransaction` instance or `None` if no API key / extraction fails.
+- **`process_bank_statement_pdf_with_gemini(file_bytes)`** — passes raw PDF bytes to Gemini 2.5 Flash with structured output (schema = `BankStatementExtraction`) to extract **all** individual debit/credit transactions from a bank statement. Returns a list of `ExtractedTransaction` (empty list on failure / missing API key).
+- Both functions return `ExtractedTransaction`/`List[ExtractedTransaction]` or `None`/`[]` if no API key or extraction fails.
+
+### 9. Telegram Auth Service — `app/services/telegram_auth.py`
+
+Implements a simple **in-memory** account-linking code store:
+
+- **`generate_link_code(user_id)`** — creates a single-use code like `FP-8492` (from `secrets.randbelow`), valid for **10 minutes**, keyed in the `LINK_CODES` dict. Expired codes are purged on each generation.
+- **`verify_link_code(code)`** — looks up the code (case-insensitive), checks expiry, returns the linked `user_id`, and **deletes the code** (single use). Returns `None` if invalid/expired.
+
+> ⚠️ Codes live in process memory only — a restart invalidates all active codes. For a multi-instance deployment, move this store to Redis or a DB table.
 
 ---
 
@@ -191,6 +204,7 @@ api_router.include_router(auth_router)        # /auth/*
 api_router.include_router(finance_router)     # /transactions, /budgets, /goals
 api_router.include_router(documents_router)   # /documents/*
 api_router.include_router(chat_router)        # /chat
+api_router.include_router(telegram_router)    # /telegram/*
 ```
 
 ### A. Authentication — `app/api/v1/auth.py` (prefix `/auth`)
@@ -268,6 +282,31 @@ All finance endpoints use `supabase_admin` (service-role) but scope queries by `
 6. Returns `ChatResponse` with `response` text and `memories_used` (the Qdrant memories that grounded the answer).
 7. On error, returns `500` with a descriptive message.
 
+### E. Telegram — `app/api/v1/telegram.py` (prefix `/telegram`)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/telegram/link-code` | (Auth) Generate a single-use, 10-minute link code (`FP-XXXX`) for the logged-in user. |
+| `POST` | `/telegram/webhook` | (Public) Telegram bot webhook — handles `/start`, `/link FP-XXXX`, text queries, receipt photos, and PDF bank statements. |
+
+**Link-code flow (`create_telegram_link_code`):**
+1. Protected by `get_current_user`.
+2. Calls `generate_link_code(user_id)` and returns `{code, expires_in_seconds: 600}`.
+3. The frontend `TelegramModal` displays the code and a deep link `https://t.me/FinPilotAIBot?start=FP-XXXX`.
+
+**Webhook flow (`telegram_webhook`):**
+1. Parses the Telegram update (message text, photo array, or document).
+2. If the text is `/start` or `/link`:
+   - With an `FP-XXXX` code → `verify_link_code(code)`; on success, updates `users.telegram_chat_id = chat_id` (via `supabase_admin`) and replies "Account Linked Successfully!".
+   - Otherwise replies with a welcome message explaining how to link.
+3. Resolves the linked user via `get_user_by_telegram_id(chat_id)` (queries `users.telegram_chat_id`). If unlinked, replies with a prompt to `/link`.
+4. **PDF bank statement** (`document.mime_type == "application/pdf"`): downloads the file from Telegram, calls `process_bank_statement_pdf_with_gemini`, **bulk-inserts** all extracted transactions with `source="telegram_statement_pdf"`, and replies with a summary.
+5. **Receipt photo** (highest-resolution `photo`): downloads the image, calls `process_receipt_with_gemini`, inserts a transaction with `source="telegram_ocr"`, and replies with the extracted details.
+6. **Text query**: builds the `financial_agent` initial state with the message as a `HumanMessage` and the user's `user_id`, invokes LangGraph, and sends the final `AIMessage` content back via Telegram.
+7. All processing is dispatched as FastAPI `BackgroundTasks` (so Telegram gets an immediate `{"status": "ok"}`), and replies use `httpx` to `https://api.telegram.org/bot<TOKEN>/sendMessage` with Markdown parsing.
+
+> Note: `send_telegram_message` is a no-op if `TELEGRAM_BOT_TOKEN` is not configured.
+
 ---
 
 ## 📄 Schemas (Pydantic Models)
@@ -285,6 +324,7 @@ All finance endpoints use `supabase_admin` (service-role) but scope queries by `
 
 ### `app/schemas/document.py`
 - **`ExtractedTransaction`** — schema enforced on Gemini structured output: `merchant`, `amount` (float), `category` (Food/Groceries/Shopping/Transport/Bills/Entertainment/Healthcare/Education/Others), `date` (`YYYY-MM-DD`), optional `description`.
+- **`BankStatementExtraction`** — wrapper for PDF statement OCR: `transactions` (list of `ExtractedTransaction`).
 - **`DocumentUploadResponse`** — `document_id`, `file_url`, `signed_url`, optional `extracted_data` (`ExtractedTransaction`), `message`.
 - **`DocumentResponse`** — `id`, `user_id`, `file_url`, optional `signed_url`, `document_type`, `uploaded_date`.
 
@@ -312,7 +352,7 @@ The backend assumes the following external service state (per the master TODO pl
 
 - **Qdrant:** a cloud/self-hosted instance with a `user_memories` collection (vector size `768`, cosine distance). The collection is auto-created on startup via `init_memory_collection()`.
 
-> ⚠️ The `.env` file (with `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `BUCKET_NAME`, `GEMINI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`) is git-ignored and not committed.
+> ⚠️ The `.env` file (with `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `BUCKET_NAME`, `GEMINI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`, `TELEGRAM_BOT_TOKEN`) is git-ignored and not committed.
 
 ---
 
@@ -355,10 +395,10 @@ langchain-core>=0.1.30
 |-------|-------------|--------|
 | **Phase 1** | Foundation (Supabase DB + Auth + RLS + Storage) | ✅ Assumed set up (schema referenced by code) |
 | **Phase 2** | Backend Core API (FastAPI) — auth, transactions, budgets, goals, documents | ✅ **Implemented** |
-| **Phase 3** | Frontend Core (React + Vite) | ⏳ Only `frontend/agent.md` guidelines exist — **no code yet** |
+| **Phase 3** | Frontend Core (React + Vite) | ✅ **Implemented** (see `frontend/FREADME.md`) |
 | **Phase 4** | AI Brain (LangGraph + Gemini + Qdrant) | ✅ **Implemented** (agent, chat endpoint, OCR, memory) |
-| **Phase 5** | Frontend AI Features (chat UI, uploads) | ❌ Not started |
-| **Phase 6** | Telegram Integration | ❌ Not started |
+| **Phase 5** | Frontend AI Features (chat UI, uploads) | ✅ **Implemented** (chat drawer, upload modal, dashboard) |
+| **Phase 6** | Telegram Integration | ✅ **Implemented** (webhook, account linking, receipt/PDF/text chat) — bot registration & deployment pending |
 | **Phase 7** | Deployment & Polish | ❌ Not started |
 
 ### What is Fully Done
@@ -370,17 +410,21 @@ langchain-core>=0.1.30
 - ✅ Complete **Finance** API (`transactions`, `budgets`, `goals` — create + list).
 - ✅ Complete **Documents** API (`upload`, `list`, `delete`).
 - ✅ **Gemini Vision OCR** on receipt/document upload (structured extraction + auto-transaction creation).
+- ✅ **Gemini PDF bank-statement extraction** (`process_bank_statement_pdf_with_gemini`) — bulk transaction import.
 - ✅ **Qdrant vector memory** (`user_memories` collection, embed + save + search, startup init).
 - ✅ **LangGraph financial agent** (DB context → memory recall → Gemini reasoning).
 - ✅ **`/api/v1/chat`** endpoint exposed via FastAPI.
+- ✅ **Telegram integration** — `/telegram/link-code` + `/telegram/webhook` (account linking, receipt OCR, PDF statement import, AI text chat).
 - ✅ All Pydantic request/response schemas (auth, finance, document, chat).
-- ✅ Frontend development guidelines documented in `frontend/agent.md`.
+- ✅ Frontend React/Vite application (auth, dashboard, chat drawer, upload modal, Telegram modal).
+- ✅ Frontend development guidelines documented in `frontend/FREADME.md`.
 - ✅ Master build plan in `docs/TODO.md`.
 
 ### What is NOT Done Yet
-- ❌ Actual frontend React/Vite application (auth pages, dashboard, charts, chat UI).
 - ❌ Persistence of newly-learned AI memories from chat (the `remember_user_preference` tool exists but is not yet wired into the chat flow).
-- ❌ Telegram bot webhook (`/api/telegram/webhook`) and account linking (`/link FP-XXXX`).
+- ❌ Frontend placeholder pages (`/transactions`, `/budgets`, `/goals`, `/documents` routes show inline placeholders pending full CRUD UI).
+- ❌ Hardcoded dashboard income benchmark (`₹60,000`) — not yet user-configurable.
+- ❌ Registering the production Telegram bot (BotFather) and setting the webhook URL to a deployed backend.
 - ❌ Deployment (Render for backend, Vercel for frontend) and cold-start mitigation via CronJob.org.
 
 ---
@@ -393,7 +437,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 # create a .env with SUPABASE_URL, SUPABASE_ANON_KEY,
 # SUPABASE_SERVICE_ROLE_KEY, SUPABASE_PASSWORD, BUCKET_NAME,
-# GEMINI_API_KEY, QDRANT_URL, QDRANT_API_KEY
+# GEMINI_API_KEY, QDRANT_URL, QDRANT_API_KEY, TELEGRAM_BOT_TOKEN
 uvicorn app.main:app --reload
 ```
 
