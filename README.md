@@ -323,3 +323,78 @@ The backend assumes the following external service state (per the master TODO pl
 # dependencies
 fastapi>=0.110.0
 uvicorn[standard]>=0.28.0
+supabase>=2.3.0
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+python-dotenv>=1.0.1
+python-multipart>=0.0.9
+httpx>=0.27.0
+
+#AI Dependencies
+google-genai>=0.1.1
+qdrant-client>=1.8.0
+langgraph>=0.0.26
+langchain-core>=0.1.30
+```
+
+### `pyproject.toml`
+- `name = "backend"`, `version = "0.1.0"`, `requires-python = ">=3.12"`.
+- `dependencies = []` (dependencies live in `requirements.txt` for now).
+
+### `.gitignore`
+- Ignores Python artifacts (`__pycache__`, `*.pyc`, `build/`, `dist/`, `*.egg-info`), virtualenvs (`.venv`), `.env`, and `agent.md`.
+
+### `.python-version`
+- Pins Python to `3.12`.
+
+---
+
+## 📊 Status
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| **Phase 1** | Foundation (Supabase DB + Auth + RLS + Storage) | ✅ Assumed set up (schema referenced by code) |
+| **Phase 2** | Backend Core API (FastAPI) — auth, transactions, budgets, goals, documents | ✅ **Implemented** |
+| **Phase 3** | Frontend Core (React + Vite) | ⏳ Only `frontend/agent.md` guidelines exist — **no code yet** |
+| **Phase 4** | AI Brain (LangGraph + Gemini + Qdrant) | ✅ **Implemented** (agent, chat endpoint, OCR, memory) |
+| **Phase 5** | Frontend AI Features (chat UI, uploads) | ❌ Not started |
+| **Phase 6** | Telegram Integration | ❌ Not started |
+| **Phase 7** | Deployment & Polish | ❌ Not started |
+
+### What is Fully Done
+- ✅ FastAPI project scaffold with clean, layered structure (`core`, `api/v1`, `schemas`, `agent`, `services`).
+- ✅ Environment-based configuration via Pydantic Settings (incl. `GEMINI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`).
+- ✅ Dual Supabase clients (public + admin) with extended timeouts.
+- ✅ JWT bearer auth dependency (`get_current_user`).
+- ✅ Complete **Auth** API (`signup`, `login`, `me`, `logout`).
+- ✅ Complete **Finance** API (`transactions`, `budgets`, `goals` — create + list).
+- ✅ Complete **Documents** API (`upload`, `list`, `delete`).
+- ✅ **Gemini Vision OCR** on receipt/document upload (structured extraction + auto-transaction creation).
+- ✅ **Qdrant vector memory** (`user_memories` collection, embed + save + search, startup init).
+- ✅ **LangGraph financial agent** (DB context → memory recall → Gemini reasoning).
+- ✅ **`/api/v1/chat`** endpoint exposed via FastAPI.
+- ✅ All Pydantic request/response schemas (auth, finance, document, chat).
+- ✅ Frontend development guidelines documented in `frontend/agent.md`.
+- ✅ Master build plan in `docs/TODO.md`.
+
+### What is NOT Done Yet
+- ❌ Actual frontend React/Vite application (auth pages, dashboard, charts, chat UI).
+- ❌ Persistence of newly-learned AI memories from chat (the `remember_user_preference` tool exists but is not yet wired into the chat flow).
+- ❌ Telegram bot webhook (`/api/telegram/webhook`) and account linking (`/link FP-XXXX`).
+- ❌ Deployment (Render for backend, Vercel for frontend) and cold-start mitigation via CronJob.org.
+
+---
+
+## 🚀 How to Run (Backend)
+
+```bash
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+# create a .env with SUPABASE_URL, SUPABASE_ANON_KEY,
+# SUPABASE_SERVICE_ROLE_KEY, SUPABASE_PASSWORD, BUCKET_NAME,
+# GEMINI_API_KEY, QDRANT_URL, QDRANT_API_KEY
+uvicorn app.main:app --reload
+```
+
+The interactive API docs will be available at `http://localhost:8000/docs` (Swagger UI).

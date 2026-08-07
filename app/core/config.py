@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str | None = None
     QDRANT_URL: str | None = None
     QDRANT_API_KEY: str | None = None
+
+    TELEGRAM_BOT_TOKEN: str | None = None
     class Config:
         env_file = ".env"
         extra = "ignore"
