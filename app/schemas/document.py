@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import List, Optional
 
 # Gemini Extraction Schema
 class ExtractedTransaction(BaseModel):
@@ -28,3 +28,6 @@ class DocumentResponse(BaseModel):
     signed_url: Optional[str] = None
     document_type: str
     uploaded_date: str
+
+class BankStatementExtraction(BaseModel):
+    transactions: List[ExtractedTransaction]

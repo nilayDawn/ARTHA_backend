@@ -11,7 +11,7 @@ from app.core.config import settings
 from app.core.database import supabase_admin
 from app.services.telegram_auth import generate_link_code, verify_link_code
 from app.agent.graph import financial_agent
-from app.services.ocr import process_receipt_with_gemini
+from app.services.ocr import process_receipt_with_gemini, process_bank_statement_pdf_with_gemini
 from langchain_core.messages import HumanMessage
 from app.core.security import get_current_user
 
@@ -46,6 +46,7 @@ async def telegram_webhook(request: Request, background_tasks: BackgroundTasks):
     chat_id = message.get("chat", {}).get("id")
     text = message.get("text", "")
     photos = message.get("photo", [])
+    document = message.get("document", {})
 
     if not chat_id:
         return {"status": "ignored"}
@@ -73,6 +74,55 @@ async def telegram_webhook(request: Request, background_tasks: BackgroundTasks):
         return {"status": "ok"}
 
     user_id = user["id"]
+
+    # 📄 HANDLE PDF BANK STATEMENT UPLOADS
+   
+    if document and document.get("mime_type") == "application/pdf":
+        file_id = document.get("file_id")
+        file_name = document.get("file_name", "statement.pdf")
+
+        async def process_pdf_task():
+            await send_telegram_message(chat_id, f"⏳ Processing bank statement *{file_name}* with Gemini AI...")
+            
+            async with httpx.AsyncClient() as client:
+                f_res = await client.get(f"{TELEGRAM_API_URL}/getFile?file_id={file_id}")
+                file_path = f_res.json()["result"]["file_path"]
+                pdf_res = await client.get(f"https://api.telegram.org/file/bot{settings.TELEGRAM_BOT_TOKEN}/{file_path}")
+                pdf_bytes = pdf_res.content
+
+            # Extract multiple transactions
+            tx_list = process_bank_statement_pdf_with_gemini(pdf_bytes)
+
+            if tx_list:
+                # Prepare rows for bulk insertion into Supabase
+                db_rows = [
+                    {
+                        "user_id": user_id,
+                        "merchant": tx.merchant,
+                        "amount": tx.amount,
+                        "category": tx.category,
+                        "date": tx.date,
+                        "source": "telegram_statement_pdf"
+                    }
+                    for tx in tx_list
+                ]
+                
+                # Bulk insert into Supabase transactions table
+                supabase_admin.table("transactions").insert(db_rows).execute()
+
+                reply = (
+                    f"📊 *Bank Statement Imported Successfully!*\n\n"
+                    f"• *File:* `{file_name}`\n"
+                    f"• *Total Transactions:* {len(tx_list)}\n\n"
+                    f"All transactions have been added to your dashboard!"
+                )
+            else:
+                reply = "❌ Couldn't parse transactions from that PDF. Please ensure it's a clear, unencrypted bank statement."
+
+            await send_telegram_message(chat_id, reply)
+
+        background_tasks.add_task(process_pdf_task)
+        return {"status": "ok"}
 
     # 1. Route Photo (Receipt OCR)
     if photos:
