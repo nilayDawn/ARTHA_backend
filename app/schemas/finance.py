@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date as dt, datetime
 
 from pydantic import BaseModel
 
@@ -8,14 +8,14 @@ class TransactionCreate(BaseModel):
     amount: float
     merchant: str | None = "Unknown"
     category: str
-    date: date
+    date: dt
     source: str | None = "manual"
 
 class TransactionUpdate(BaseModel):
     category: str | None = None
     merchant: str | None = None
     amount: float | None = None
-    date: date | None = None
+    date: dt | None = None
 
 class TransactionResponse(TransactionCreate):
     id: str
@@ -38,7 +38,7 @@ class GoalCreate(BaseModel):
     goal_name: str
     target_amount: float
     saved_amount: float | None = 0.0
-    deadline: date | None = None
+    deadline: dt | None = None
 
 class GoalResponse(GoalCreate):
     id: str
@@ -49,4 +49,4 @@ class GoalUpdate(BaseModel):
     goal_name: str | None = None
     target_amount: float | None = None
     saved_amount: float | None = None
-    deadline: date | None = None
+    deadline: dt | None = None

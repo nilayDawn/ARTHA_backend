@@ -1,4 +1,3 @@
-from datetime import date, datetime
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from postgrest.exceptions import APIError
 

@@ -4,9 +4,10 @@ from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 
 
-class AgentState(TypedDict):
+class AgentState(TypedDict, total=False):
     messages: Annotated[list[BaseMessage], add_messages]
     user_id: str
     user_preferences: list[str]
     memories: list[str]
     db_context: dict[str, Any]
+    is_blocked: bool
