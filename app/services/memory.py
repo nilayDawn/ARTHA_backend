@@ -1,29 +1,31 @@
 import uuid
-
 from google import genai
 from qdrant_client.http import models
 
 from app.core.config import settings
 from app.core.vector_db import qdrant_client
 
-COLLECTION_NAME = settings.COLLECTION_NAME
-VECTOR_SIZE = settings.VECTOR_SIZE
+COLLECTION_NAME = settings.COLLECTION_NAME or "user_memories"
+VECTOR_SIZE = settings.VECTOR_SIZE or 3072
+
 
 def _get_embedding(text: str) -> list[float]:
-    """Generates a 768-dimensional vector embedding using Gemini text-embedding-004."""
+    """Generates a 3072-dimensional vector embedding using Gemini gemini-embedding-001."""
     if not settings.GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY is not set.")
-    
+
     client = genai.Client(api_key=settings.GEMINI_API_KEY)
     response = client.models.embed_content(
-        model="text-embedding-004",
+        model="gemini-embedding-001",
         contents=text,
     )
-    return response.embedding.values
+    if not response.embeddings or not response.embeddings[0].values:
+        raise ValueError("No embedding returned from Gemini API.")
+    return response.embeddings[0].values
 
 
 def init_memory_collection():
-    """Initializes the Qdrant vector collection if it doesn't already exist."""
+    """Initializes the Qdrant vector collection and user_id payload index if needed."""
     if not qdrant_client:
         print("[Qdrant Warning] Qdrant client is not initialized.")
         return
@@ -37,10 +39,21 @@ def init_memory_collection():
                 collection_name=COLLECTION_NAME,
                 vectors_config=models.VectorParams(
                     size=VECTOR_SIZE,
-                    distance=models.Distance.COSINE
-                )
+                    distance=models.Distance.COSINE,
+                ),
             )
             print(f"[Qdrant] Created collection '{COLLECTION_NAME}' successfully.")
+
+        # Ensure payload index on user_id exists for filtered search
+        try:
+            qdrant_client.create_payload_index(
+                collection_name=COLLECTION_NAME,
+                field_name="user_id",
+                field_schema=models.PayloadSchemaType.KEYWORD,
+            )
+        except Exception:
+            pass
+
     except Exception as e:
         print(f"[Qdrant Init Error]: {e}")
 
@@ -53,7 +66,6 @@ def save_user_memory(user_id: str, memory_text: str, category: str = "general") 
         return False
 
     try:
-        # Ensure collection exists
         init_memory_collection()
 
         vector = _get_embedding(memory_text)
@@ -69,9 +81,9 @@ def save_user_memory(user_id: str, memory_text: str, category: str = "general") 
                         "user_id": user_id,
                         "memory": memory_text,
                         "category": category,
-                    }
+                    },
                 )
-            ]
+            ],
         )
         return True
     except Exception as e:
@@ -87,26 +99,28 @@ def search_user_memories(user_id: str, query: str, limit: int = 5) -> list[str]:
         return []
 
     try:
-        # Ensure collection exists
         init_memory_collection()
 
         query_vector = _get_embedding(query)
 
-        search_result = qdrant_client.search(
+        # Use query_points for qdrant-client >= 1.8 compatibility
+        search_result = qdrant_client.query_points(
             collection_name=COLLECTION_NAME,
-            query_vector=query_vector,
+            query=query_vector,
             query_filter=models.Filter(
                 must=[
                     models.FieldCondition(
                         key="user_id",
-                        match=models.MatchValue(value=user_id)
+                        match=models.MatchValue(value=user_id),
                     )
                 ]
             ),
-            limit=limit
+            limit=limit,
         )
 
-        memories = [hit.payload.get("memory") for hit in search_result if hit.payload]
+        memories = [
+            hit.payload.get("memory") for hit in search_result.points if hit.payload
+        ]
         return memories
     except Exception as e:
         print(f"[Qdrant Search Memory Error]: {e}")

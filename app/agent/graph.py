@@ -8,6 +8,9 @@ from langgraph.graph import END, StateGraph
 from app.agent.guardrail import evaluate_security_guardrail
 from app.agent.state import AgentState
 from app.agent.tools import (
+    create_user_budget_in_db,
+    create_user_goal_in_db,
+    create_user_transaction_in_db,
     fetch_relevant_memories,
     fetch_user_financial_context,
     remember_user_preference,
@@ -85,14 +88,14 @@ def memory_save_node(state: AgentState) -> dict[str, Any]:
 
 
 def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
-    """Node: Generates standard response using Gemini 2.5 Flash."""
+    """Node: Generates response using Gemini 2.5 Flash and executes database mutation actions."""
     if not settings.GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY is not configured.")
 
     client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
     system_prompt = f"""
-    You are ARTHA AI, a knowledgeable, empathetic, and sharp personal AI financial employee.
+    You are ARTHA AI, a dedicated, knowledgeable, and sharp personal AI financial employee.
     
     Current User Context:
     - User ID: {state['user_id']}
@@ -103,6 +106,24 @@ def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
     1. Provide precise, actionable financial insights based on the user's data.
     2. Ground your response strictly using the provided financial context.
     3. Keep answers conversational, helpful, concise, and easy to read using markdown formatting.
+    4. ACTION EXECUTION:
+       If the user asks you to ADD, CREATE, SET, or LOG a new financial goal, transaction, or budget:
+       You MUST append a JSON action block at the VERY END of your text inside triple backticks tagged ```json_action ... ```.
+
+       - Goal Creation Format:
+       ```json_action
+       {{"action": "create_goal", "data": {{"goal_name": "Laptop", "target_amount": 82000.0, "saved_amount": 0.0}}}}
+       ```
+
+       - Transaction Creation Format:
+       ```json_action
+       {{"action": "create_transaction", "data": {{"amount": 500.0, "category": "Groceries", "merchant": "Supermarket"}}}}
+       ```
+
+       - Budget Creation Format:
+       ```json_action
+       {{"action": "create_budget", "data": {{"category": "Food", "monthly_limit": 15000.0}}}}
+       ```
     """
 
     # Prepare message history
@@ -118,6 +139,70 @@ def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
     )
 
     reply = response.text or "I was unable to analyze your financial query at this time."
+
+    # Parse and execute structured action blocks (e.g. create_goal, create_transaction, create_budget)
+    if "```json_action" in reply:
+        try:
+            parts = reply.split("```json_action")
+            action_block = parts[1].split("```")[0].strip()
+            action_data = json.loads(action_block)
+            action_name = action_data.get("action")
+            data = action_data.get("data", {})
+            user_id = state["user_id"]
+
+            if action_name == "create_goal":
+                res = create_user_goal_in_db(
+                    user_id=user_id,
+                    goal_name=data.get("goal_name", "New Goal"),
+                    target_amount=data.get("target_amount", 0.0),
+                    saved_amount=data.get("saved_amount", 0.0),
+                    deadline=data.get("deadline"),
+                )
+                if res.get("success"):
+                    remember_user_preference(
+                        user_id,
+                        f"Added new financial goal '{data.get('goal_name')}' with target amount ₹{data.get('target_amount')}",
+                        "goal",
+                    )
+
+            elif action_name == "create_transaction":
+                res = create_user_transaction_in_db(
+                    user_id=user_id,
+                    amount=data.get("amount", 0.0),
+                    category=data.get("category", "General"),
+                    merchant=data.get("merchant", "Unknown"),
+                    date=data.get("date"),
+                )
+                if res.get("success"):
+                    remember_user_preference(
+                        user_id,
+                        f"Added transaction of ₹{data.get('amount')} for {data.get('category')} ({data.get('merchant')})",
+                        "transaction",
+                    )
+
+            elif action_name == "create_budget":
+                res = create_user_budget_in_db(
+                    user_id=user_id,
+                    category=data.get("category", "General"),
+                    monthly_limit=data.get("monthly_limit", 0.0),
+                    month=data.get("month"),
+                )
+                if res.get("success"):
+                    remember_user_preference(
+                        user_id,
+                        f"Set monthly budget of ₹{data.get('monthly_limit')} for {data.get('category')}",
+                        "budget",
+                    )
+
+            # Strip the json_action code block from final user text
+            clean_text = parts[0].strip()
+            remaining = parts[1].split("```", 1)
+            if len(remaining) > 1 and remaining[1].strip():
+                clean_text += "\n\n" + remaining[1].strip()
+            reply = clean_text
+        except Exception as err:
+            print(f"[Action Execution Error]: {err}")
+
     return {"messages": [AIMessage(content=reply)]}
 
 
