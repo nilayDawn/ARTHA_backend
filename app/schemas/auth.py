@@ -1,11 +1,12 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional
 from datetime import datetime
+
+from pydantic import BaseModel, EmailStr
+
 
 class UserSignUp(BaseModel):
     email: EmailStr
     password: str
-    full_name: Optional[str] = None
+    full_name: str | None = None
 
 class UserSignIn(BaseModel):
     email: EmailStr
@@ -20,6 +21,6 @@ class AuthTokenResponse(BaseModel):
 class UserProfileResponse(BaseModel):
     id: str
     email: str
-    full_name: Optional[str] = None
-    telegram_chat_id: Optional[str] = None
+    full_name: str | None = None
+    telegram_chat_id: str | None = None
     created_at: datetime

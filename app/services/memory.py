@@ -1,14 +1,15 @@
 import uuid
-from typing import List, Dict, Any
+
 from google import genai
 from qdrant_client.http import models
+
 from app.core.config import settings
 from app.core.vector_db import qdrant_client
 
 COLLECTION_NAME = settings.COLLECTION_NAME
 VECTOR_SIZE = settings.VECTOR_SIZE
 
-def _get_embedding(text: str) -> List[float]:
+def _get_embedding(text: str) -> list[float]:
     """Generates a 768-dimensional vector embedding using Gemini text-embedding-004."""
     if not settings.GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY is not set.")
@@ -78,7 +79,7 @@ def save_user_memory(user_id: str, memory_text: str, category: str = "general") 
         return False
 
 
-def search_user_memories(user_id: str, query: str, limit: int = 5) -> List[str]:
+def search_user_memories(user_id: str, query: str, limit: int = 5) -> list[str]:
     """
     Retrieves top relevant memories for a given query filtered strictly by user_id.
     """

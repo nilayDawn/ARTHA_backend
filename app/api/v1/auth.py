@@ -1,7 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.schemas.auth import UserSignUp, UserSignIn, AuthTokenResponse, UserProfileResponse
-from app.core.database import supabase, supabase_admin
+
+from app.core.database import supabase
 from app.core.security import get_current_user
+from app.schemas.auth import (
+    AuthTokenResponse,
+    UserProfileResponse,
+    UserSignIn,
+    UserSignUp,
+)
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -59,7 +65,7 @@ def sign_in(credentials: UserSignIn):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Authentication failed: {str(e)}"
+            detail=f"Authentication failed: {e!s}"
         )
 
 @router.get("/me", response_model=UserProfileResponse)

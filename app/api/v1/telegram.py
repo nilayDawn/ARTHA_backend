@@ -6,14 +6,18 @@
 
 
 import httpx
-from fastapi import APIRouter, Request, BackgroundTasks, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends, Request
+from langchain_core.messages import HumanMessage
+
+from app.agent.graph import financial_agent
 from app.core.config import settings
 from app.core.database import supabase_admin
-from app.services.telegram_auth import generate_link_code, verify_link_code
-from app.agent.graph import financial_agent
-from app.services.ocr import process_receipt_with_gemini, process_bank_statement_pdf_with_gemini
-from langchain_core.messages import HumanMessage
 from app.core.security import get_current_user
+from app.services.ocr import (
+    process_bank_statement_pdf_with_gemini,
+    process_receipt_with_gemini,
+)
+from app.services.telegram_auth import generate_link_code, verify_link_code
 
 router = APIRouter(prefix="/telegram", tags=["Telegram"])
 

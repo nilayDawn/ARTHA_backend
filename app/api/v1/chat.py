@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from langchain_core.messages import HumanMessage, AIMessage
-from app.schemas.chat import ChatRequest, ChatResponse
-from app.core.security import get_current_user
+from langchain_core.messages import AIMessage, HumanMessage
+
 from app.agent.graph import financial_agent
+from app.core.security import get_current_user
+from app.schemas.chat import ChatRequest, ChatResponse
 
 router = APIRouter(prefix="/chat", tags=["Chat & AI"])
 
@@ -52,5 +53,5 @@ def chat_with_agent(
         print(f"[Chat Endpoint Error]: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while processing your AI query: {str(e)}"
+            detail=f"An error occurred while processing your AI query: {e!s}"
         )

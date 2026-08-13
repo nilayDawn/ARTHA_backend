@@ -1,20 +1,21 @@
-from pydantic import BaseModel
-from typing import Optional, List
 from datetime import date, datetime
+
+from pydantic import BaseModel
+
 
 # --- Transactions ---
 class TransactionCreate(BaseModel):
     amount: float
-    merchant: Optional[str] = "Unknown"
+    merchant: str | None = "Unknown"
     category: str
     date: date
-    source: Optional[str] = "manual"
+    source: str | None = "manual"
 
 class TransactionUpdate(BaseModel):
-    category: Optional[str] = None
-    merchant: Optional[str] = None
-    amount: Optional[float] = None
-    date: Optional[date] = None
+    category: str | None = None
+    merchant: str | None = None
+    amount: float | None = None
+    date: date | None = None
 
 class TransactionResponse(TransactionCreate):
     id: str
@@ -36,8 +37,8 @@ class BudgetResponse(BudgetCreate):
 class GoalCreate(BaseModel):
     goal_name: str
     target_amount: float
-    saved_amount: Optional[float] = 0.0
-    deadline: Optional[date] = None
+    saved_amount: float | None = 0.0
+    deadline: date | None = None
 
 class GoalResponse(GoalCreate):
     id: str
@@ -45,7 +46,7 @@ class GoalResponse(GoalCreate):
     created_at: datetime
 
 class GoalUpdate(BaseModel):
-    goal_name: Optional[str] = None
-    target_amount: Optional[float] = None
-    saved_amount: Optional[float] = None
-    deadline: Optional[date] = None
+    goal_name: str | None = None
+    target_amount: float | None = None
+    saved_amount: float | None = None
+    deadline: date | None = None

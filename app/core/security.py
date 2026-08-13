@@ -1,5 +1,6 @@
 from fastapi import HTTPException, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+
 from app.core.database import supabase
 
 security = HTTPBearer()
@@ -29,6 +30,6 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(securi
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Could not validate credentials: {str(e)}",
+            detail=f"Could not validate credentials: {e!s}",
             headers={"WWW-Authenticate": "Bearer"},
         )

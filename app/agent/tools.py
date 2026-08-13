@@ -1,8 +1,10 @@
-from typing import List, Dict, Any
-from app.core.database import supabase_admin
-from app.services.memory import search_user_memories, save_user_memory
+from typing import Any
 
-def fetch_user_financial_context(user_id: str) -> Dict[str, Any]:
+from app.core.database import supabase_admin
+from app.services.memory import save_user_memory, search_user_memories
+
+
+def fetch_user_financial_context(user_id: str) -> dict[str, Any]:
     """Retrieves recent transactions, active budgets, and savings goals for the user."""
     try:
         tx_res = (
@@ -36,7 +38,7 @@ def fetch_user_financial_context(user_id: str) -> Dict[str, Any]:
         return {"recent_transactions": [], "budgets": [], "goals": []}
 
 
-def fetch_relevant_memories(user_id: str, query: str) -> List[str]:
+def fetch_relevant_memories(user_id: str, query: str) -> list[str]:
     """Retrieves relevant user habits and financial goals from Qdrant vector memory."""
     return search_user_memories(user_id, query, limit=5)
 

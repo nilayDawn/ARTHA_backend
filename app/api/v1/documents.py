@@ -1,10 +1,11 @@
 import uuid
-from typing import List
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
-from app.schemas.document import DocumentUploadResponse, DocumentResponse
+
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+
+from app.core.config import settings
 from app.core.database import supabase_admin
 from app.core.security import get_current_user
-from app.core.config import settings
+from app.schemas.document import DocumentResponse, DocumentUploadResponse
 from app.services.ocr import process_receipt_with_gemini
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
@@ -88,7 +89,7 @@ async def upload_document(
     )
 
 
-@router.get("", response_model=List[DocumentResponse])
+@router.get("", response_model=list[DocumentResponse])
 def get_user_documents(current_user: dict = Depends(get_current_user)):
     """
     List all documents for the authenticated user, attaching signed URLs for secure access.
@@ -139,8 +140,8 @@ def delete_document(document_id: str, current_user: dict = Depends(get_current_u
         # Remove from storage
         supabase_admin.storage.from_(BUCKET_NAME).remove([doc["file_url"]])
         
-        # Remove from DB
-        supabase_admin.table("documents").delete().eq("id", document_id).execute()
+        # Remove from DB enforcing user_id security filter
+        supabase_admin.table("documents").delete().eq("id", document_id).eq("user_id", current_user["id"]).execute()
         
         return {"status": "success", "message": "Document deleted successfully"}
     except Exception as e:

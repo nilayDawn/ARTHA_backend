@@ -1,10 +1,12 @@
-from typing import Annotated, List, Dict, Any, TypedDict
+from typing import Annotated, Any, TypedDict
+
 from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 
+
 class AgentState(TypedDict):
-    messages: Annotated[List[BaseMessage], add_messages]
+    messages: Annotated[list[BaseMessage], add_messages]
     user_id: str
-    user_preferences: List[str]
-    memories: List[str]
-    db_context: Dict[str, Any]
+    user_preferences: list[str]
+    memories: list[str]
+    db_context: dict[str, Any]

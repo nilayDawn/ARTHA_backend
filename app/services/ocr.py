@@ -1,8 +1,10 @@
-from typing import List
+
 from google import genai
 from google.genai import types
+
 from app.core.config import settings
-from app.schemas.document import ExtractedTransaction, BankStatementExtraction
+from app.schemas.document import BankStatementExtraction, ExtractedTransaction
+
 
 def process_receipt_with_gemini(image_bytes: bytes, mime_type: str) -> ExtractedTransaction | None:
     """
@@ -49,7 +51,7 @@ def process_receipt_with_gemini(image_bytes: bytes, mime_type: str) -> Extracted
 
     return None
 
-def process_bank_statement_pdf_with_gemini(file_bytes: bytes) -> List[ExtractedTransaction]:
+def process_bank_statement_pdf_with_gemini(file_bytes: bytes) -> list[ExtractedTransaction]:
     """Passes PDF bytes directly to Gemini 2.5 Flash to extract all transactions."""
     if not settings.GEMINI_API_KEY:
         return []

@@ -1,21 +1,27 @@
 import json
+from typing import Any
+
 from google import genai
-from typing import Dict, Any
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from langgraph.graph import StateGraph, END
+from langchain_core.messages import AIMessage, HumanMessage
+from langgraph.graph import END, StateGraph
+
 from app.agent.state import AgentState
-from app.agent.tools import fetch_user_financial_context, fetch_relevant_memories,remember_user_preference
+from app.agent.tools import (
+    fetch_relevant_memories,
+    fetch_user_financial_context,
+    remember_user_preference,
+)
 from app.core.config import settings
 
 
-def db_context_node(state: AgentState) -> Dict[str, Any]:
+def db_context_node(state: AgentState) -> dict[str, Any]:
     """Node: Pulls recent transactions, budgets, and goals from Supabase."""
     user_id = state["user_id"]
     context = fetch_user_financial_context(user_id)
     return {"db_context": context}
 
 
-def memory_recall_node(state: AgentState) -> Dict[str, Any]:
+def memory_recall_node(state: AgentState) -> dict[str, Any]:
     """Node: Retrieves contextual long-term user memories and user preferences from Qdrant."""
     user_id = state["user_id"]
     last_user_msg = ""
@@ -27,7 +33,7 @@ def memory_recall_node(state: AgentState) -> Dict[str, Any]:
     memories = fetch_relevant_memories(user_id, last_user_msg) if last_user_msg else []
     return {"memories": memories}
 
-def memory_save_node(state: AgentState) -> Dict[str, Any]:
+def memory_save_node(state: AgentState) -> dict[str, Any]:
     """Node: Saves user preferences and memories to Qdrant."""
     user_id = state['user_id']
     last_user_msg = " "
@@ -39,7 +45,7 @@ def memory_save_node(state: AgentState) -> Dict[str, Any]:
     return {"user_preferences": user_preferences}
 
 
-def llm_reasoning_node(state: AgentState) -> Dict[str, Any]:
+def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
     """Node: Generates standard response using Gemini 2.5 Flash."""
     if not settings.GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY is not configured.")

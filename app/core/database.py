@@ -1,4 +1,5 @@
-from supabase import create_client, Client, ClientOptions
+from supabase import Client, ClientOptions, create_client
+
 from app.core.config import settings
 
 #Increase the timeout for Supabase client to handle large file uploads
