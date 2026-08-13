@@ -5,6 +5,7 @@ from app.api.v1.chat import router as chat_router
 from app.api.v1.documents import router as documents_router
 from app.api.v1.finance import router as finance_router
 from app.api.v1.telegram import router as telegram_router
+from app.api.v1.report import router as report_router
 
 api_router = APIRouter()
 
@@ -13,3 +14,4 @@ api_router.include_router(finance_router)
 api_router.include_router(documents_router)
 api_router.include_router(chat_router)
 api_router.include_router(telegram_router)
+api_router.include_router(report_router)

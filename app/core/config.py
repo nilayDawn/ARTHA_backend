@@ -21,6 +21,13 @@ class Settings(BaseSettings):
     VECTOR_SIZE: int | None
 
     TELEGRAM_BOT_TOKEN: str | None = None
+
+    EMAIL_FROM: str = "ARTHA AI <noreply@finpilot.ai>"
+    SMTP_SERVER: str | None = "smtp.gmail.com"
+    SMTP_PORT: int | None = 587
+    SMTP_USERNAME: str | None = None
+    SMTP_PASSWORD: str | None = None
+    RESEND_API_KEY: str | None = None
     class Config:
         env_file = ".env"
         extra = "ignore"

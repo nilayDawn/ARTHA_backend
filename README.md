@@ -55,7 +55,8 @@ backend/
     │       ├── finance.py  # /transactions, /budgets, /goals
     │       ├── documents.py# /documents endpoints (upload w/ OCR)
     │       ├── chat.py     # /chat endpoint (AI agent)
-    │       └── telegram.py # /telegram endpoints (webhook + account linking)
+    │       ├── telegram.py # /telegram endpoints (webhook + account linking)
+    │       └── report.py   # /reports endpoints (async email reports)
     ├── agent/
     │   ├── graph.py        # LangGraph workflow (3-node financial agent)
     │   ├── state.py        # AgentState TypedDict
@@ -74,7 +75,8 @@ backend/
     ├── services/
     │   ├── memory.py       # Qdrant memory save/search (embeddings)
     │   ├── ocr.py          # Gemini 2.5 Flash Vision receipt + PDF statement extraction
-    │   └── telegram_auth.py# In-memory single-use Telegram link codes (FP-XXXX)
+    │   ├── telegram_auth.py# In-memory single-use Telegram link codes (FP-XXXX)
+    │   └── email.py        # Resend HTML financial report generation & delivery
     └── utils/              # (empty placeholder)
 ```
 
@@ -197,6 +199,13 @@ Implements a simple **in-memory** account-linking code store:
 
 > ⚠️ Codes live in process memory only — a restart invalidates all active codes. For a multi-instance deployment, move this store to Redis or a DB table.
 
+### 10. Email Report Service — `app/services/email.py`
+
+Handles financial summary report rendering and email delivery:
+
+- **`generate_report_content(user_name, financial_data)`** — builds a responsive HTML email with inline CSS, key financial totals (income vs expenses, budget utilization, active goals), and styled tables.
+- **`send_email_report(to_email, subject, html_content)`** — sends email via the **Resend API** (`resend.Emails.send`). Fallback logic returns gracefully if API key is not configured.
+
 ---
 
 ## 🔌 API Endpoints (Implemented)
@@ -209,6 +218,7 @@ api_router.include_router(finance_router)     # /transactions, /budgets, /goals
 api_router.include_router(documents_router)   # /documents/*
 api_router.include_router(chat_router)        # /chat
 api_router.include_router(telegram_router)    # /telegram/*
+api_router.include_router(report_router)      # /reports/*
 ```
 
 ### A. Authentication — `app/api/v1/auth.py` (prefix `/auth`)
@@ -310,6 +320,19 @@ All finance endpoints use `supabase_admin` (service-role) but scope queries by `
 7. All processing is dispatched as FastAPI `BackgroundTasks` (so Telegram gets an immediate `{"status": "ok"}`), and replies use `httpx` to `https://api.telegram.org/bot<TOKEN>/sendMessage` with Markdown parsing.
 
 > Note: `send_telegram_message` is a no-op if `TELEGRAM_BOT_TOKEN` is not configured.
+
+### F. Reports & Email — `app/api/v1/report.py` (prefix `/reports`)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/reports/send-email` | (Auth) Asynchronously compile financial summary and send HTML report via email. (202) |
+
+**Flow (`send_monthly_report_email`):**
+1. Protected by `get_current_user` dependency.
+2. Fetches user transactions, budgets, and goals from Supabase using `supabase_admin`.
+3. Dispatches `email_task` as a FastAPI `BackgroundTask`.
+4. `email_task` renders the HTML report (`generate_report_content`) and delivers it to the user's email via Resend (`send_email_report`).
+5. Returns `HTTP 202 Accepted` immediately with confirmation message `{"status": "success", "message": "Report is being generated and sent to user@email.com."}`.
 
 ---
 
@@ -419,6 +442,7 @@ langchain-core>=0.1.30
 - ✅ **LangGraph financial agent** (DB context → memory recall → Gemini reasoning).
 - ✅ **`/api/v1/chat`** endpoint exposed via FastAPI.
 - ✅ **Telegram integration** — `/telegram/link-code` + `/telegram/webhook` (account linking, receipt OCR, PDF statement import, AI text chat).
+- ✅ **Email summary reports** — `/reports/send-email` (HTML template generation + async delivery via Resend).
 - ✅ All Pydantic request/response schemas (auth, finance, document, chat).
 - ✅ Frontend React/Vite application (auth, dashboard, chat drawer, upload modal, Telegram modal).
 - ✅ Frontend development guidelines documented in `frontend/FREADME.md`.
