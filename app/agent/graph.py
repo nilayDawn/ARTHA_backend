@@ -4,7 +4,7 @@ from typing import Dict, Any
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langgraph.graph import StateGraph, END
 from app.agent.state import AgentState
-from app.agent.tools import fetch_user_financial_context, fetch_relevant_memories
+from app.agent.tools import fetch_user_financial_context, fetch_relevant_memories,remember_user_preference
 from app.core.config import settings
 
 
@@ -16,7 +16,7 @@ def db_context_node(state: AgentState) -> Dict[str, Any]:
 
 
 def memory_recall_node(state: AgentState) -> Dict[str, Any]:
-    """Node: Retrieves contextual long-term user memories from Qdrant."""
+    """Node: Retrieves contextual long-term user memories and user preferences from Qdrant."""
     user_id = state["user_id"]
     last_user_msg = ""
     for msg in reversed(state["messages"]):
@@ -26,6 +26,17 @@ def memory_recall_node(state: AgentState) -> Dict[str, Any]:
 
     memories = fetch_relevant_memories(user_id, last_user_msg) if last_user_msg else []
     return {"memories": memories}
+
+def memory_save_node(state: AgentState) -> Dict[str, Any]:
+    """Node: Saves user preferences and memories to Qdrant."""
+    user_id = state['user_id']
+    last_user_msg = " "
+    for msg in reversed(state["messages"]):
+        if isinstance(msg, HumanMessage):
+            last_user_msg = msg.content
+            break
+    user_preferences = remember_user_preference(user_id, last_user_msg, category="preference") if last_user_msg else []
+    return {"user_preferences": user_preferences}
 
 
 def llm_reasoning_node(state: AgentState) -> Dict[str, Any]:
@@ -49,7 +60,7 @@ def llm_reasoning_node(state: AgentState) -> Dict[str, Any]:
     3. Keep answers conversational, helpful, concise, and easy to read using markdown formatting.
     """
 
-    # Prepare message history for Gemini
+    # Prepare message history 
     formatted_contents = [{"role": "user", "parts": [{"text": system_prompt}]}]
 
     for msg in state["messages"]:
@@ -73,12 +84,14 @@ def create_financial_agent():
     workflow.add_node("fetch_db_context", db_context_node)
     workflow.add_node("recall_memories", memory_recall_node)
     workflow.add_node("llm_reasoning", llm_reasoning_node)
+    workflow.add_node("save_user_preferences", memory_save_node)
 
     # Set Graph Edges
     workflow.set_entry_point("fetch_db_context")
     workflow.add_edge("fetch_db_context", "recall_memories")
     workflow.add_edge("recall_memories", "llm_reasoning")
-    workflow.add_edge("llm_reasoning", END)
+    workflow.add_edge("llm_reasoning", "save_user_preferences")
+    workflow.add_edge("save_user_preferences", END)
 
     return workflow.compile()
 

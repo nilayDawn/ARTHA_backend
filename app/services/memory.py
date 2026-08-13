@@ -5,8 +5,8 @@ from qdrant_client.http import models
 from app.core.config import settings
 from app.core.vector_db import qdrant_client
 
-COLLECTION_NAME = "user_memories"
-VECTOR_SIZE = 768  # Dimensionality for text-embedding-004
+COLLECTION_NAME = settings.COLLECTION_NAME
+VECTOR_SIZE = settings.VECTOR_SIZE
 
 def _get_embedding(text: str) -> List[float]:
     """Generates a 768-dimensional vector embedding using Gemini text-embedding-004."""

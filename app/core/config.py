@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from functools import lru_cache
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "FinPilot AI"
@@ -10,12 +11,20 @@ class Settings(BaseSettings):
     BUCKET_NAME: str | None
 
     GEMINI_API_KEY: str | None = None
+    MODEL_NAME: str | None 
+
     QDRANT_URL: str | None = None
     QDRANT_API_KEY: str | None = None
+    COLLECTION_NAME: str | None = "user_memories"
+    VECTOR_SIZE: int | None
 
     TELEGRAM_BOT_TOKEN: str | None = None
     class Config:
         env_file = ".env"
         extra = "ignore"
 
-settings = Settings()
+@lru_cache()
+def get_settings():
+    return Settings()
+
+settings = get_settings()

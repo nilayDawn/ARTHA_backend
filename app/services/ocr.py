@@ -22,9 +22,9 @@ def process_receipt_with_gemini(image_bytes: bytes, mime_type: str) -> Extracted
         and a short description of the line items.
         If any field is unclear, make your best reasonable inference based on typical receipts.
         """
-
+        model_name = settings.MODEL_NAME
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model=model_name,
             contents=[
                 types.Part.from_bytes(
                     data=image_bytes,

@@ -10,6 +10,12 @@ class TransactionCreate(BaseModel):
     date: date
     source: Optional[str] = "manual"
 
+class TransactionUpdate(BaseModel):
+    category: Optional[str] = None
+    merchant: Optional[str] = None
+    amount: Optional[float] = None
+    date: Optional[date] = None
+
 class TransactionResponse(TransactionCreate):
     id: str
     user_id: str
@@ -37,3 +43,9 @@ class GoalResponse(GoalCreate):
     id: str
     user_id: str
     created_at: datetime
+
+class GoalUpdate(BaseModel):
+    goal_name: Optional[str] = None
+    target_amount: Optional[float] = None
+    saved_amount: Optional[float] = None
+    deadline: Optional[date] = None
