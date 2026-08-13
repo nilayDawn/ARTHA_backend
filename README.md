@@ -145,16 +145,19 @@ Creates **two** Supabase clients with extended timeouts (60s for PostgREST and S
 
 Every protected endpoint below depends on this function via `current_user: dict = Depends(get_current_user)`.
 
-### 6. AI Agent Workflow — `app/agent/graph.py`
+### 6. AI Agent Workflow — `app/agent/graph.py` & `app/agent/guardrail.py`
 
-Builds a **LangGraph** state machine `financial_agent` with three sequential nodes:
+Builds a **LangGraph** state machine `financial_agent` with an entry security guardrail node and conditional routing:
 
 ```text
-fetch_db_context ──▶ recall_memories ──▶ llm_reasoning ──▶ END
+security_guardrail ──▶ (is_blocked?) ──┬──▶ [Yes] ──▶ END (Short-circuit)
+                                      └──▶ [No]  ──▶ fetch_db_context ──▶ recall_memories ──▶ llm_reasoning ──▶ save_user_preferences ──▶ END
 ```
 
+- **`security_guardrail`** — calls `evaluate_security_guardrail(last_user_msg)` (`app/agent/guardrail.py`) to run pattern injection checks (jailbreak defense) + Gemini domain classification. If a query is out-of-scope or unethical, sets `is_blocked=True` and returns a refusal message.
+- **`route_after_guardrail`** — conditional router that terminates the graph immediately if `is_blocked=True`, skipping DB/vector lookups and main LLM reasoning.
 - **`fetch_db_context`** — calls `fetch_user_financial_context(user_id)` (from `tools.py`) to pull the user's recent 20 transactions, budgets, and goals from Supabase into `db_context`.
-- **`recall_memories`** — extracts the last `HumanMessage`, then calls `fetch_relevant_memories(user_id, query)` to retrieve up to 5 matching long-term memories/preferences from Qdrant.
+- **`recall_memories`** — extracts the last `HumanMessage`, then calls `fetch_relevant_memories(user_id, query)` to retrieve matching long-term memories/preferences from Qdrant.
 - **`llm_reasoning`** — builds a system prompt (with user ID, financial context, and memories) and calls Gemini 2.5 Flash (`gemini-2.5-flash`) to generate a grounded, conversational financial answer. Returns an `AIMessage` appended to the message state.
 
 The shared state is defined in `app/agent/state.py` (`AgentState`):
@@ -162,6 +165,7 @@ The shared state is defined in `app/agent/state.py` (`AgentState`):
 - `user_id` — the authenticated user.
 - `memories` — retrieved Qdrant memories.
 - `db_context` — financial rows from Supabase.
+- `is_blocked` — boolean flag indicating security guardrail decision.
 
 #### Agent Tools — `app/agent/tools.py`
 - `fetch_user_financial_context(user_id)` → dict of `recent_transactions`, `budgets`, `goals` (with graceful error handling returning empty lists).
