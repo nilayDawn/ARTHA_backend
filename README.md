@@ -19,6 +19,19 @@
 
 ---
 
+## 📚 Technical Documentation Index
+
+For technical recruiters, software architects, and engineering reviewers, detailed technical blueprints are available inside the [`docs/`](docs/) directory:
+
+- 📑 **[00. Architectural & Engineering Rationale](docs/ENGINEERING_DECISIONS.md)**: Executive summary of core architectural choices, latency optimizations, and production readiness.
+- 🏛️ **[01. System Architecture & High-Level Blueprint](docs/01_SYSTEM_ARCHITECTURE.md)**: Asynchronous FastAPI gateway, Supabase database schemas, and component interactions.
+- ⚡ **[02. Token & Cache Optimization Strategy](docs/02_TOKEN_AND_CACHE_OPTIMIZATION.md)**: High-density prompt serialization (80% cost cut) and in-memory TTL cache with event-driven invalidation.
+- 🛡️ **[03. AI Security Guardrails & Token Cryptography](docs/03_SECURITY_AND_GUARDRAILS.md)**: Multi-layer guardrails against prompt injection and Fernet AES symmetric token encryption.
+- 🧠 **[04. LangGraph Agent Workflow & Vector Memory](docs/04_AGENT_WORKFLOW_AND_MEMORY.md)**: State graph machine, Qdrant semantic vector memory, and structured action block engine.
+- 📡 **[05. REST API Specification & Endpoint Reference](docs/05_API_DOCUMENTATION.md)**: Full OpenAPI contracts, request/response JSON schemas, and auth requirements.
+
+---
+
 ## 🛠 Tech Stack
 
 | Layer | Technology | Version / Notes |
