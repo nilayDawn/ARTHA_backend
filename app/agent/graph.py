@@ -15,6 +15,7 @@ from app.agent.tools import (
     remember_user_preference,
 )
 from app.core.llm_setup import generate_with_fallback
+from app.utils.logger import logger
 
 
 def security_guardrail_node(state: AgentState) -> dict[str, Any]:
@@ -28,14 +29,17 @@ def security_guardrail_node(state: AgentState) -> dict[str, Any]:
             last_user_msg = msg.content
             break
 
+    logger.info("[AGENT GUARDRAIL] Evaluating input message for UserID: %s", state.get("user_id"))
     is_blocked, refusal_message = evaluate_security_guardrail(last_user_msg)
 
     if is_blocked:
+        logger.warning("[AGENT GUARDRAIL] Query blocked for UserID: %s | Refusal: %s", state.get("user_id"), refusal_message)
         return {
             "is_blocked": True,
             "messages": [AIMessage(content=refusal_message)],
         }
 
+    logger.info("[AGENT GUARDRAIL] Query passed for UserID: %s", state.get("user_id"))
     return {"is_blocked": False}
 
 
@@ -46,6 +50,7 @@ def route_after_guardrail(state: AgentState) -> str:
     Otherwise, proceed to database context retrieval.
     """
     if state.get("is_blocked"):
+        logger.info("[AGENT ROUTER] Short-circuiting execution to END due to security guardrail block.")
         return END
     return "fetch_db_context"
 
@@ -53,6 +58,7 @@ def route_after_guardrail(state: AgentState) -> str:
 def db_context_node(state: AgentState) -> dict[str, Any]:
     """Node: Pulls recent transactions, budgets, and goals from Supabase."""
     user_id = state["user_id"]
+    logger.info("[AGENT DB NODE] Fetching financial context for UserID: %s", user_id)
     context = fetch_user_financial_context(user_id)
     return {"db_context": context}
 
@@ -66,7 +72,9 @@ def memory_recall_node(state: AgentState) -> dict[str, Any]:
             last_user_msg = msg.content
             break
 
+    logger.info("[AGENT MEMORY NODE] Recalling vector memories for UserID: %s", user_id)
     memories = fetch_relevant_memories(user_id, last_user_msg) if last_user_msg else []
+    logger.info("[AGENT MEMORY NODE] Retrieved %d memory records.", len(memories))
     return {"memories": memories}
 
 
@@ -87,6 +95,7 @@ def memory_save_node(state: AgentState) -> dict[str, Any]:
             break
 
     if not last_user_msg or len(last_user_msg.strip()) < 15:
+        logger.debug("[MEMORY SAVE NODE] Skipping save for short/empty query.")
         return {"user_preferences": []}
 
     # Only save if message expresses a long-term preference/habit
@@ -94,9 +103,11 @@ def memory_save_node(state: AgentState) -> dict[str, Any]:
     is_important = any(kw in lower_msg for kw in PREFERENCE_KEYWORDS)
 
     if is_important:
+        logger.info("[MEMORY SAVE NODE] Saving user preference to Qdrant for UserID: %s", user_id)
         remember_user_preference(user_id, last_user_msg.strip(), category="preference")
         return {"user_preferences": [last_user_msg]}
 
+    logger.info("[MEMORY SAVE NODE] Message classified as generic chat. Skipped Qdrant persistence.")
     return {"user_preferences": []}
 
 

@@ -1,12 +1,8 @@
 import json
-import logging
-
-from google import genai
 
 from app.core.config import settings
 from app.core.llm_setup import generate_with_fallback
-
-logger = logging.getLogger(__name__)
+from app.utils.logger import logger
 
 # Pattern-based security keywords for fast injection/jailbreak detection
 UNETHICAL_OR_BLOCKED_KEYWORDS = [

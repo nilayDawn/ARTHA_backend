@@ -5,6 +5,7 @@ from qdrant_client.http import models
 from app.core.config import settings
 from app.core.llm_setup import generate_with_fallback_embedding
 from app.core.vector_db import qdrant_client
+from app.utils.logger import logger
 
 COLLECTION_NAME = settings.COLLECTION_NAME or "user_memories"
 VECTOR_SIZE = settings.VECTOR_SIZE or 3072
@@ -18,7 +19,7 @@ def _get_embedding(text: str) -> list[float]:
 def init_memory_collection():
     """Initializes the Qdrant vector collection and user_id payload index if needed."""
     if not qdrant_client:
-        print("[Qdrant Warning] Qdrant client is not initialized.")
+        logger.warning("[Qdrant] Qdrant client is not initialized.")
         return
 
     try:
@@ -33,7 +34,7 @@ def init_memory_collection():
                     distance=models.Distance.COSINE,
                 ),
             )
-            print(f"[Qdrant] Created collection '{COLLECTION_NAME}' successfully.")
+            logger.info("[Qdrant] Created collection '%s' successfully.", COLLECTION_NAME)
 
         # Ensure payload index on user_id exists for filtered search
         try:
@@ -46,7 +47,7 @@ def init_memory_collection():
             pass
 
     except Exception as e:
-        print(f"[Qdrant Init Error]: {e}")
+        logger.error("[Qdrant Init Error]: %s", e)
 
 
 def save_user_memory(user_id: str, memory_text: str, category: str = "general") -> bool:
@@ -76,9 +77,10 @@ def save_user_memory(user_id: str, memory_text: str, category: str = "general") 
                 )
             ],
         )
+        logger.info("[Qdrant] Saved memory for UserID: %s | Text: '%s'", user_id, memory_text)
         return True
     except Exception as e:
-        print(f"[Qdrant Save Memory Error]: {e}")
+        logger.error("[Qdrant Save Memory Error]: %s", e)
         return False
 
 
@@ -112,7 +114,8 @@ def search_user_memories(user_id: str, query: str, limit: int = 5) -> list[str]:
         memories = [
             hit.payload.get("memory") for hit in search_result.points if hit.payload
         ]
+        logger.info("[Qdrant] Retrieved %d memory vectors for UserID: %s", len(memories), user_id)
         return memories
     except Exception as e:
-        print(f"[Qdrant Search Memory Error]: {e}")
+        logger.error("[Qdrant Search Memory Error]: %s", e)
         return []

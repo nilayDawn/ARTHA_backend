@@ -1,0 +1,84 @@
+2026-08-14 11:48:06,821 | INFO     | uvicorn.error:_serve:94 - Started server process [47964]
+2026-08-14 11:48:06,821 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-14 11:48:06,822 | INFO     | root:startup_event:23 - Initializing ARTHA AI backend application...
+2026-08-14 11:48:07,378 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-14 11:48:07,388 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-14 11:48:07,583 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-14 11:48:07,585 | INFO     | root:startup_event:25 - Qdrant memory collection check completed.
+2026-08-14 11:48:07,585 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-14 11:48:10,297 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-14 11:48:10,398 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-14 11:48:10,398 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-14 11:48:10,399 | INFO     | uvicorn.error:_serve:104 - Finished server process [47964]
+2026-08-14 11:48:13,761 | INFO     | uvicorn.error:_serve:94 - Started server process [48078]
+2026-08-14 11:48:13,761 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-14 11:48:13,762 | INFO     | root:startup_event:23 - Initializing ARTHA AI backend application...
+2026-08-14 11:48:14,309 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-14 11:48:14,312 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-14 11:48:14,517 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-14 11:48:14,519 | INFO     | root:startup_event:25 - Qdrant memory collection check completed.
+2026-08-14 11:48:14,520 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-14 11:48:16,728 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-14 11:48:16,829 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-14 11:48:16,830 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-14 11:48:16,830 | INFO     | uvicorn.error:_serve:104 - Finished server process [48078]
+2026-08-14 11:48:20,324 | INFO     | uvicorn.error:_serve:94 - Started server process [48154]
+2026-08-14 11:48:20,324 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-14 11:48:20,325 | INFO     | root:startup_event:23 - Initializing ARTHA AI backend application...
+2026-08-14 11:48:20,895 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-14 11:48:20,898 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-14 11:48:21,104 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-14 11:48:21,106 | INFO     | root:startup_event:25 - Qdrant memory collection check completed.
+2026-08-14 11:48:21,107 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-14 11:48:24,319 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-14 11:48:24,420 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-14 11:48:24,421 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-14 11:48:24,421 | INFO     | uvicorn.error:_serve:104 - Finished server process [48154]
+2026-08-14 11:48:27,848 | INFO     | uvicorn.error:_serve:94 - Started server process [48240]
+2026-08-14 11:48:27,849 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-14 11:48:27,849 | INFO     | root:startup_event:23 - Initializing ARTHA AI backend application...
+2026-08-14 11:48:28,400 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-14 11:48:28,401 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-14 11:48:28,601 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-14 11:48:28,603 | INFO     | root:startup_event:25 - Qdrant memory collection check completed.
+2026-08-14 11:48:28,603 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-14 11:48:32,519 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-14 11:48:32,619 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-14 11:48:32,619 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-14 11:48:32,620 | INFO     | uvicorn.error:_serve:104 - Finished server process [48240]
+2026-08-14 11:48:36,007 | INFO     | uvicorn.error:_serve:94 - Started server process [48368]
+2026-08-14 11:48:36,007 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-14 11:48:36,007 | INFO     | root:startup_event:23 - Initializing ARTHA AI backend application...
+2026-08-14 11:48:36,949 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-14 11:48:36,950 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-14 11:48:37,202 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-14 11:48:37,204 | INFO     | root:startup_event:25 - Qdrant memory collection check completed.
+2026-08-14 11:48:37,204 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-14 11:48:39,814 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-14 11:48:39,915 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-14 11:48:39,916 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-14 11:48:39,916 | INFO     | uvicorn.error:_serve:104 - Finished server process [48368]
+2026-08-14 11:48:43,514 | INFO     | uvicorn.error:_serve:94 - Started server process [48455]
+2026-08-14 11:48:43,514 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-14 11:48:43,515 | INFO     | root:startup_event:23 - Initializing ARTHA AI backend application...
+2026-08-14 11:48:44,066 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-14 11:48:44,077 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-14 11:48:44,293 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-14 11:48:44,295 | INFO     | root:startup_event:25 - Qdrant memory collection check completed.
+2026-08-14 11:48:44,296 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-14 11:48:47,506 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-14 11:48:47,606 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-14 11:48:47,607 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-14 11:48:47,607 | INFO     | uvicorn.error:_serve:104 - Finished server process [48455]
+2026-08-14 11:48:51,004 | INFO     | uvicorn.error:_serve:94 - Started server process [48553]
+2026-08-14 11:48:51,004 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-14 11:48:51,005 | INFO     | root:startup_event:23 - Initializing ARTHA AI backend application...
+2026-08-14 11:48:51,558 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-14 11:48:51,560 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-14 11:48:51,627 | INFO     | root:<module>:6 - --- LOGGING SYSTEM TEST ---
+2026-08-14 11:48:51,627 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: test_log_key (TTL: 60s)
+2026-08-14 11:48:51,627 | INFO     | root:get_cached_data:15 - [CACHE HIT] Key: test_log_key
+2026-08-14 11:48:51,628 | INFO     | root:invalidate_user_caches:43 - [CACHE INVALIDATED USER] UserID: test_log (1 keys cleared: ['test_log_key'])
+2026-08-14 11:48:51,762 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-14 11:48:51,764 | INFO     | root:startup_event:25 - Qdrant memory collection check completed.
+2026-08-14 11:48:51,764 | INFO     | uvicorn.error:startup:62 - Application startup complete.
