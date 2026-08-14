@@ -82,3 +82,7 @@
 2026-08-14 11:48:51,762 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
 2026-08-14 11:48:51,764 | INFO     | root:startup_event:25 - Qdrant memory collection check completed.
 2026-08-14 11:48:51,764 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-14 11:51:50,942 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-14 11:51:51,043 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-14 11:51:51,043 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-14 11:51:51,044 | INFO     | uvicorn.error:_serve:104 - Finished server process [48553]
