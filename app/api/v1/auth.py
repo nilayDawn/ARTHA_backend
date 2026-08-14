@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.core.cache import get_cached_data, set_cached_data
 from app.core.database import supabase
 from app.core.security import get_current_user
 from app.schemas.auth import (
@@ -70,12 +71,22 @@ def sign_in(credentials: UserSignIn):
 
 @router.get("/me", response_model=UserProfileResponse)
 def get_user_profile(current_user: dict = Depends(get_current_user)):
-    """Retrieve profile data for the authenticated user from public.users table."""
+    """Retrieve profile data for the authenticated user from public.users table with caching."""
+    user_id = current_user["id"]
+    cache_key = f"user_profile:{user_id}"
+    cached_profile = get_cached_data(cache_key)
+    if cached_profile is not None:
+        return cached_profile
+
     try:
-        res = supabase.table("users").select("id, email, full_name, telegram_chat_id, created_at").eq("id", current_user["id"]).execute()
+        res = supabase.table("users").select("id, email, full_name, telegram_chat_id, created_at").eq("id", user_id).execute()
         if not res.data:
             raise HTTPException(status_code=404, detail="User profile not found")
-        return res.data[0]
+        profile = res.data[0]
+        set_cached_data(cache_key, profile, ttl_seconds=300)
+        return profile
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from postgrest.exceptions import APIError
 
+from app.core.cache import get_cached_data, invalidate_user_caches, set_cached_data
 from app.core.database import supabase_admin
 from app.core.security import get_current_user
 from app.schemas.finance import (
@@ -26,6 +27,7 @@ def create_transaction(transaction: TransactionCreate, current_user: dict = Depe
     
     try:
         res = supabase_admin.table("transactions").insert(data).execute()
+        invalidate_user_caches(current_user["id"])
         return res.data[0]
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -42,8 +44,13 @@ def get_transactions(
     skip: int | None = Query(0, ge=0),
     current_user: dict = Depends(get_current_user)
 ):
+    user_id = current_user["id"]
+    cache_key = f"transactions:{user_id}:{category}:{type}:{search}:{start_date}:{end_date}:{month}:{limit}:{skip}"
+    cached = get_cached_data(cache_key)
+    if cached is not None:
+        return cached
+
     try:
-        user_id = current_user["id"]
         # Enforce user security isolation in database query
         query = supabase_admin.table("transactions").select("*").eq("user_id", user_id)
 
@@ -111,7 +118,9 @@ def get_transactions(
             query = query.offset(skip)
 
         res = query.execute()
-        return res.data
+        result = res.data or []
+        set_cached_data(cache_key, result, ttl_seconds=180)
+        return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -189,6 +198,7 @@ def update_transaction(transaction_id: str, tx_update: TransactionUpdate, curren
         res = supabase_admin.table("transactions").update(update_data).eq("id", clean_id).eq("user_id", user_id).execute()
         if not res.data:
             raise HTTPException(status_code=404, detail="Transaction not found or unauthorized")
+        invalidate_user_caches(user_id)
         return res.data[0]
     except HTTPException:
         raise
@@ -202,8 +212,10 @@ def delete_transaction(transaction_id: str, current_user: dict = Depends(get_cur
         user_id = current_user["id"]
         # Secure database delete scoped to authenticated user
         supabase_admin.table("transactions").delete().eq("id", clean_id).eq("user_id", user_id).execute()
+        invalidate_user_caches(user_id)
         return {"message": "Transaction deleted successfully"}
     except (APIError, Exception):
+        invalidate_user_caches(current_user["id"])
         return {"message": "Transaction deleted successfully"}
 
 
@@ -215,18 +227,27 @@ def create_budget(budget: BudgetCreate, current_user: dict = Depends(get_current
     
     try:
         res = supabase_admin.table("budgets").insert(data).execute()
+        invalidate_user_caches(current_user["id"])
         return res.data[0]
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error creating budget: {e!s}")
 
 @router.get("/budgets", response_model=list[BudgetResponse])
 def get_budgets(month: str | None = Query(None), current_user: dict = Depends(get_current_user)):
+    user_id = current_user["id"]
+    cache_key = f"budgets:{user_id}:{month}"
+    cached = get_cached_data(cache_key)
+    if cached is not None:
+        return cached
+
     try:
-        query = supabase_admin.table("budgets").select("*").eq("user_id", current_user["id"])
+        query = supabase_admin.table("budgets").select("*").eq("user_id", user_id)
         if month and month.strip() and month.strip() != "ALL":
             query = query.eq("month", month.strip())
         res = query.execute()
-        return res.data
+        result = res.data or []
+        set_cached_data(cache_key, result, ttl_seconds=180)
+        return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -237,8 +258,10 @@ def delete_budget(budget_id: str, current_user: dict = Depends(get_current_user)
         user_id = current_user["id"]
         # Secure database delete on budgets table scoped to authenticated user
         supabase_admin.table("budgets").delete().eq("id", clean_id).eq("user_id", user_id).execute()
+        invalidate_user_caches(user_id)
         return {"message": "Budget deleted successfully"}
     except (APIError, Exception):
+        invalidate_user_caches(current_user["id"])
         return {"message": "Budget deleted successfully"}
 
 
@@ -252,15 +275,24 @@ def create_goal(goal: GoalCreate, current_user: dict = Depends(get_current_user)
         
     try:
         res = supabase_admin.table("goals").insert(data).execute()
+        invalidate_user_caches(current_user["id"])
         return res.data[0]
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/goals", response_model=list[GoalResponse])
 def get_goals(current_user: dict = Depends(get_current_user)):
+    user_id = current_user["id"]
+    cache_key = f"goals:{user_id}"
+    cached = get_cached_data(cache_key)
+    if cached is not None:
+        return cached
+
     try:
-        res = supabase_admin.table("goals").select("*").eq("user_id", current_user["id"]).execute()
-        return res.data
+        res = supabase_admin.table("goals").select("*").eq("user_id", user_id).execute()
+        result = res.data or []
+        set_cached_data(cache_key, result, ttl_seconds=180)
+        return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -276,6 +308,7 @@ def update_goal(goal_id: str, goal_update: GoalUpdate, current_user: dict = Depe
         res = supabase_admin.table("goals").update(update_data).eq("id", clean_id).eq("user_id", user_id).execute()
         if not res.data:
             raise HTTPException(status_code=404, detail="Goal not found or unauthorized")
+        invalidate_user_caches(user_id)
         return res.data[0]
     except HTTPException:
         raise
@@ -287,8 +320,9 @@ def delete_goal(goal_id: str, current_user: dict = Depends(get_current_user)):
     try:
         clean_id = str(goal_id).strip()
         user_id = current_user["id"]
-        # Secure database delete scoped strictly to authenticated user
         supabase_admin.table("goals").delete().eq("id", clean_id).eq("user_id", user_id).execute()
+        invalidate_user_caches(user_id)
         return {"message": "Goal deleted successfully"}
     except (APIError, Exception):
+        invalidate_user_caches(current_user["id"])
         return {"message": "Goal deleted successfully"}

@@ -5,6 +5,7 @@ from datetime import UTC, datetime, timedelta
 
 from cryptography.fernet import Fernet
 
+from app.core.cache import get_cached_data, invalidate_user_caches, set_cached_data
 from app.core.config import settings
 from app.core.database import supabase_admin
 
@@ -31,13 +32,18 @@ def decrypt_code(encrypted_code: str) -> str | None:
 
 def get_or_create_link_code(user_id: str, force_refresh: bool = False) -> dict:
     """
-    Fetches active link code from Supabase DB if valid.
+    Fetches active link code from cache/Supabase DB if valid.
     If force_refresh is True or the code is missing/expired, generates a new code,
-    encrypts it with Fernet, saves to Supabase users table, and returns it.
+    encrypts it with Fernet, saves to Supabase users table, caches it, and returns it.
     """
     now = datetime.now(UTC)
+    cache_key = f"telegram_link_code:{user_id}"
 
     if not force_refresh:
+        cached = get_cached_data(cache_key)
+        if cached is not None:
+            return cached
+
         try:
             res = supabase_admin.table("users").select("telegram_link_code_encrypted", "telegram_link_code_expires_at").eq("id", user_id).execute()
             if res.data and res.data[0].get("telegram_link_code_encrypted"):
@@ -49,7 +55,9 @@ def get_or_create_link_code(user_id: str, force_refresh: bool = False) -> dict:
                         raw_code = decrypt_code(row["telegram_link_code_encrypted"])
                         if raw_code:
                             remaining_seconds = int((expires_at - now).total_seconds())
-                            return {"code": raw_code, "expires_in_seconds": remaining_seconds}
+                            result = {"code": raw_code, "expires_in_seconds": remaining_seconds}
+                            set_cached_data(cache_key, result, ttl_seconds=min(60, remaining_seconds))
+                            return result
         except Exception as e:
             print(f"[Telegram Auth] DB lookup error (migration needed?): {e}")
 
@@ -66,7 +74,9 @@ def get_or_create_link_code(user_id: str, force_refresh: bool = False) -> dict:
     except Exception as e:
         print(f"[Telegram Auth] DB update error (migration needed?): {e}")
 
-    return {"code": new_code, "expires_in_seconds": 600}
+    result = {"code": new_code, "expires_in_seconds": 600}
+    set_cached_data(cache_key, result, ttl_seconds=60)
+    return result
 
 def verify_link_code(code: str) -> str | None:
     """
@@ -97,6 +107,7 @@ def verify_link_code(code: str) -> str | None:
                         "telegram_link_code_encrypted": None,
                         "telegram_link_code_expires_at": None
                     }).eq("id", user_id).execute()
+                    invalidate_user_caches(user_id)
                     return user_id
     except Exception as e:
         print(f"[Telegram Auth] DB verification error: {e}")

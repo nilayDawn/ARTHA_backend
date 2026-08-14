@@ -70,32 +70,49 @@ def memory_recall_node(state: AgentState) -> dict[str, Any]:
     return {"memories": memories}
 
 
+PREFERENCE_KEYWORDS = [
+    "prefer", "habit", "usually", "always", "salary", "income",
+    "paycheck", "monthly limit", "save for", "saving for", "never spend",
+    "my goal", "favorite", "allot"
+]
+
+
 def memory_save_node(state: AgentState) -> dict[str, Any]:
-    """Node: Saves user preferences and memories to Qdrant."""
+    """Node: Selectively saves ONLY important financial preferences and habits to Qdrant."""
     user_id = state["user_id"]
-    last_user_msg = " "
-    for msg in reversed(state["messages"]):
+    last_user_msg = ""
+    for msg in reversed(state.get("messages", [])):
         if isinstance(msg, HumanMessage):
             last_user_msg = msg.content
             break
-    user_preferences = (
-        remember_user_preference(user_id, last_user_msg, category="preference")
-        if last_user_msg
-        else []
-    )
-    return {"user_preferences": user_preferences}
+
+    if not last_user_msg or len(last_user_msg.strip()) < 15:
+        return {"user_preferences": []}
+
+    # Only save if message expresses a long-term preference/habit
+    lower_msg = last_user_msg.lower()
+    is_important = any(kw in lower_msg for kw in PREFERENCE_KEYWORDS)
+
+    if is_important:
+        remember_user_preference(user_id, last_user_msg.strip(), category="preference")
+        return {"user_preferences": [last_user_msg]}
+
+    return {"user_preferences": []}
 
 
 def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
-    """Node: Generates response using Gemini 2.5 Flash and executes database mutation actions."""
+    """Node: Generates response using Gemini Flash and executes database mutation actions."""
+    from app.agent.tools import format_compact_financial_context
+
+    compact_db_summary = format_compact_financial_context(state.get("db_context", {}))
     
     system_prompt = f"""
     You are ARTHA AI, a dedicated, knowledgeable, and sharp personal AI financial employee.
     
     Current User Context:
     - User ID: {state['user_id']}
-    - Financial Data (Transactions, Budgets, Goals): {json.dumps(state.get('db_context', {}))}
-    - Long-Term User Memories & Preferences: {json.dumps(state.get('memories', []))}
+    - Financial Data Summary: {compact_db_summary}
+    - Long-Term Memories: {json.dumps(state.get('memories', []))}
     
     Guidelines:
     1. Provide precise, actionable financial insights based on the user's data.
