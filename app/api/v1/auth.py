@@ -72,7 +72,7 @@ def sign_in(credentials: UserSignIn):
 def get_user_profile(current_user: dict = Depends(get_current_user)):
     """Retrieve profile data for the authenticated user from public.users table."""
     try:
-        res = supabase.table("users").select("*").eq("id", current_user["id"]).execute()
+        res = supabase.table("users").select("id, email, full_name, telegram_chat_id, created_at").eq("id", current_user["id"]).execute()
         if not res.data:
             raise HTTPException(status_code=404, detail="User profile not found")
         return res.data[0]

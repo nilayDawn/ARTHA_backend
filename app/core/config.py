@@ -13,7 +13,10 @@ class Settings(BaseSettings):
     BUCKET_NAME: str | None
 
     GEMINI_API_KEY: str | None = None
-    MODEL_NAME: str | None 
+    GEMINI_API_KEY_1: str | None = None
+    GEMINI_API_KEY_2: str | None = None
+    GEMINI_API_KEY_3: str | None = None
+    MODEL_NAME: str | None = None
 
     QDRANT_URL: str | None = None
     QDRANT_API_KEY: str | None = None

@@ -1,7 +1,6 @@
 import json
 from typing import Any
 
-from google import genai
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.graph import END, StateGraph
 
@@ -15,7 +14,7 @@ from app.agent.tools import (
     fetch_user_financial_context,
     remember_user_preference,
 )
-from app.core.config import settings
+from app.core.llm_setup import generate_with_fallback
 
 
 def security_guardrail_node(state: AgentState) -> dict[str, Any]:
@@ -89,11 +88,7 @@ def memory_save_node(state: AgentState) -> dict[str, Any]:
 
 def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
     """Node: Generates response using Gemini 2.5 Flash and executes database mutation actions."""
-    if not settings.GEMINI_API_KEY:
-        raise ValueError("GEMINI_API_KEY is not configured.")
-
-    client = genai.Client(api_key=settings.GEMINI_API_KEY)
-
+    
     system_prompt = f"""
     You are ARTHA AI, a dedicated, knowledgeable, and sharp personal AI financial employee.
     
@@ -133,12 +128,9 @@ def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
         role = "user" if isinstance(msg, HumanMessage) else "model"
         formatted_contents.append({"role": role, "parts": [{"text": msg.content}]})
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=formatted_contents,
-    )
+    response = generate_with_fallback(formatted_contents)
 
-    reply = response.text or "I was unable to analyze your financial query at this time."
+    reply = response or "I was unable to analyze your financial query at this time."
 
     # Parse and execute structured action blocks (e.g. create_goal, create_transaction, create_budget)
     if "```json_action" in reply:

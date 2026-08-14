@@ -4,8 +4,8 @@ from app.api.v1.auth import router as auth_router
 from app.api.v1.chat import router as chat_router
 from app.api.v1.documents import router as documents_router
 from app.api.v1.finance import router as finance_router
-from app.api.v1.telegram import router as telegram_router
 from app.api.v1.report import router as report_router
+from app.api.v1.telegram import router as telegram_router
 
 api_router = APIRouter()
 

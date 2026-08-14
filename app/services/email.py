@@ -1,6 +1,8 @@
 
 import httpx
+
 from app.core.config import settings
+
 
 def generate_report_content(user_name: str, financial_data: dict) -> str:
     """Compiles raw financial data into a clean, modern inline-styled HTML email."""

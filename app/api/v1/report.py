@@ -1,6 +1,8 @@
 
 from datetime import datetime
-from fastapi import APIRouter, Depends, BackgroundTasks, status
+
+from fastapi import APIRouter, BackgroundTasks, Depends, status
+
 from app.core.database import supabase_admin
 from app.core.security import get_current_user
 from app.services.email import generate_report_content, send_email_report

@@ -1,9 +1,10 @@
 import json
 import logging
-from typing import Tuple
+
 from google import genai
 
 from app.core.config import settings
+from app.core.llm_setup import generate_with_fallback
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ DEFAULT_REFUSAL_MESSAGE = (
 )
 
 
-def evaluate_security_guardrail(last_message: str) -> Tuple[bool, str]:
+def evaluate_security_guardrail(last_message: str) -> tuple[bool, str]:
     """
     Evaluates whether the user's query is relevant to personal finance
     and safe/ethical to process.
@@ -48,11 +49,8 @@ def evaluate_security_guardrail(last_message: str) -> Tuple[bool, str]:
             )
 
     # 2. Fast LLM classifier for domain relevance & safety
-    if not settings.GEMINI_API_KEY:
-        return False, ""
 
     try:
-        client = genai.Client(api_key=settings.GEMINI_API_KEY)
         classification_prompt = f"""
 You are a strict security and domain filter for a Personal Finance AI Agent named ARTHA.
 Analyze the user's query and classify it into exactly one decision:
@@ -65,12 +63,9 @@ Respond strictly in valid JSON format:
 {{"decision": "ALLOW"}} or {{"decision": "BLOCK", "reason": "<short explanation>"}}
 """
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=classification_prompt,
-        )
+        response = generate_with_fallback(classification_prompt)
 
-        text = (response.text or "").strip()
+        text = (response or "").strip()
         if text.startswith("```json"):
             text = text.replace("```json", "").replace("```", "").strip()
         elif text.startswith("```"):

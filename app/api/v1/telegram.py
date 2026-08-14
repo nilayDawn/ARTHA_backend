@@ -17,7 +17,7 @@ from app.services.ocr import (
     process_bank_statement_pdf_with_gemini,
     process_receipt_with_gemini,
 )
-from app.services.telegram_auth import generate_link_code, verify_link_code
+from app.services.telegram_auth import get_or_create_link_code, verify_link_code
 
 router = APIRouter(prefix="/telegram", tags=["Telegram"])
 
@@ -34,14 +34,19 @@ async def send_telegram_message(chat_id: int, text: str):
         })
 
 def get_user_by_telegram_id(chat_id: int) -> dict | None:
-    res = supabase_admin.table("users").select("*").eq("telegram_chat_id", str(chat_id)).execute()
+    res = supabase_admin.table("users").select("id, email, full_name, telegram_chat_id, created_at").eq("telegram_chat_id", str(chat_id)).execute()
     return res.data[0] if res.data else None
 
 @router.post("/link-code")
-def create_telegram_link_code(current_user: dict = Depends(get_current_user)):
-    """Frontend calls this to get a code like FP-8492 to show the user."""
-    code = generate_link_code(current_user["id"])
-    return {"code": code, "expires_in_seconds": 600}
+def create_telegram_link_code(
+    refresh: bool = False,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Fetches the active link code from Supabase DB or generates a new encrypted code.
+    If refresh=true, forces generating a new link code.
+    """
+    return get_or_create_link_code(current_user["id"], force_refresh=refresh)
 
 @router.post("/webhook")
 async def telegram_webhook(request: Request, background_tasks: BackgroundTasks):
