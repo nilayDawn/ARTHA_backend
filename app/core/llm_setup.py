@@ -44,7 +44,7 @@ def validate_gemini_api_key(api_key: str) -> tuple[bool, str]:
 
     try:
         client = genai.Client(api_key=api_key.strip())
-        model_name = settings.MODEL_NAME or "gemini-3.6-flash"
+        model_name = settings.MODEL_NAME or "gemini-2.5-flash"
         response = client.models.generate_content(
             model=model_name,
             contents="Ping test to verify API key.",
@@ -58,7 +58,7 @@ def validate_gemini_api_key(api_key: str) -> tuple[bool, str]:
 
 def generate_with_fallback(prompt, custom_api_key: str | None = None):
     last_error = None
-    model_name = settings.MODEL_NAME or "gemini-3.6-flash"
+    model_name = settings.MODEL_NAME or "gemini-2.5-flash"
     keys_to_try = get_effective_api_keys(custom_api_key)
 
     if not keys_to_try:
@@ -87,7 +87,7 @@ def generate_with_fallback(prompt, custom_api_key: str | None = None):
 
 def generate_with_fallback_ocr(image_bytes, mime_type, prompt, custom_api_key: str | None = None):
     last_error = None
-    model_name = settings.MODEL_NAME or "gemini-3.6-flash"
+    model_name = settings.MODEL_NAME or "gemini-2.5-flash"
     keys_to_try = get_effective_api_keys(custom_api_key)
 
     if not keys_to_try:

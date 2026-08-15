@@ -24,3 +24,302 @@
 2026-08-15 10:11:55,365 | INFO     | root:get_cached_data:15 - [CACHE HIT] Key: transactions:6be3c98e-6962-44a0-9a37-8fb28060746a:None:None:None:None:None:2026-08:100:0
 2026-08-15 10:11:55,366 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60310 - "GET /api/v1/transactions?month=2026-08 HTTP/1.1" 200
 2026-08-15 10:11:55,367 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60348 - "GET /api/v1/budgets?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:33:16,966 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:33:17,067 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:33:17,068 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:33:17,068 | INFO     | uvicorn.error:_serve:104 - Finished server process [19440]
+2026-08-15 10:33:20,485 | INFO     | uvicorn.error:_serve:94 - Started server process [28526]
+2026-08-15 10:33:20,485 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:33:20,485 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:33:21,034 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:33:21,038 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:33:21,235 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:33:21,238 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:33:21,238 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:33:36,108 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:33:36,209 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:33:36,209 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:33:36,210 | INFO     | uvicorn.error:_serve:104 - Finished server process [28526]
+2026-08-15 10:33:39,647 | INFO     | uvicorn.error:_serve:94 - Started server process [28760]
+2026-08-15 10:33:39,647 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:33:39,647 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:33:40,199 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:33:40,204 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:33:40,400 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:33:40,403 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:33:40,403 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:34:24,058 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:34:24,159 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:34:24,160 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:34:24,160 | INFO     | uvicorn.error:_serve:104 - Finished server process [28760]
+2026-08-15 10:34:30,479 | INFO     | uvicorn.error:_serve:94 - Started server process [29169]
+2026-08-15 10:34:30,479 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:34:30,480 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:34:31,042 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:34:31,043 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:34:31,253 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:34:31,255 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:34:31,256 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:34:37,576 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:34:37,677 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:34:37,677 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:34:37,677 | INFO     | uvicorn.error:_serve:104 - Finished server process [29169]
+2026-08-15 10:34:41,171 | INFO     | uvicorn.error:_serve:94 - Started server process [29309]
+2026-08-15 10:34:41,172 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:34:41,172 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:34:41,726 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:34:41,729 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:34:41,927 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:34:41,930 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:34:41,930 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:34:41,931 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:34:42,031 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:34:42,032 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:34:42,032 | INFO     | uvicorn.error:_serve:104 - Finished server process [29309]
+2026-08-15 10:34:45,319 | INFO     | uvicorn.error:_serve:94 - Started server process [29398]
+2026-08-15 10:34:45,320 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:34:45,320 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:34:45,886 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:34:45,887 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:34:46,089 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:34:46,091 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:34:46,091 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:35:18,404 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:35:18,505 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:35:18,506 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:35:18,506 | INFO     | uvicorn.error:_serve:104 - Finished server process [29398]
+2026-08-15 10:35:21,888 | INFO     | uvicorn.error:_serve:94 - Started server process [29830]
+2026-08-15 10:35:21,889 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:35:21,889 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:35:22,450 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:35:22,451 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:35:22,652 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:35:22,654 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:35:22,655 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:35:38,610 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:35:38,711 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:35:38,712 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:35:38,712 | INFO     | uvicorn.error:_serve:104 - Finished server process [29830]
+2026-08-15 10:35:42,238 | INFO     | uvicorn.error:_serve:94 - Started server process [30019]
+2026-08-15 10:35:42,238 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:35:42,238 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:35:42,815 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:35:42,816 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:35:43,024 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:35:43,026 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:35:43,026 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:35:43,027 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:35:43,128 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:35:43,128 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:35:43,128 | INFO     | uvicorn.error:_serve:104 - Finished server process [30019]
+2026-08-15 10:35:46,483 | INFO     | uvicorn.error:_serve:94 - Started server process [30104]
+2026-08-15 10:35:46,484 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:35:46,484 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:35:47,041 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:35:47,053 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:35:47,259 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:35:47,262 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:35:47,262 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:36:02,410 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:36:02,511 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:36:02,512 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:36:02,512 | INFO     | uvicorn.error:_serve:104 - Finished server process [30104]
+2026-08-15 10:36:05,925 | INFO     | uvicorn.error:_serve:94 - Started server process [30311]
+2026-08-15 10:36:05,925 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:36:05,925 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:36:06,478 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:36:06,479 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:36:06,679 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:36:06,682 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:36:06,682 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:36:08,990 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:36:09,091 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:36:09,092 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:36:09,092 | INFO     | uvicorn.error:_serve:104 - Finished server process [30311]
+2026-08-15 10:36:12,482 | INFO     | uvicorn.error:_serve:94 - Started server process [30431]
+2026-08-15 10:36:12,483 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:36:12,483 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:36:13,051 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:36:13,052 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:36:13,253 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:36:13,255 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:36:13,255 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:36:15,061 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:36:15,162 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:36:15,162 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:36:15,162 | INFO     | uvicorn.error:_serve:104 - Finished server process [30431]
+2026-08-15 10:36:18,471 | INFO     | uvicorn.error:_serve:94 - Started server process [30523]
+2026-08-15 10:36:18,472 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:36:18,472 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:36:19,019 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:36:19,022 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:36:19,227 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:36:19,230 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:36:19,230 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:39:00,860 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:39:00,961 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:39:00,961 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:39:00,961 | INFO     | uvicorn.error:_serve:104 - Finished server process [30523]
+2026-08-15 10:39:04,519 | INFO     | uvicorn.error:_serve:94 - Started server process [31615]
+2026-08-15 10:39:04,519 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:39:04,519 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:39:05,067 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:39:05,083 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:39:05,290 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:39:05,292 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:39:05,292 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:39:12,919 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:39:13,020 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:39:13,020 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:39:13,020 | INFO     | uvicorn.error:_serve:104 - Finished server process [31615]
+2026-08-15 10:39:16,501 | INFO     | uvicorn.error:_serve:94 - Started server process [31795]
+2026-08-15 10:39:16,502 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:39:16,502 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:39:17,075 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:39:17,077 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:39:17,277 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:39:17,279 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:39:17,280 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:39:22,597 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:39:22,698 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:39:22,698 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:39:22,698 | INFO     | uvicorn.error:_serve:104 - Finished server process [31795]
+2026-08-15 10:39:26,134 | INFO     | uvicorn.error:_serve:94 - Started server process [31929]
+2026-08-15 10:39:26,134 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:39:26,135 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:39:26,682 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:39:26,688 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:39:26,895 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:39:26,897 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:39:26,898 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:39:26,898 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 10:39:26,999 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 10:39:27,000 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 10:39:27,000 | INFO     | uvicorn.error:_serve:104 - Finished server process [31929]
+2026-08-15 10:39:30,343 | INFO     | uvicorn.error:_serve:94 - Started server process [32007]
+2026-08-15 10:39:30,344 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:39:30,344 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:39:30,899 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:39:30,900 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:39:31,104 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:39:31,107 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:39:31,107 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:39:31,126 | INFO     | uvicorn.access:send:485 - 127.0.0.1:57056 - "GET /docs HTTP/1.1" 200
+2026-08-15 10:39:31,340 | INFO     | uvicorn.access:send:485 - 127.0.0.1:57056 - "GET /openapi.json HTTP/1.1" 200
+2026-08-15 10:39:56,831 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/token?grant_type=password "HTTP/2 200 OK"
+2026-08-15 10:39:56,837 | INFO     | uvicorn.access:send:485 - 127.0.0.1:58474 - "POST /api/v1/auth/login HTTP/1.1" 200
+2026-08-15 10:40:44,043 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:40:44,071 | INFO     | root:security_guardrail_node:32 - [AGENT GUARDRAIL] Evaluating input message for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:40:44,142 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:40:44,439 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 400 Bad Request"
+2026-08-15 10:40:44,504 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:40:44,902 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 404 Not Found"
+2026-08-15 10:40:44,985 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:40:45,471 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 404 Not Found"
+2026-08-15 10:40:45,539 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:40:47,483 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-15 10:40:47,486 | INFO     | root:security_guardrail_node:42 - [AGENT GUARDRAIL] Query passed for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:40:47,488 | INFO     | root:db_context_node:61 - [AGENT DB NODE] Fetching financial context for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:40:49,158 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/transactions?select=amount%2Ccategory%2Cmerchant%2Cdate%2Csource&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a&order=date.desc&limit=15 "HTTP/2 200 OK"
+2026-08-15 10:40:49,867 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/budgets?select=category%2Cmonthly_limit%2Cmonth&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a "HTTP/2 200 OK"
+2026-08-15 10:40:50,459 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/goals?select=goal_name%2Ctarget_amount%2Csaved_amount%2Cdeadline&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a "HTTP/2 200 OK"
+2026-08-15 10:40:50,460 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: user_financial_context:6be3c98e-6962-44a0-9a37-8fb28060746a (TTL: 180s)
+2026-08-15 10:40:50,462 | INFO     | root:memory_recall_node:75 - [AGENT MEMORY NODE] Recalling vector memories for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:40:51,035 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:40:51,235 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:40:51,548 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 400 Bad Request"
+2026-08-15 10:40:52,330 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-15 10:40:52,728 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/points/query "HTTP/1.1 200 OK"
+2026-08-15 10:40:52,730 | INFO     | root:search_user_memories:117 - [Qdrant] Retrieved 3 memory vectors for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:40:52,730 | INFO     | root:memory_recall_node:77 - [AGENT MEMORY NODE] Retrieved 3 memory records.
+2026-08-15 10:40:52,800 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:40:53,027 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 400 Bad Request"
+2026-08-15 10:40:53,098 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:40:53,518 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 404 Not Found"
+2026-08-15 10:40:53,588 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:40:54,063 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 404 Not Found"
+2026-08-15 10:40:54,139 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:40:56,715 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-15 10:40:56,718 | INFO     | root:memory_save_node:106 - [MEMORY SAVE NODE] Saving user preference to Qdrant for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:40:56,889 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:40:57,093 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:40:57,367 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 400 Bad Request"
+2026-08-15 10:40:58,079 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-15 10:40:58,446 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/points?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:40:58,447 | INFO     | root:save_user_memory:80 - [Qdrant] Saved memory for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a | Text: 'Tell about my goals'
+2026-08-15 10:40:58,449 | INFO     | uvicorn.access:send:485 - 127.0.0.1:59624 - "POST /api/v1/chat HTTP/1.1" 200
+2026-08-15 10:42:14,009 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38284 - "OPTIONS /api/v1/transactions?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:42:14,009 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38290 - "OPTIONS /api/v1/budgets?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:42:14,015 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38296 - "OPTIONS /api/v1/transactions?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:42:14,015 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38304 - "OPTIONS /api/v1/budgets?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:42:14,425 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:42:14,749 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:42:15,732 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38304 - "OPTIONS /api/v1/goals HTTP/1.1" 200
+2026-08-15 10:42:15,733 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38284 - "OPTIONS /api/v1/goals HTTP/1.1" 200
+2026-08-15 10:42:15,738 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/transactions?select=%2A&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a&date=gte.2026-08-01&date=lte.2026-08-31&order=date.desc&limit=100 "HTTP/2 200 OK"
+2026-08-15 10:42:15,740 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/budgets?select=%2A&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a&month=eq.2026-08 "HTTP/2 200 OK"
+2026-08-15 10:42:15,743 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: transactions:6be3c98e-6962-44a0-9a37-8fb28060746a:None:None:None:None:None:2026-08:100:0 (TTL: 180s)
+2026-08-15 10:42:15,744 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: budgets:6be3c98e-6962-44a0-9a37-8fb28060746a:2026-08 (TTL: 180s)
+2026-08-15 10:42:15,749 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38316 - "GET /api/v1/budgets?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:42:15,749 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38290 - "GET /api/v1/transactions?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:42:15,968 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:42:15,971 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:42:15,973 | INFO     | root:get_cached_data:15 - [CACHE HIT] Key: transactions:6be3c98e-6962-44a0-9a37-8fb28060746a:None:None:None:None:None:2026-08:100:0
+2026-08-15 10:42:15,977 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38316 - "GET /api/v1/transactions?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:42:15,978 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:42:15,980 | INFO     | root:get_cached_data:15 - [CACHE HIT] Key: budgets:6be3c98e-6962-44a0-9a37-8fb28060746a:2026-08
+2026-08-15 10:42:15,981 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38290 - "GET /api/v1/budgets?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:42:16,219 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/goals?select=%2A&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a "HTTP/2 200 OK"
+2026-08-15 10:42:16,220 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: goals:6be3c98e-6962-44a0-9a37-8fb28060746a (TTL: 180s)
+2026-08-15 10:42:16,222 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38296 - "GET /api/v1/goals HTTP/1.1" 200
+2026-08-15 10:42:16,787 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:42:16,788 | INFO     | root:get_cached_data:15 - [CACHE HIT] Key: goals:6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:42:16,790 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38296 - "GET /api/v1/goals HTTP/1.1" 200
+2026-08-15 10:42:45,359 | INFO     | uvicorn.access:send:485 - 127.0.0.1:37192 - "OPTIONS /api/v1/goals HTTP/1.1" 200
+2026-08-15 10:42:46,301 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:42:47,506 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/goals "HTTP/2 201 Created"
+2026-08-15 10:42:47,507 | INFO     | root:invalidate_user_caches:43 - [CACHE INVALIDATED USER] UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a (4 keys cleared: ['user_financial_context:6be3c98e-6962-44a0-9a37-8fb28060746a', 'transactions:6be3c98e-6962-44a0-9a37-8fb28060746a:None:None:None:None:None:2026-08:100:0', 'budgets:6be3c98e-6962-44a0-9a37-8fb28060746a:2026-08', 'goals:6be3c98e-6962-44a0-9a37-8fb28060746a'])
+2026-08-15 10:42:47,507 | INFO     | uvicorn.access:send:485 - 127.0.0.1:37202 - "POST /api/v1/goals HTTP/1.1" 201
+2026-08-15 10:42:48,336 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:42:48,760 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/goals?select=%2A&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a "HTTP/2 200 OK"
+2026-08-15 10:42:48,761 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: goals:6be3c98e-6962-44a0-9a37-8fb28060746a (TTL: 180s)
+2026-08-15 10:42:48,762 | INFO     | uvicorn.access:send:485 - 127.0.0.1:37202 - "GET /api/v1/goals HTTP/1.1" 200
+2026-08-15 10:43:19,337 | INFO     | uvicorn.access:send:485 - 127.0.0.1:37624 - "OPTIONS /api/v1/goals/b8251b64-46f5-406e-b9cb-b481aff7c22c HTTP/1.1" 200
+2026-08-15 10:43:20,605 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:43:21,308 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PATCH https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/goals?id=eq.b8251b64-46f5-406e-b9cb-b481aff7c22c&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a "HTTP/2 200 OK"
+2026-08-15 10:43:21,309 | INFO     | root:invalidate_user_caches:43 - [CACHE INVALIDATED USER] UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a (1 keys cleared: ['goals:6be3c98e-6962-44a0-9a37-8fb28060746a'])
+2026-08-15 10:43:21,310 | INFO     | uvicorn.access:send:485 - 127.0.0.1:37632 - "PATCH /api/v1/goals/b8251b64-46f5-406e-b9cb-b481aff7c22c HTTP/1.1" 200
+2026-08-15 10:43:21,530 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:43:22,244 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/goals?select=%2A&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a "HTTP/2 200 OK"
+2026-08-15 10:43:22,245 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: goals:6be3c98e-6962-44a0-9a37-8fb28060746a (TTL: 180s)
+2026-08-15 10:43:22,246 | INFO     | uvicorn.access:send:485 - 127.0.0.1:37632 - "GET /api/v1/goals HTTP/1.1" 200
+2026-08-15 10:43:40,798 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38576 - "OPTIONS /api/v1/chat HTTP/1.1" 200
+2026-08-15 10:43:42,108 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:43:42,111 | INFO     | root:security_guardrail_node:32 - [AGENT GUARDRAIL] Evaluating input message for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:43:42,161 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:43:42,553 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 404 Not Found"
+2026-08-15 10:43:42,614 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:43:42,991 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 404 Not Found"
+2026-08-15 10:43:43,046 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:43:44,976 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-15 10:43:44,978 | INFO     | root:security_guardrail_node:42 - [AGENT GUARDRAIL] Query passed for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:43:44,982 | INFO     | root:db_context_node:61 - [AGENT DB NODE] Fetching financial context for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:43:45,795 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/transactions?select=amount%2Ccategory%2Cmerchant%2Cdate%2Csource&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a&order=date.desc&limit=15 "HTTP/2 200 OK"
+2026-08-15 10:43:46,410 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/budgets?select=category%2Cmonthly_limit%2Cmonth&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a "HTTP/2 200 OK"
+2026-08-15 10:43:46,930 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/goals?select=goal_name%2Ctarget_amount%2Csaved_amount%2Cdeadline&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a "HTTP/2 200 OK"
+2026-08-15 10:43:46,931 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: user_financial_context:6be3c98e-6962-44a0-9a37-8fb28060746a (TTL: 180s)
+2026-08-15 10:43:46,931 | INFO     | root:memory_recall_node:75 - [AGENT MEMORY NODE] Recalling vector memories for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:43:47,479 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:43:47,677 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:43:48,364 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-15 10:43:48,770 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/points/query "HTTP/1.1 200 OK"
+2026-08-15 10:43:48,771 | INFO     | root:search_user_memories:117 - [Qdrant] Retrieved 3 memory vectors for UserID: 6be3c98e-6962-44a0-9a37-8fb28060746a
+2026-08-15 10:43:48,771 | INFO     | root:memory_recall_node:77 - [AGENT MEMORY NODE] Retrieved 3 memory records.
+2026-08-15 10:43:48,822 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:43:49,186 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 404 Not Found"
+2026-08-15 10:43:49,235 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:43:49,621 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 404 Not Found"
+2026-08-15 10:43:49,677 | INFO     | google_genai.models:generate_content:6586 - AFC is enabled with max remote calls: 10.
+2026-08-15 10:43:51,868 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-15 10:43:51,870 | INFO     | root:memory_save_node:110 - [MEMORY SAVE NODE] Message classified as generic chat. Skipped Qdrant persistence.
+2026-08-15 10:43:51,871 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38584 - "POST /api/v1/chat HTTP/1.1" 200
