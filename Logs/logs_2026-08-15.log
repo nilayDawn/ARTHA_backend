@@ -323,3 +323,15 @@
 2026-08-15 10:43:51,868 | INFO     | httpx:_send_single_request:1025 - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
 2026-08-15 10:43:51,870 | INFO     | root:memory_save_node:110 - [MEMORY SAVE NODE] Message classified as generic chat. Skipped Qdrant persistence.
 2026-08-15 10:43:51,871 | INFO     | uvicorn.access:send:485 - 127.0.0.1:38584 - "POST /api/v1/chat HTTP/1.1" 200
+2026-08-15 11:38:03,656 | INFO     | uvicorn.error:shutdown:273 - Shutting down
+2026-08-15 11:38:03,757 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
+2026-08-15 11:38:03,758 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
+2026-08-15 11:38:03,758 | INFO     | uvicorn.error:_serve:104 - Finished server process [32007]
+2026-08-15 11:38:08,797 | INFO     | uvicorn.error:_serve:94 - Started server process [54540]
+2026-08-15 11:38:08,797 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 11:38:08,797 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 11:38:09,384 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 11:38:09,389 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 11:38:09,585 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 11:38:09,587 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 11:38:09,587 | INFO     | uvicorn.error:startup:62 - Application startup complete.

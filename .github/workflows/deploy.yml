@@ -19,18 +19,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies directly into package directory
+      - name: Install dependencies into target package directory
         run: |
           python -m pip install --upgrade pip
           pip install --target=".python_packages/lib/site-packages" -r requirements.txt
-
-      - name: Zip deployment package
-        run: |
-          zip -r release.zip . -x ".git/*" ".github/*"
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'artha-api-live'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-          package: release.zip
+          package: .
