@@ -10,9 +10,15 @@ from app.utils.logger import logger
 app = FastAPI(title=settings.PROJECT_NAME)
 
 # Enable CORS for Frontend Development
+origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://gentle-grass-0ac410700.7.azurestaticapps.net",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
