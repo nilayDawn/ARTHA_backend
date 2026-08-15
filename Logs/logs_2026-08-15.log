@@ -1,0 +1,26 @@
+2026-08-15 10:11:39,641 | INFO     | uvicorn.error:_serve:94 - Started server process [19440]
+2026-08-15 10:11:39,642 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-15 10:11:39,642 | INFO     | root:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 10:11:40,184 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections "HTTP/1.1 200 OK"
+2026-08-15 10:11:40,191 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-08-15 10:11:40,393 | INFO     | httpx:_send_single_request:1025 - HTTP Request: PUT https://a6f6bf52-8ce0-41b7-be23-03f084a811d8.eu-central-1-0.aws.cloud.qdrant.io:6333/collections/user_memories/index?wait=true "HTTP/1.1 200 OK"
+2026-08-15 10:11:40,395 | INFO     | root:startup_event:45 - Qdrant memory collection check completed.
+2026-08-15 10:11:40,396 | INFO     | uvicorn.error:startup:62 - Application startup complete.
+2026-08-15 10:11:51,950 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60310 - "OPTIONS /api/v1/transactions?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:11:51,951 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60324 - "OPTIONS /api/v1/budgets?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:11:51,951 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60328 - "OPTIONS /api/v1/transactions?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:11:51,951 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60336 - "OPTIONS /api/v1/budgets?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:11:53,267 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:11:53,268 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:11:54,801 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/budgets?select=%2A&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a&month=eq.2026-08 "HTTP/2 200 OK"
+2026-08-15 10:11:54,802 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: budgets:6be3c98e-6962-44a0-9a37-8fb28060746a:2026-08 (TTL: 180s)
+2026-08-15 10:11:54,804 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/rest/v1/transactions?select=%2A&user_id=eq.6be3c98e-6962-44a0-9a37-8fb28060746a&date=gte.2026-08-01&date=lte.2026-08-31&order=date.desc&limit=100 "HTTP/2 200 OK"
+2026-08-15 10:11:54,811 | INFO     | root:set_cached_data:28 - [CACHE SET] Key: transactions:6be3c98e-6962-44a0-9a37-8fb28060746a:None:None:None:None:None:2026-08:100:0 (TTL: 180s)
+2026-08-15 10:11:54,812 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60310 - "GET /api/v1/budgets?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:11:54,813 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60348 - "GET /api/v1/transactions?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:11:55,360 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:11:55,361 | INFO     | httpx:_send_single_request:1025 - HTTP Request: GET https://dxpdhheafqyiaayoyshv.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-08-15 10:11:55,364 | INFO     | root:get_cached_data:15 - [CACHE HIT] Key: budgets:6be3c98e-6962-44a0-9a37-8fb28060746a:2026-08
+2026-08-15 10:11:55,365 | INFO     | root:get_cached_data:15 - [CACHE HIT] Key: transactions:6be3c98e-6962-44a0-9a37-8fb28060746a:None:None:None:None:None:2026-08:100:0
+2026-08-15 10:11:55,366 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60310 - "GET /api/v1/transactions?month=2026-08 HTTP/1.1" 200
+2026-08-15 10:11:55,367 | INFO     | uvicorn.access:send:485 - 127.0.0.1:60348 - "GET /api/v1/budgets?month=2026-08 HTTP/1.1" 200

@@ -1,16 +1,22 @@
 # 📡 05. REST API Specification & Endpoint Reference
 
 > **Complete OpenAPI Contract & Request/Response Examples**  
-> *Detailed reference for Authentication, Financial Ledger, AI Agent Chat, OCR Receipts, Telegram Integration, and Email Summary Reports.*
+> *Detailed reference for Authentication, Financial Ledger, AI Agent Chat, OCR Receipts, Custom LLM API Key Management, Telegram Integration, and Email Summary Reports.*
 
 ---
 
-## 🔐 Authentication Header Requirements
+## 🔐 Authentication & Custom LLM Header Requirements
 
 All endpoints except public signup/login routes require a valid Supabase JWT Bearer token:
 ```http
 Authorization: Bearer <YOUR_SUPABASE_JWT_ACCESS_TOKEN>
 ```
+
+To supply a custom Google Gemini LLM API key per request, include the optional header:
+```http
+X-User-LLM-Key: <YOUR_CUSTOM_GEMINI_API_KEY>
+```
+*Note: If provided, the system prioritizes this key for LLM reasoning, OCR parsing, and embeddings, falling back to system-configured keys if inactive or invalid.*
 
 ---
 
@@ -28,6 +34,7 @@ Authorization: Bearer <YOUR_SUPABASE_JWT_ACCESS_TOKEN>
 | **Finance**| `GET` | `/api/v1/goals` | Fetch savings goals | 180s TTL Cache |
 | **Finance**| `POST` | `/api/v1/goals` | Create savings goal | Invalidation Trigger |
 | **Agent** | `POST` | `/api/v1/chat` | Send message to AI CFO | State Machine |
+| **Agent** | `POST` | `/api/v1/chat/validate-key` | Validate custom Gemini API Key | Live Ping Test |
 | **OCR** | `POST` | `/api/v1/documents/upload` | Upload receipt image for OCR | Gemini Vision |
 | **Telegram**|`POST` | `/api/v1/telegram/link-code` | Fetch `FP-XXXX` token | 60s TTL Cache |
 | **Reports** |`POST` | `/api/v1/reports/send-email` | Send email summary report | Resend Async |
@@ -42,6 +49,7 @@ Authorization: Bearer <YOUR_SUPABASE_JWT_ACCESS_TOKEN>
 ```json
 {
   "message": "Add a new goal to save 50000 for iPhone by December",
+  "custom_api_key": "AIzaSy...",
   "history": [
     {"role": "user", "content": "Hi ARTHA"},
     {"role": "assistant", "content": "Hello! How can I assist with your finances today?"}
@@ -60,7 +68,26 @@ Authorization: Bearer <YOUR_SUPABASE_JWT_ACCESS_TOKEN>
 
 ---
 
-### 2. Receipt OCR Upload (`POST /api/v1/documents/upload`)
+### 2. Validate Custom Gemini API Key (`POST /api/v1/chat/validate-key`)
+
+**Request Payload:**
+```json
+{
+  "api_key": "AIzaSy..."
+}
+```
+
+**Response Payload:**
+```json
+{
+  "valid": true,
+  "message": "Gemini API Key validated successfully!"
+}
+```
+
+---
+
+### 3. Receipt OCR Upload (`POST /api/v1/documents/upload`)
 
 **Request Payload:** `multipart/form-data` with key `file` containing receipt image (`JPEG, PNG, WEBP`).
 
@@ -75,4 +102,5 @@ Authorization: Bearer <YOUR_SUPABASE_JWT_ACCESS_TOKEN>
   },
   "message": "Receipt parsed successfully"
 }
-```
+}
+``````

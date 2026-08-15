@@ -11,6 +11,7 @@
 
 ### Core Capabilities:
 - **FastAPI REST API**: High-performance asynchronous REST endpoints with JWT Bearer authentication.
+- **Custom User LLM API Key Infrastructure**: Thread-safe `ContextVar` per-request isolation and `X-User-LLM-Key` middleware. Users can bring personal Gemini API keys with automatic fallback to system keys.
 - **LangGraph AI Reasoning Engine**: Powered by **Gemini 3.6 Flash** with structured action block parsing (`json_action`) for automated database mutations.
 - **Vector Memory Storage**: **Qdrant** integration paired with `gemini-embedding-001` (3072-dim) for selective memory storage of user habits and rules.
 - **Centralized TTL Caching**: Thread-safe in-memory caching engine (`app.core.cache`) with event-driven invalidation across all financial endpoints and AI context retrieval.
