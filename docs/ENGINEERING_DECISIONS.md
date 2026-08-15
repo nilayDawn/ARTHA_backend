@@ -36,18 +36,19 @@ Rather than relying on basic LLM wrappers, ARTHA AI is built with modern softwar
 
 ## 🎯 Key Engineering Decisions
 
-### 1. Stateless Telegram Linking with Fernet AES Persistence
-- **Problem**: Storing single-use Telegram link codes in process memory (`LINK_CODES = {}`) caused active connection codes to reset whenever the backend restarted or scaled across multiple worker processes.
+### 1. Multi-Environment Resilient Telegram Verification & Interactive Webhook UX
+- **Problem**: Encrypting ephemeral link codes with local symmetric keys caused verification failures when webhooks were handled by different environments (e.g. local server vs. live Azure App Service).
 - **Engineering Solution**: 
-  - Persisted link codes in the Supabase `users` database table with **Fernet symmetric AES encryption**.
-  - Generated deterministic 32-byte Fernet keys derived via SHA-256 from application secret keys (`SUPABASE_SERVICE_ROLE_KEY`).
-  - Added an explicit `refresh` query parameter (`POST /telegram/link-code?refresh=true`) allowing users to manually regenerate connection tokens on demand.
-- **Security & Privacy Impact**: Raw plaintext connection codes (`FP-XXXX`) are never written to disk or database logs. Webhook verification queries encrypted records and immediately purges tokens upon single-use verification.
+  - Standardized single-use link codes (`FP-XXXX`) with 10-minute database expiration and instant single-use cleanup upon verification.
+  - Implemented dual-mode verification (`verify_link_code`) supporting both plain-text and legacy encrypted formats.
+  - Upgraded Telegram Webhooks with regex pattern matching (`FP-\d{4}`), enabling users to connect accounts seamlessly via `/start FP-XXXX`, `/link FP-XXXX`, or plain code.
+  - Added interactive UX feedback in Telegram: immediate `sendChatAction` (`"typing"`) and `🤔 Thinking...` status messages for text queries, plus background multi-modal receipt OCR (supporting compressed photos and uncompressed image documents).
+- **Security & User Experience Impact**: Completely eliminated environment token mismatches while offering instant, rich interactive feedback inside Telegram.
 
 ```
-[User Clicks Connect] ──▶ [Generate Code FP-8492] ──▶ [Fernet Encrypt] ──▶ [Save to Supabase users Table]
-                                                                                      │
-[Telegram Bot Webhook] ◀── [/link FP-8492 Command] ◀── [Decrypt & Match DB Token] ◀──┘
+[User Clicks Connect] ──▶ [Generate Code FP-4298] ──▶ [Store in Supabase users Table]
+                                                                        │
+[Telegram Bot Webhook] ◀── [/link FP-4298 Command] ◀── [Regex Match & Bind chat_id] ◀──┘
 ```
 
 ---

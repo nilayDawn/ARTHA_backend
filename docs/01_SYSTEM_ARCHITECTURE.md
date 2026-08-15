@@ -63,31 +63,41 @@ Rather than operating as a simple LLM wrapper, ARTHA AI uses a decoupled **micro
 - **Semantic Storage**: Stores long-term user habits, preferences, and financial rules.
 - **Schema**: 3072-dimensional vector collection (`user_memories`) indexed with Cosine Similarity and payload metadata filtering scoped by `user_id`.
 
+### 2.5 Telegram Integration & Multi-Channel Webhooks (`@NilFinanceBot`)
+- **Single-Use Token Verification**: Dashboard issues dynamic link tokens (`FP-XXXX`). Webhooks parse `/start FP-XXXX`, `/link FP-XXXX`, or raw `FP-XXXX` to bind `telegram_chat_id` to Supabase user accounts.
+- **Interactive UX Feedback**: Triggers Telegram chat typing status (`sendChatAction`) and dispatches immediate `🤔 Thinking...` status messages prior to agent reasoning.
+- **Multi-Modal Input Processing**: Accepts text financial notes, receipt photos (`photo`), receipt files (`document` image MIME types), and multi-transaction PDF bank statements.
+
+### 2.6 Multi-Action Agent Reasoning & Relative Date Handling
+- **Multi-Action Execution**: Parses multiple structured `json_action` blocks in a single LLM turn (e.g. logging an expense note and income deposit simultaneously).
+- **Relative Date Normalization**: Automatically converts relative terms ("yesterday", "2 days ago") into ISO `YYYY-MM-DD` timestamps via tool normalization.
+- **Automatic Income Categorization**: Automatically classifies income inputs ("salary", "bonus", "deposit") under the "Income" category type.
+
 ---
 
 ## 📊 3. End-to-End Request Lifecycle
 
 ```
-[User Chat Request] ──▶ [JWT Bearer Auth Validation]
-                               │
-                               ▼
-                   [Security Guardrail Node]
-                               │
-                   ├── (If Blocked) ──▶ [Return Refusal Response]
-                   │
-                   └── (If Allowed) ──▶ [Fetch DB Context (TTL Cached)]
-                                               │
-                                               ▼
-                                    [Recall Qdrant Memory]
-                                               │
-                                               ▼
-                                  [Gemini 3.6 Flash Inference]
-                                               │
-                                               ▼
-                                 [Structured Action Execution]
-                                               │
-                                               ▼
-                               [Selective Qdrant Persistence]
+[User Chat / Telegram Webhook] ──▶ [Auth / Link Token Verification]
+                                          │
+                                          ▼
+                              [Security Guardrail Node]
+                                          │
+                              ├── (If Blocked) ──▶ [Return Refusal Response]
+                              │
+                              └── (If Allowed) ──▶ [Fetch DB Context (TTL Cached)]
+                                                          │
+                                                          ▼
+                                               [Recall Qdrant Memory]
+                                                          │
+                                                          ▼
+                                             [Gemini 3.6 Flash Inference]
+                                                          │
+                                                          ▼
+                                            [Multi-Action Execution (DB)]
+                                                          │
+                                                          ▼
+                                           [Selective Qdrant Persistence]
 ```
 
 ---

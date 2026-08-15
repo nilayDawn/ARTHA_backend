@@ -36,7 +36,8 @@ X-User-LLM-Key: <YOUR_CUSTOM_GEMINI_API_KEY>
 | **Agent** | `POST` | `/api/v1/chat` | Send message to AI CFO | State Machine |
 | **Agent** | `POST` | `/api/v1/chat/validate-key` | Validate custom Gemini API Key | Live Ping Test |
 | **OCR** | `POST` | `/api/v1/documents/upload` | Upload receipt image for OCR | Gemini Vision |
-| **Telegram**|`POST` | `/api/v1/telegram/link-code` | Fetch `FP-XXXX` token | 60s TTL Cache |
+| **Telegram**|`POST` | `/api/v1/telegram/link-code` | Fetch active or new `FP-XXXX` connection token | 60s TTL Cache / Single Use |
+| **Telegram**|`POST` | `/api/v1/telegram/webhook` | Incoming Telegram Bot Updates (Text, Photos, Documents) | Direct Execution |
 | **Reports** |`POST` | `/api/v1/reports/send-email` | Send email summary report | Resend Async |
 
 ---
@@ -48,7 +49,7 @@ X-User-LLM-Key: <YOUR_CUSTOM_GEMINI_API_KEY>
 **Request Payload:**
 ```json
 {
-  "message": "Add a new goal to save 50000 for iPhone by December",
+  "message": "Spent 250 on lunch yesterday and got 50000 salary deposit today",
   "custom_api_key": "AIzaSy...",
   "history": [
     {"role": "user", "content": "Hi ARTHA"},
@@ -60,11 +61,12 @@ X-User-LLM-Key: <YOUR_CUSTOM_GEMINI_API_KEY>
 **Response Payload:**
 ```json
 {
-  "response": "I have created a new savings goal for your iPhone with a target amount of ₹50,000!",
+  "response": "I've logged your ₹250 lunch expense under Food & Dining for yesterday, and added your ₹50,000 salary deposit under Income!",
   "memories_used": [],
-  "user_preferences": ["save 50000 for iPhone by December"]
+  "user_preferences": ["lunch expense", "salary deposit"]
 }
 ```
+*Note: Supports relative dates ("yesterday", "X days ago"), auto-income classification ("salary", "bonus", "deposit"), and executing multiple structured actions in a single conversation turn.*
 
 ---
 
@@ -89,18 +91,26 @@ X-User-LLM-Key: <YOUR_CUSTOM_GEMINI_API_KEY>
 
 ### 3. Receipt OCR Upload (`POST /api/v1/documents/upload`)
 
-**Request Payload:** `multipart/form-data` with key `file` containing receipt image (`JPEG, PNG, WEBP`).
+**Request Payload:** `multipart/form-data` with key `file` containing receipt image (`JPEG, PNG, WEBP, PDF`).
 
 **Response Payload:**
 ```json
 {
   "extracted": {
-    "merchant": "Starbucks Coffee",
-    "amount": 450.0,
+    "merchant": "AROMAS CAFE",
+    "amount": 879.0,
     "category": "Food & Dining",
-    "date": "2026-08-14"
+    "date": "2023-09-24"
   },
   "message": "Receipt parsed successfully"
 }
-}
-``````
+```
+
+---
+
+### 4. Telegram Webhook & Integration (`POST /api/v1/telegram/webhook`)
+
+**Endpoint Behavior:**
+- **Authentication Linking:** Parses code matching `/link FP-XXXX`, `/start FP-XXXX`, or raw `FP-XXXX`. Connects Telegram `chat_id` to Supabase user account. Gracefully reports status if account is already linked.
+- **Instant Interactive Feedback:** Triggers Telegram's `sendChatAction` (`typing`) and sends an initial `🤔 Thinking...` status message for text queries.
+- **Receipt OCR & PDF Import:** Processes photo messages (`photo`) and image files (`document` with `image/*` MIME type) using Gemini Vision OCR, as well as multi-transaction PDF bank statements. Automatically inserts extracted transactions into Supabase.```
