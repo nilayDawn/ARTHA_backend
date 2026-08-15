@@ -340,3 +340,4 @@
 2026-08-15 11:51:39,712 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
 2026-08-15 11:51:39,712 | INFO     | uvicorn.error:_serve:104 - Finished server process [54540]
 2026-08-15 11:51:43,383 | INFO     | FinPilotAI:startup_event:43 - Initializing ARTHA AI backend application...
+2026-08-15 11:51:49,232 | INFO     | FinPilotAI:startup_event:45 - Qdrant memory collection check completed.
