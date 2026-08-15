@@ -101,6 +101,35 @@ def create_user_goal_in_db(
         return {"success": False, "error": str(e)}
 
 
+def normalize_transaction_date(date_str: str | None) -> str:
+    """Parses relative terms ('yesterday', 'today', 'X days ago') or formatted dates into YYYY-MM-DD."""
+    today = datetime.date.today()
+    if not date_str or not str(date_str).strip():
+        return today.isoformat()
+    
+    clean_date = str(date_str).strip().lower()
+    if clean_date in ("yesterday", "prev day", "previous day"):
+        return (today - datetime.timedelta(days=1)).isoformat()
+    elif clean_date in ("today", "now"):
+        return today.isoformat()
+    elif clean_date in ("tomorrow","next day","nextd"): 
+        return (today + datetime.timedelta(days=1)).isoformat()
+    
+    import re
+    match = re.search(r"(\d+)\s*days?\s*ago", clean_date)
+    if match:
+        days_ago = int(match.group(1))
+        return (today - datetime.timedelta(days=days_ago)).isoformat()
+        
+    try:
+        dt = datetime.datetime.strptime(clean_date[:10], "%Y-%m-%d")
+        return dt.date().isoformat()
+    except Exception:
+        pass
+        
+    return today.isoformat()
+
+
 def create_user_transaction_in_db(
     user_id: str,
     amount: float,
@@ -110,12 +139,13 @@ def create_user_transaction_in_db(
 ) -> dict[str, Any]:
     """Inserts a new transaction into Supabase."""
     try:
+        tx_date = normalize_transaction_date(date)
         data = {
             "user_id": user_id,
             "amount": float(amount),
             "category": category,
             "merchant": merchant,
-            "date": date or datetime.date.today().isoformat(),
+            "date": tx_date,
             "source": "ai_agent",
         }
         res = supabase_admin.table("transactions").insert(data).execute()

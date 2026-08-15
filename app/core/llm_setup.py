@@ -44,7 +44,7 @@ def validate_gemini_api_key(api_key: str) -> tuple[bool, str]:
 
     try:
         client = genai.Client(api_key=api_key.strip())
-        model_name = settings.MODEL_NAME or "gemini-2.5-flash"
+        model_name = settings.MODEL_NAME or "gemini-3.6-flash"
         response = client.models.generate_content(
             model=model_name,
             contents="Ping test to verify API key.",
@@ -58,7 +58,7 @@ def validate_gemini_api_key(api_key: str) -> tuple[bool, str]:
 
 def generate_with_fallback(prompt, custom_api_key: str | None = None):
     last_error = None
-    model_name = settings.MODEL_NAME or "gemini-2.5-flash"
+    model_name = settings.MODEL_NAME or "gemini-3.6-flash"
     keys_to_try = get_effective_api_keys(custom_api_key)
 
     if not keys_to_try:
@@ -85,13 +85,15 @@ def generate_with_fallback(prompt, custom_api_key: str | None = None):
     )
 
 
-def generate_with_fallback_ocr(image_bytes, mime_type, prompt, custom_api_key: str | None = None):
+def generate_with_fallback_ocr(image_bytes, mime_type, prompt, custom_api_key: str | None = None, schema=None):
     last_error = None
-    model_name = settings.MODEL_NAME or "gemini-2.5-flash"
+    model_name = settings.MODEL_NAME or "gemini-3.6-flash"
     keys_to_try = get_effective_api_keys(custom_api_key)
 
     if not keys_to_try:
         raise RuntimeError("No Gemini API keys available (neither custom nor system keys set).")
+
+    schema_to_use = schema if schema is not None else ExtractedTransaction
 
     for key in keys_to_try:
         try:
@@ -108,7 +110,7 @@ def generate_with_fallback_ocr(image_bytes, mime_type, prompt, custom_api_key: s
                 ],
                 config=genai.types.GenerateContentConfig(
                     response_mime_type="application/json",
-                    response_schema=ExtractedTransaction,
+                    response_schema=schema_to_use,
                     temperature=0.1,
                 ),
             )

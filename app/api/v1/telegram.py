@@ -60,26 +60,61 @@ async def telegram_webhook(request: Request, background_tasks: BackgroundTasks):
     if not chat_id:
         return {"status": "ignored"}
 
-    # Handle /start or /link code
-    if text.startswith("/start") or text.startswith("/link"):
-        parts = text.split()
-        if len(parts) > 1 and parts[1].startswith("FP-"):
-            code = parts[1]
-            user_id = verify_link_code(code)
-            if user_id:
-                supabase_admin.table("users").update({"telegram_chat_id": str(chat_id)}).eq("id", user_id).execute()
-                background_tasks.add_task(send_telegram_message, chat_id, "✅ *Account Linked Successfully!* You can now send expense notes, questions, or upload receipt photos directly here.")
-            else:
-                background_tasks.add_task(send_telegram_message, chat_id, "❌ Invalid or expired code. Please generate a new code from your dashboard.")
+    # Handle code linking (e.g. /start FP-XXXX, /link FP-XXXX, or raw FP-XXXX)
+    import re
+    code_match = re.search(r"\b(FP-\d{4})\b", text, re.IGNORECASE)
+    if code_match:
+        code = code_match.group(1).upper()
+        user_id = verify_link_code(code)
+        if user_id:
+            supabase_admin.table("users").update({"telegram_chat_id": str(chat_id)}).eq("id", user_id).execute()
+            background_tasks.add_task(
+                send_telegram_message,
+                chat_id,
+                "✅ *Account Linked Successfully!* You can now send expense notes, questions, or upload receipt photos directly here."
+            )
             return {"status": "ok"}
-        
-        background_tasks.add_task(send_telegram_message, chat_id, "👋 Welcome to FinPilot AI!\nTo link your account, visit your web dashboard, click 'Connect Telegram', and send `/link FP-XXXX` here.")
+        else:
+            # Check if account is ALREADY linked to this chat_id
+            existing_user = get_user_by_telegram_id(chat_id)
+            if existing_user:
+                background_tasks.add_task(
+                    send_telegram_message,
+                    chat_id,
+                    "✅ *Account Already Connected!* Your Telegram is already linked to your ARTHA account. You can log expenses, ask questions, or upload receipts anytime."
+                )
+            else:
+                background_tasks.add_task(
+                    send_telegram_message,
+                    chat_id,
+                    "❌ Invalid or expired code. Please click 'Connect Telegram' on your web dashboard to generate a fresh code."
+                )
+            return {"status": "ok"}
+
+    if text.strip().startswith("/start") or text.strip().startswith("/link"):
+        existing_user = get_user_by_telegram_id(chat_id)
+        if existing_user:
+            background_tasks.add_task(
+                send_telegram_message,
+                chat_id,
+                "✅ *Welcome back to ARTHA AI!* Your account is connected. Ask any question or send an expense note!"
+            )
+        else:
+            background_tasks.add_task(
+                send_telegram_message,
+                chat_id,
+                "👋 Welcome to ARTHA AI!\nTo link your account, visit your web dashboard, click 'Connect Telegram', and send `/link FP-XXXX` here."
+            )
         return {"status": "ok"}
 
     # Fetch linked user
     user = get_user_by_telegram_id(chat_id)
     if not user:
-        background_tasks.add_task(send_telegram_message, chat_id, "⚠️ Account not linked yet. Please send `/link FP-XXXX` with your dashboard code.")
+        background_tasks.add_task(
+            send_telegram_message,
+            chat_id,
+            "⚠️ Account not linked yet. Please send `/link FP-XXXX` with your dashboard code."
+        )
         return {"status": "ok"}
 
     user_id = user["id"]

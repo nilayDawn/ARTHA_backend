@@ -114,6 +114,11 @@ def memory_save_node(state: AgentState) -> dict[str, Any]:
 def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
     """Node: Generates response using Gemini Flash and executes database mutation actions."""
     from app.agent.tools import format_compact_financial_context
+    import datetime
+
+    today_dt = datetime.date.today()
+    today_str = today_dt.isoformat()
+    yesterday_str = (today_dt - datetime.timedelta(days=1)).isoformat()
 
     compact_db_summary = format_compact_financial_context(state.get("db_context", {}))
     
@@ -122,6 +127,8 @@ def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
     
     Current User Context:
     - User ID: {state['user_id']}
+    - Today's Date: {today_str}
+    - Yesterday's Date: {yesterday_str}
     - Financial Data Summary: {compact_db_summary}
     - Long-Term Memories: {json.dumps(state.get('memories', []))}
     
@@ -130,17 +137,22 @@ def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
     2. Ground your response strictly using the provided financial context.
     3. Keep answers conversational, helpful, concise, and easy to read using markdown formatting.
     4. ACTION EXECUTION:
-       If the user asks you to ADD, CREATE, SET, or LOG a new financial goal, transaction, or budget:
+       If the user asks you to ADD, CREATE, SET, or LOG new financial goals, transactions, or budgets:
        You MUST append a JSON action block at the VERY END of your text inside triple backticks tagged ```json_action ... ```.
+       If the user asks to add MULTIPLE transactions (e.g. an expense AND an income/bonus), output a separate ```json_action ... ``` block for EACH item.
+       ALWAYS include a "date" parameter in YYYY-MM-DD format based on relative timing mentioned (e.g., if user says "yesterday", set date to "{yesterday_str}"; if "today", set date to "{today_str}").
 
        - Goal Creation Format:
        ```json_action
        {{"action": "create_goal", "data": {{"goal_name": "Laptop", "target_amount": 82000.0, "saved_amount": 0.0}}}}
        ```
 
-       - Transaction Creation Format:
+       - Transaction Creation Format (For Income/Bonus, set category to "Income"; set exact date YYYY-MM-DD):
        ```json_action
-       {{"action": "create_transaction", "data": {{"amount": 500.0, "category": "Groceries", "merchant": "Supermarket"}}}}
+       {{"action": "create_transaction", "data": {{"amount": 500.0, "category": "Groceries", "merchant": "Supermarket", "date": "{today_str}"}}}}
+       ```
+       ```json_action
+       {{"action": "create_transaction", "data": {{"amount": 200.0, "category": "Income", "merchant": "Work Bonus", "date": "{yesterday_str}"}}}}
        ```
 
        - Budget Creation Format:
@@ -160,68 +172,79 @@ def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
 
     reply = response or "I was unable to analyze your financial query at this time."
 
-    # Parse and execute structured action blocks (e.g. create_goal, create_transaction, create_budget)
+    # Parse and execute ALL structured action blocks (e.g. multiple transactions, goals, budgets)
     if "```json_action" in reply:
-        try:
-            parts = reply.split("```json_action")
-            action_block = parts[1].split("```")[0].strip()
-            action_data = json.loads(action_block)
-            action_name = action_data.get("action")
-            data = action_data.get("data", {})
-            user_id = state["user_id"]
+        import re
+        pattern = r"```json_action\s*([\s\S]*?)\s*```"
+        matches = re.findall(pattern, reply)
 
-            if action_name == "create_goal":
-                res = create_user_goal_in_db(
-                    user_id=user_id,
-                    goal_name=data.get("goal_name", "New Goal"),
-                    target_amount=data.get("target_amount", 0.0),
-                    saved_amount=data.get("saved_amount", 0.0),
-                    deadline=data.get("deadline"),
-                )
-                if res.get("success"):
-                    remember_user_preference(
-                        user_id,
-                        f"Added new financial goal '{data.get('goal_name')}' with target amount ₹{data.get('target_amount')}",
-                        "goal",
-                    )
+        user_id = state["user_id"]
+        for action_str in matches:
+            try:
+                action_data = json.loads(action_str.strip())
+                actions_list = action_data if isinstance(action_data, list) else [action_data]
 
-            elif action_name == "create_transaction":
-                res = create_user_transaction_in_db(
-                    user_id=user_id,
-                    amount=data.get("amount", 0.0),
-                    category=data.get("category", "General"),
-                    merchant=data.get("merchant", "Unknown"),
-                    date=data.get("date"),
-                )
-                if res.get("success"):
-                    remember_user_preference(
-                        user_id,
-                        f"Added transaction of ₹{data.get('amount')} for {data.get('category')} ({data.get('merchant')})",
-                        "transaction",
-                    )
+                for item in actions_list:
+                    action_name = item.get("action")
+                    data = item.get("data", {})
 
-            elif action_name == "create_budget":
-                res = create_user_budget_in_db(
-                    user_id=user_id,
-                    category=data.get("category", "General"),
-                    monthly_limit=data.get("monthly_limit", 0.0),
-                    month=data.get("month"),
-                )
-                if res.get("success"):
-                    remember_user_preference(
-                        user_id,
-                        f"Set monthly budget of ₹{data.get('monthly_limit')} for {data.get('category')}",
-                        "budget",
-                    )
+                    if action_name == "create_goal":
+                        res = create_user_goal_in_db(
+                            user_id=user_id,
+                            goal_name=data.get("goal_name", "New Goal"),
+                            target_amount=data.get("target_amount", 0.0),
+                            saved_amount=data.get("saved_amount", 0.0),
+                            deadline=data.get("deadline"),
+                        )
+                        if res.get("success"):
+                            remember_user_preference(
+                                user_id,
+                                f"Added financial goal '{data.get('goal_name')}' target ₹{data.get('target_amount')}",
+                                "goal",
+                            )
 
-            # Strip the json_action code block from final user text
-            clean_text = parts[0].strip()
-            remaining = parts[1].split("```", 1)
-            if len(remaining) > 1 and remaining[1].strip():
-                clean_text += "\n\n" + remaining[1].strip()
-            reply = clean_text
-        except Exception as err:
-            print(f"[Action Execution Error]: {err}")
+                    elif action_name == "create_transaction":
+                        cat = str(data.get("category", "General")).strip()
+                        merchant = str(data.get("merchant", "Unknown")).strip()
+                        
+                        # Auto-tag income if merchant or category implies deposit/bonus/income/salary
+                        m_lower = merchant.lower()
+                        c_lower = cat.lower()
+                        if any(kw in m_lower or kw in c_lower for kw in ["bonus", "income", "salary", "deposit", "deposite", "transfer in", "paycheck", "credit"]):
+                            cat = "Income"
+
+                        res = create_user_transaction_in_db(
+                            user_id=user_id,
+                            amount=data.get("amount", 0.0),
+                            category=cat,
+                            merchant=merchant,
+                            date=data.get("date"),
+                        )
+                        if res.get("success"):
+                            remember_user_preference(
+                                user_id,
+                                f"Added transaction ₹{data.get('amount')} ({cat}/{merchant})",
+                                "transaction",
+                            )
+
+                    elif action_name == "create_budget":
+                        res = create_user_budget_in_db(
+                            user_id=user_id,
+                            category=data.get("category", "General"),
+                            monthly_limit=data.get("monthly_limit", 0.0),
+                            month=data.get("month"),
+                        )
+                        if res.get("success"):
+                            remember_user_preference(
+                                user_id,
+                                f"Set budget ₹{data.get('monthly_limit')} for {data.get('category')}",
+                                "budget",
+                            )
+            except Exception as action_err:
+                print(f"[Action Execution Exception]: {action_err}")
+
+        # Strip out all json_action code blocks from the user-facing text
+        reply = re.sub(pattern, "", reply).strip()
 
     return {"messages": [AIMessage(content=reply)]}
 

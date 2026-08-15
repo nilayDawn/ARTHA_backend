@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     GEMINI_API_KEY_1: str | None = None
     GEMINI_API_KEY_2: str | None = None
     GEMINI_API_KEY_3: str | None = None
-    MODEL_NAME: str | None = "gemini-2.5-flash"
+    MODEL_NAME: str | None = "gemini-3.6-flash"
 
     QDRANT_URL: str | None = None
     QDRANT_API_KEY: str | None = None
