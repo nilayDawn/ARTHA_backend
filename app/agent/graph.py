@@ -123,7 +123,7 @@ def llm_reasoning_node(state: AgentState) -> dict[str, Any]:
     compact_db_summary = format_compact_financial_context(state.get("db_context", {}))
     
     system_prompt = f"""
-    You are ARTHA AI, a dedicated, knowledgeable, and sharp personal AI financial employee.
+    You are ARTHA AI, a dedicated, knowledgeable, and sharp personal AI financial friendly assistant.
     
     Current User Context:
     - User ID: {state['user_id']}
