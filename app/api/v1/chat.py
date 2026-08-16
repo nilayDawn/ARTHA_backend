@@ -74,10 +74,16 @@ def chat_with_agent(
         )
 
     except Exception as e:
-        print(f"[Chat Endpoint Error]: {e}")
+        err_str = str(e)
+        print(f"[Chat Endpoint Error]: {err_str}")
+        if any(kw in err_str.lower() for kw in ["quota", "exhausted", "429", "rate limit", "resource_exhausted", "api_key"]):
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail="API_KEY_QUOTA_EXHAUSTED: System default API key quota has been exhausted. Please configure your own ARTHA API Key in settings to continue using AI CFO features."
+            )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while processing your AI query: {e!s}"
+            detail=f"An error occurred while processing your AI query: {err_str}"
         )
     finally:
         if token:
