@@ -39,7 +39,7 @@ async def send_monthly_report_email(
             html_report = generate_report_content(user_name, financial_data)
             send_email_report(
                 to_email=user_email,
-                subject=f"📊 Your FinPilot AI Financial Summary - {financial_data['report_date']}",
+                subject=f"📊 Your ARTHA AI Financial Summary - {financial_data['report_date']}",
                 html_content=html_report
             )
         except Exception as e:

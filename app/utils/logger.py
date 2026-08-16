@@ -6,7 +6,7 @@ def setup_logging():
     Configures application logging for production and local environments.
     Streams directly to sys.stdout so Azure Log Stream and console can capture logs.
     """
-    logger = logging.getLogger("FinPilotAI")
+    logger = logging.getLogger("ArthaAI")
     logger.setLevel(logging.INFO)
 
     # Clear existing handlers to prevent duplicates

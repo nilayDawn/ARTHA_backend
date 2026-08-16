@@ -110,7 +110,7 @@ def generate_report_content(user_name: str, financial_data: dict) -> str:
             </div>
 
             <div style="background-color: #f8fafc; padding: 16px; text-align: center; border-top: 1px solid #e2e8f0;">
-                <p style="color: #94a3b8; font-size: 12px; margin: 0;">Sent via FinPilot AI Assistant • Managing your money smarter</p>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0;">Sent via ARTHA AI Assistant • Managing your money smarter</p>
             </div>
         </div>
     </body>
