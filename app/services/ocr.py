@@ -1,4 +1,3 @@
-
 from app.core.llm_setup import generate_with_fallback_ocr
 from app.schemas.document import BankStatementExtraction, ExtractedTransaction
 
@@ -20,7 +19,7 @@ def extract_transactions_from_document(file_bytes: bytes, mime_type: str) -> lis
         "If it is a statement containing multiple transactions, return EVERY transaction row in the statement."
     )
 
-    # 1. Attempt multi-transaction statement extraction using BankStatementExtraction schema
+    #  Attempt multi-transaction statement extraction 
     try:
         response = generate_with_fallback_ocr(file_bytes, mime_type, prompt, schema=BankStatementExtraction)
         if response:
@@ -30,7 +29,7 @@ def extract_transactions_from_document(file_bytes: bytes, mime_type: str) -> lis
     except Exception as e:
         print(f"[Gemini Multi-Tx Extraction Warning]: {e}")
 
-    # 2. Fallback to single receipt extraction if BankStatementExtraction schema failed
+    #  Fallback to single receipt extraction if BankStatementExtraction schema failed
     try:
         response = generate_with_fallback_ocr(file_bytes, mime_type, prompt, schema=ExtractedTransaction)
         if response:

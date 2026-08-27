@@ -16,11 +16,6 @@ SYSTEM_API_KEYS = [key for key in API_KEYS if key]
 
 
 def get_effective_api_keys(override_key: str | None = None) -> list[str]:
-    """
-    Returns prioritized list of API keys:
-    1. override_key or custom_api_key_ctx (if provided by user)
-    2. SYSTEM_API_KEYS (configured application defaults)
-    """
     user_key = override_key or custom_api_key_ctx.get(None)
     keys_to_try = []
 
@@ -35,10 +30,6 @@ def get_effective_api_keys(override_key: str | None = None) -> list[str]:
 
 
 def validate_gemini_api_key(api_key: str) -> tuple[bool, str]:
-    """
-    Validates a provided Gemini API key by making a lightweight test query.
-    Returns (True, success_msg) or (False, error_msg).
-    """
     if not api_key or not api_key.strip():
         return False, "API key cannot be empty."
 

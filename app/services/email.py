@@ -5,7 +5,6 @@ from app.core.config import settings
 
 
 def generate_report_content(user_name: str, financial_data: dict) -> str:
-    """Compiles raw financial data into a clean, modern inline-styled HTML email."""
     
     transactions = financial_data.get("transactions", [])
     goals = financial_data.get("goals", [])
@@ -17,6 +16,40 @@ def generate_report_content(user_name: str, financial_data: dict) -> str:
     total_expenses = sum(abs(tx["amount"]) for tx in transactions if tx.get("amount", 0) < 0)
     net_savings = total_income - total_expenses
     savings_rate = (net_savings / total_income * 100) if total_income > 0 else 0.0
+
+    # Budgets Section HTML
+    budgets_html = ""
+    if budgets:
+        for b in budgets:
+            limit = b.get("limit_amount") or b.get("allocated_amount", 1)
+            spent = b.get("spent_amount", 0)
+            pct = int((spent / limit) * 100) if limit > 0 else 0
+            bar_width = min(pct, 100)
+            
+           
+            if pct > 100:
+                bar_color = "#dc2626"  
+                status_text = f"<span style='color: #dc2626; font-weight: 600;'>{pct}% (Over Budget)</span>"
+            elif pct >= 80:
+                bar_color = "#f59e0b"  
+                status_text = f"<span style='color: #d97706;'>{pct}%</span>"
+            else:
+                bar_color = "#10b981" 
+                status_text = f"<span style='color: #64748b;'>{pct}%</span>"
+
+            budgets_html += f"""
+            <div style="margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px;">
+                    <span style="font-weight: 600; color: #334155;">{b.get('category', 'Category')}</span>
+                    <span style="color: #64748b; font-size: 13px;">₹{spent:,.2f} / ₹{limit:,.2f} ({status_text})</span>
+                </div>
+                <div style="background-color: #e2e8f0; border-radius: 6px; height: 8px; overflow: hidden;">
+                    <div style="background-color: {bar_color}; height: 100%; width: {bar_width}%; border-radius: 6px;"></div>
+                </div>
+            </div>
+            """
+    else:
+        budgets_html = "<p style='color: #94a3b8; font-size: 14px;'>No active budget categories set for this month.</p>"
 
     # Goals Section HTML
     goals_html = ""
@@ -91,7 +124,10 @@ def generate_report_content(user_name: str, financial_data: dict) -> str:
                     </div>
                 </div>
 
-                <h3 style="color: #1e293b; font-size: 16px; margin-top: 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">🎯 Financial Goals</h3>
+                <h3 style="color: #1e293b; font-size: 16px; margin-top: 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">📊 Category Budgets</h3>
+                {budgets_html}
+
+                <h3 style="color: #1e293b; font-size: 16px; margin-top: 24px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">🎯 Financial Goals</h3>
                 {goals_html}
 
                 <h3 style="color: #1e293b; font-size: 16px; margin-top: 24px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">💳 Recent Transactions</h3>
@@ -118,7 +154,6 @@ def generate_report_content(user_name: str, financial_data: dict) -> str:
     """
 
 def send_email_report(to_email: str, subject: str, html_content: str):
-    """Dispatches the HTML report using Resend REST API."""
     if not settings.RESEND_API_KEY:
         raise ValueError("RESEND_API_KEY is missing in backend environment variables.")
 

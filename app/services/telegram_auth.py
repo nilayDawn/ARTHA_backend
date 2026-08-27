@@ -18,12 +18,10 @@ def _get_fernet_cipher() -> Fernet:
     return Fernet(fernet_key)
 
 def encrypt_code(code: str) -> str:
-    """Encrypts a plaintext link code into a secure ciphertext string."""
     cipher = _get_fernet_cipher()
     return cipher.encrypt(code.encode()).decode()
 
 def decrypt_code(encrypted_code: str) -> str | None:
-    """Decrypts ciphertext string back to plaintext code."""
     try:
         cipher = _get_fernet_cipher()
         return cipher.decrypt(encrypted_code.encode()).decode()
@@ -68,7 +66,7 @@ def get_or_create_link_code(user_id: str, force_refresh: bool = False) -> dict:
     expires_at = now + timedelta(minutes=10)
 
     try:
-        # Store plain code directly to ensure zero key mismatch across environments
+      
         supabase_admin.table("users").update({
             "telegram_link_code_encrypted": new_code,
             "telegram_link_code_expires_at": expires_at.isoformat()
@@ -81,15 +79,11 @@ def get_or_create_link_code(user_id: str, force_refresh: bool = False) -> dict:
     return result
 
 def verify_link_code(code: str) -> str | None:
-    """
-    Verifies incoming code from Telegram webhook against stored codes in Supabase.
-    On success, clears the link code (single use) and returns user_id.
-    """
     target_code = code.strip().upper()
     now = datetime.now(UTC)
 
     try:
-        # Query users with non-null active link codes
+        
         res = (
             supabase_admin.table("users")
             .select("id", "telegram_link_code_encrypted", "telegram_link_code_expires_at")

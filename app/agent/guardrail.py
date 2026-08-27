@@ -35,7 +35,7 @@ def evaluate_security_guardrail(last_message: str) -> tuple[bool, str]:
 
     lower_msg = last_message.lower()
 
-    # 1. Fast keyword check for prompt injection & jailbreaks
+    
     for keyword in UNETHICAL_OR_BLOCKED_KEYWORDS:
         if keyword in lower_msg:
             return (
@@ -44,7 +44,7 @@ def evaluate_security_guardrail(last_message: str) -> tuple[bool, str]:
                 "I cannot process prompt injections or unauthorized system commands.",
             )
 
-    # 2. Fast LLM classifier for domain relevance & safety
+ 
 
     try:
         classification_prompt = f"""

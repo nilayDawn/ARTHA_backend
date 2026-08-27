@@ -12,12 +12,10 @@ VECTOR_SIZE = settings.VECTOR_SIZE or 3072
 
 
 def _get_embedding(text: str) -> list[float]:
-    """Generates a 3072-dimensional vector embedding using Gemini gemini-embedding-001."""
     return generate_with_fallback_embedding(text)
 
 
 def init_memory_collection():
-    """Initializes the Qdrant vector collection and user_id payload index if needed."""
     if not qdrant_client:
         logger.warning("[Qdrant] Qdrant client is not initialized.")
         return
@@ -36,7 +34,7 @@ def init_memory_collection():
             )
             logger.info("[Qdrant] Created collection '%s' successfully.", COLLECTION_NAME)
 
-        # Ensure payload index on user_id exists for filtered search
+        
         try:
             qdrant_client.create_payload_index(
                 collection_name=COLLECTION_NAME,
@@ -51,9 +49,6 @@ def init_memory_collection():
 
 
 def save_user_memory(user_id: str, memory_text: str, category: str = "general") -> bool:
-    """
-    Embeds memory_text and stores it in Qdrant with payload metadata (user_id, text, category).
-    """
     if not qdrant_client:
         return False
 
@@ -85,9 +80,6 @@ def save_user_memory(user_id: str, memory_text: str, category: str = "general") 
 
 
 def search_user_memories(user_id: str, query: str, limit: int = 5) -> list[str]:
-    """
-    Retrieves top relevant memories for a given query filtered strictly by user_id.
-    """
     if not qdrant_client:
         return []
 
@@ -96,7 +88,6 @@ def search_user_memories(user_id: str, query: str, limit: int = 5) -> list[str]:
 
         query_vector = _get_embedding(query)
 
-        # Use query_points for qdrant-client >= 1.8 compatibility
         search_result = qdrant_client.query_points(
             collection_name=COLLECTION_NAME,
             query=query_vector,
@@ -115,7 +106,7 @@ def search_user_memories(user_id: str, query: str, limit: int = 5) -> list[str]:
             hit.payload.get("memory") for hit in search_result.points if hit.payload
         ]
         logger.info("[Qdrant] Retrieved %d memory vectors for UserID: %s", len(memories), user_id)
-        return memories
+        return memories 
     except Exception as e:
         logger.error("[Qdrant Search Memory Error]: %s", e)
         return []

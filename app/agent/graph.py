@@ -253,17 +253,14 @@ def create_financial_agent():
     """Compiles the LangGraph multi-node financial reasoning agent workflow with entry security guardrail."""
     workflow = StateGraph(AgentState)
 
-    # Add Nodes
     workflow.add_node("security_guardrail", security_guardrail_node)
     workflow.add_node("fetch_db_context", db_context_node)
     workflow.add_node("recall_memories", memory_recall_node)
     workflow.add_node("llm_reasoning", llm_reasoning_node)
     workflow.add_node("save_user_preferences", memory_save_node)
 
-    # Set Graph Edges
     workflow.set_entry_point("security_guardrail")
 
-    # Conditional edge: guardrail check -> END or fetch_db_context
     workflow.add_conditional_edges(
         "security_guardrail",
         route_after_guardrail,

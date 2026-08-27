@@ -45,7 +45,6 @@ def sign_up(user_data: UserSignUp):
 
 @router.post("/login", response_model=AuthTokenResponse)
 def sign_in(credentials: UserSignIn):
-    """Authenticate existing user with Email and Password."""
     try:
         response = supabase.auth.sign_in_with_password({
             "email": credentials.email,
@@ -71,7 +70,6 @@ def sign_in(credentials: UserSignIn):
 
 @router.get("/me", response_model=UserProfileResponse)
 def get_user_profile(current_user: dict = Depends(get_current_user)):
-    """Retrieve profile data for the authenticated user from public.users table with caching."""
     user_id = current_user["id"]
     cache_key = f"user_profile:{user_id}"
     cached_profile = get_cached_data(cache_key)
@@ -92,7 +90,6 @@ def get_user_profile(current_user: dict = Depends(get_current_user)):
 
 @router.post("/logout")
 def sign_out(current_user: dict = Depends(get_current_user)):
-    """Sign out the current user."""
     try:
         supabase.auth.sign_out()
         return {"status": "success", "message": "Successfully logged out"}

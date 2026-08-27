@@ -6,11 +6,7 @@ from app.core.database import supabase, supabase_admin
 security = HTTPBearer()
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
-    """
-    Validates Supabase JWT access token passed in Authorization Bearer header.
-    Returns the authenticated user dict if valid. Automatically ensures user profile
-    exists in public.users to satisfy foreign key constraints.
-    """
+    
     token = credentials.credentials
     try:
         # Verify JWT against Supabase Auth engine
@@ -21,7 +17,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(securi
             email = user.email or ""
             user_metadata = user.user_metadata or {}
 
-            # Auto-sync user into public.users if missing to prevent foreign key constraint violations
+       
             try:
                 u_check = supabase_admin.table("users").select("id").eq("id", user_id).execute()
                 if not u_check.data:
