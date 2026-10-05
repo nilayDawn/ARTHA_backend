@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -30,9 +30,17 @@ class Settings(BaseSettings):
     SMTP_USERNAME: str | None = None
     SMTP_PASSWORD: str | None = None
     RESEND_API_KEY: str | None = None
-    class Config:
-        env_file = ".env"
-        extra = "ignore"
+
+    # Redis Cache Configuration
+    REDIS_URL: str | None = None
+
+    # Stripe Payments & Billing
+    STRIPE_SECRET_KEY: str | None = None
+    STRIPE_API_KEY: str | None = None
+    STRIPE_WEBHOOK_SECRET: str | None = None
+    STRIPE_PUBLISHABLE_KEY: str | None = None
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 @lru_cache
 def get_settings():

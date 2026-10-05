@@ -1,0 +1,14 @@
+from typing import Annotated, Any, TypedDict
+
+from langchain_core.messages import BaseMessage
+from langgraph.graph.message import add_messages
+
+
+class AgentState(TypedDict, total=False):
+    messages: Annotated[list[BaseMessage], add_messages]
+    user_id: str
+    custom_api_key: str | None
+    user_preferences: list[str]
+    memories: list[str]
+    db_context: dict[str, Any]
+    is_blocked: bool

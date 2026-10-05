@@ -1,12 +1,13 @@
 from fastapi import HTTPException, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from app.core.database import supabase, supabase_admin
+from app.api.dependencies import get_auth_service
+from app.core.database import supabase
 
 security = HTTPBearer()
 
+
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
-    
     token = credentials.credentials
     try:
         # Verify JWT against Supabase Auth engine
@@ -17,18 +18,9 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(securi
             email = user.email or ""
             user_metadata = user.user_metadata or {}
 
-       
-            try:
-                u_check = supabase_admin.table("users").select("id").eq("id", user_id).execute()
-                if not u_check.data:
-                    full_name = user_metadata.get("full_name") or user_metadata.get("name") or (email.split("@")[0] if email else "User")
-                    supabase_admin.table("users").insert({
-                        "id": user_id,
-                        "email": email,
-                        "full_name": full_name
-                    }).execute()
-            except Exception as sync_err:
-                print(f"[User Sync Notice]: {sync_err}")
+            # Sync user profile into public users table via cached AuthService
+            auth_service = get_auth_service()
+            auth_service.sync_user_if_needed(user_id=user_id, email=email, user_metadata=user_metadata)
 
             return {
                 "id": user_id,

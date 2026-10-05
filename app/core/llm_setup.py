@@ -1,7 +1,7 @@
 from contextvars import ContextVar
 from google import genai
 from app.core.config import settings
-from app.schemas.document import ExtractedTransaction
+from app.modules.documents.schemas import ExtractedTransaction
 
 # Context variable to hold user-supplied custom API key per request context
 custom_api_key_ctx: ContextVar[str | None] = ContextVar("custom_api_key_ctx", default=None)

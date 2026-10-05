@@ -14,18 +14,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.adapters.llm.gemini_adapter import custom_api_key_ctx
+from app.api.dependencies import get_vector_adapter
 from app.api.v1.router import api_router
 from app.core.config import settings
-from app.core.llm_setup import custom_api_key_ctx
-from app.services.memory import init_memory_collection
 from app.utils.logger import logger
 
-app = FastAPI(title=settings.PROJECT_NAME)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Initializing %s backend modular microservices...", settings.PROJECT_NAME)
+    vector_adapter = get_vector_adapter()
+    vector_adapter.initialize_store()
+    logger.info("Vector store initialization check completed.")
+    yield
+
+
+app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
 
 # Enable CORS for Frontend Development
 origins = [
@@ -61,12 +71,20 @@ async def extract_custom_llm_key_middleware(request: Request, call_next):
             custom_api_key_ctx.reset(token)
 
 
+@app.middleware("http")
+async def add_security_headers_middleware(request: Request, call_next):
+    """
+    Injects standard enterprise security headers into all responses.
+    """
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
 
-@app.on_event("startup")
-def startup_event():
-    logger.info("Initializing %s backend application...", settings.PROJECT_NAME)
-    init_memory_collection()
-    logger.info("Qdrant memory collection check completed.")
+
+
 
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
@@ -82,4 +100,3 @@ def read_root():
 def health_check():
     logger.debug("Health check request received.")
     return {"status": "healthy"}
-
