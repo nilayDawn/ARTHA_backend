@@ -6,8 +6,7 @@
   <img src="https://img.shields.io/badge/FastAPI-0.110%2B-009688?style=for-the-badge&logo=fastapi" alt="FastAPI" />
   <img src="https://img.shields.io/badge/AI%20Orchestration-LangGraph-FF6F00?style=for-the-badge" alt="LangGraph" />
   <img src="https://img.shields.io/badge/Cache-Redis%20%2F%20In--Memory-DC382D?style=for-the-badge&logo=redis" alt="Redis" />
-  <img src="https://img.shields.io/badge/Payments-Stripe-635BFF?style=for-the-badge&logo=stripe" alt="Stripe" />
-  <img src="https://img.shields.io/badge/Tests-18%2F18%20Passing-brightgreen?style=for-the-badge&logo=pytest" alt="Pytest" />
+  <img src="https://img.shields.io/badge/Tests-23%2F23%20Passing-brightgreen?style=for-the-badge&logo=pytest" alt="Pytest" />
 </p>
 
 ---
@@ -94,48 +93,31 @@ backend/
 │   │   ├── storage/                # SupabaseStorageAdapter & LocalStorageAdapter
 │   │   ├── email/                  # ResendEmailAdapter & SMTPEmailAdapter
 │   │   └── payment/                # StripeAdapter & MockPaymentAdapter
-│   ├── services/                   # Decoupled Domain Microservices
-│   │   ├── auth_service.py         # User identity & cached profile sync
-│   │   ├── transaction_service.py  # Financial ledger, relative dates, summary caching
-│   │   ├── budget_service.py       # Category thresholds & status monitoring
-│   │   ├── goal_service.py         # Savings target tracking & contributions
-│   │   ├── document_service.py     # Multimodal Vision OCR extraction
-│   │   ├── ai_agent_service.py     # LangGraph workflow, action parser, fast-path guardrail
-│   │   ├── memory_service.py       # Semantic vector memory storage & search
-│   │   ├── payment_service.py      # Stripe checkouts & webhook processing
-│   │   ├── catalogue_service.py    # Categories, merchant keywords, 50/30/20 templates
-│   │   ├── notification_service.py # Transactional HTML report generation
-│   │   └── telegram_service.py     # Bot commands, link codes, interactive feedback
-│   ├── api/v1/                     # REST API Endpoints
-│   │   ├── auth.py                 # Sign-up, Sign-in, Profile
-│   │   ├── finance.py              # Transactions, Budgets, Goals, Summaries
-│   │   ├── chat.py                 # Conversational AI Agent & Key Validation
-│   │   ├── documents.py            # Receipt OCR upload with streaming size caps
-│   │   ├── payments.py             # Stripe checkout, subscription & webhooks
-│   │   ├── catalogue.py            # Standard categories & budget templates
-│   │   ├── telegram.py             # Webhook receiver & FP-XXXX link code generator
-│   │   └── report.py               # Async email report triggers
-│   ├── core/                       # Core Utilities
-│   │   ├── config.py               # Pydantic v2 settings & environment variables
-│   │   ├── security.py             # JWT Bearer authentication dependency
-│   │   ├── rate_limiter.py         # Sliding-window rate limiter backed by CachePort
-│   │   └── telegram_auth.py        # Token encryption & cryptographic verification
-│   └── schemas/                    # Bounded Pydantic v2 Validation Schemas
-├── tests/                          # Automated Pytest Suite (18/18 Passing)
+│   ├── modules/                    # Microservice-Ready Domain Modules
+│   │   ├── auth/                   # User schemas, AuthService, login/signup routes
+│   │   ├── finance/                # Transactions, budgets, goals services & routes
+│   │   ├── documents/              # Multimodal OCR parsing & document routes
+│   │   ├── agent/                  # LangGraph AI CFO Agent & semantic memory
+│   │   ├── telegram/               # Telegram bot service, link codes & webhooks
+│   │   ├── catalogue/              # Spending categories, merchant rules & templates
+│   │   ├── payments/               # Stripe billing & checkout endpoints
+│   │   └── reports/                # HTML email report generator & dispatcher
+│   ├── templates/emails/           # Responsive HTML email templates
+│   │   ├── welcome.html
+│   │   ├── password_reset.html
+│   │   └── monthly_report.html
+│   ├── api/                        # API Dependencies & Route Aggregator
+│   ├── core/                       # Security, Rate Limiter, Lifespan, Config
+│   ├── ports/                      # Abstract Interfaces (DB, LLM, Storage, Cache, Email, Payment)
+│   └── adapters/                   # Pluggable concrete port implementations
+├── tests/                          # Automated Pytest Suite (23/23 Passing)
 │   ├── test_adapters.py            # Memory & Redis cache, repo isolation
 │   ├── test_transaction_service.py # Auto-income, relative dates, mutations
 │   ├── test_ai_agent_service.py    # Action block extraction & fast-path guardrails
 │   ├── test_telegram_service.py    # Link code format & command routing
 │   ├── test_api_endpoints.py       # REST API contracts, auth, payments, catalogue
-│   └── test_security_performance.py# Rate limiting, input bounds, upload caps, headers
-├── docs/                           # In-Depth Engineering Documentation
-│   ├── 01_SYSTEM_ARCHITECTURE.md
-│   ├── 02_TOKEN_AND_CACHE_OPTIMIZATION.md
-│   ├── 03_SECURITY_AND_GUARDRAILS.md
-│   ├── 04_AGENT_WORKFLOW_AND_MEMORY.md
-│   ├── 05_API_DOCUMENTATION.md
-│   ├── 06_DEPLOYMENT.md
-│   └── ENGINEERING_DECISIONS.md
+│   ├── test_security_performance.py# Rate limiting, input bounds, upload caps, headers
+│   └── test_modules_architecture.py# Domain modules instantiation & template rendering
 ├── requirements.txt
 ├── pyproject.toml
 └── README.md
