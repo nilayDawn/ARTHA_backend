@@ -74,7 +74,7 @@ graph TD
 ## 📁 Project Structure
 
 ```text
-backend/
+.
 ├── app/
 │   ├── main.py                     # FastAPI app factory, middleware & router configuration
 │   ├── ports/                      # Abstract Interfaces (Zero Vendor Lock-in)
@@ -135,7 +135,7 @@ backend/
 | **Guardrail Evaluation** | 2 LLM calls per message | Fast-path intent heuristics | **50% Token & Latency Cut** (safe queries pass in <1ms) |
 | **Summary Dashboard** | Uncached DB aggregations | 180s Redis TTL Cache | **Sub-millisecond render** with event-driven invalidation |
 | **DoS Upload Defense** | Unbounded memory read | 15 MB streaming chunk cap | **Zero risk of memory exhaustion crashes** |
-| **Automated Test Suite** | 0 tests | 18 Comprehensive Unit & E2E | **100% Pass Rate** |
+| **Automated Test Suite** | 0 tests | 23 Comprehensive Unit & E2E | **100% Pass Rate (1.90s)** |
 
 ---
 
@@ -156,6 +156,37 @@ backend/
 
 ---
 
+## 📡 REST API Endpoint Specification
+
+The backend exposes a unified, versioned REST API under `/api/v1/`:
+
+| Method | Endpoint | Domain Module | Description | Auth Required | Rate Limit |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/health` | Core | System health check & active adapter status | No | 60 req/min |
+| `POST` | `/api/v1/auth/signup` | `modules/auth` | Register user & initialize account profile | No | 10 req/min |
+| `POST` | `/api/v1/auth/login` | `modules/auth` | Authenticate user & return JWT token | No | 10 req/min |
+| `GET` | `/api/v1/auth/me` | `modules/auth` | Fetch authenticated user profile & preferences | Bearer JWT | 60 req/min |
+| `GET` | `/api/v1/summary` | `modules/finance` | Pre-calculated Redis-cached financial metrics | Bearer JWT | 60 req/min |
+| `GET` | `/api/v1/transactions` | `modules/finance` | List paginated & filtered transactions | Bearer JWT | 60 req/min |
+| `POST` | `/api/v1/transactions` | `modules/finance` | Create transaction & invalidate cached summary | Bearer JWT | 60 req/min |
+| `DELETE` | `/api/v1/transactions/{id}` | `modules/finance` | Delete transaction & invalidate cache | Bearer JWT | 60 req/min |
+| `GET` | `/api/v1/budgets` | `modules/finance` | List spending budgets & alert statuses | Bearer JWT | 60 req/min |
+| `POST` | `/api/v1/budgets` | `modules/finance` | Create or update budget category threshold | Bearer JWT | 60 req/min |
+| `GET` | `/api/v1/goals` | `modules/finance` | List savings goals & progress trajectories | Bearer JWT | 60 req/min |
+| `POST` | `/api/v1/goals` | `modules/finance` | Create new target savings goal | Bearer JWT | 60 req/min |
+| `POST` | `/api/v1/chat` | `modules/agent` | Stateful LangGraph AI CFO copilot message | Bearer JWT | 20 req/min |
+| `POST` | `/api/v1/documents/upload`| `modules/documents`| Multimodal receipt/statement OCR ingestion | Bearer JWT | 10 req/min |
+| `GET` | `/api/v1/documents` | `modules/documents`| List uploaded documents & parsed line items | Bearer JWT | 60 req/min |
+| `POST` | `/api/v1/telegram/link-code`| `modules/telegram`| Generate single-use 10-minute linking code | Bearer JWT | 10 req/min |
+| `POST` | `/api/v1/telegram/webhook` | `modules/telegram`| Telegram bot updates & message parser | Secret Token | Uncapped |
+| `GET` | `/api/v1/catalogue/categories`| `modules/catalogue`| Standardized spending categories & icons | No | 60 req/min |
+| `GET` | `/api/v1/catalogue/templates` | `modules/catalogue`| Standard budget templates (50/30/20, etc.) | No | 60 req/min |
+| `POST` | `/api/v1/payments/create-checkout`| `modules/payments`| Initialize Stripe subscription checkout | Bearer JWT | 10 req/min |
+| `POST` | `/api/v1/payments/webhook` | `modules/payments`| Stripe billing event webhook | Stripe Signature | Uncapped |
+| `POST` | `/api/v1/reports/monthly` | `modules/reports` | Render and send HTML monthly email report | Bearer JWT | 5 req/hour |
+
+---
+
 ## 🚀 Quickstart & Development
 
 ### 1. Prerequisites
@@ -163,7 +194,7 @@ backend/
 - Redis (Optional: runs transparently in-memory if `REDIS_URL` is omitted)
 
 ### 2. Environment Configuration
-Create a `.env` file in the `backend/` directory:
+Create a `.env` file in the repository root:
 ```env
 PROJECT_NAME="ARTHA AI"
 ENVIRONMENT="development"
@@ -192,7 +223,7 @@ RESEND_API_KEY="re_..."
 ### 3. Installation & Run
 ```bash
 # Create virtual environment
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 
 # Install dependencies
@@ -201,6 +232,7 @@ pip install -r requirements.txt
 # Run development server
 uvicorn app.main:app --reload --port 8000
 ```
+Interactive Swagger documentation will be available at `http://localhost:8000/docs`.
 
 ### 4. Running Automated Tests
 ```bash
@@ -208,31 +240,32 @@ pytest -v
 ```
 Output:
 ```text
-tests/test_adapters.py::test_memory_cache_adapter PASSED
-tests/test_adapters.py::test_memory_repository_adapter PASSED
-tests/test_ai_agent_service.py::test_extract_action_blocks PASSED
-tests/test_ai_agent_service.py::test_fast_path_guardrail PASSED
-tests/test_api_endpoints.py::test_health_check PASSED
-tests/test_api_endpoints.py::test_catalogue_categories PASSED
-tests/test_api_endpoints.py::test_payment_checkout PASSED
-tests/test_security_performance.py::test_security_headers_present PASSED
-tests/test_security_performance.py::test_rate_limiter_sliding_window PASSED
-tests/test_security_performance.py::test_upload_size_limit_rejection PASSED
-============================== 18 passed in 1.45s ==============================
+tests/test_adapters.py::test_memory_cache_adapter_lifecycle PASSED       [  4%]
+tests/test_adapters.py::test_memory_cache_user_invalidation PASSED       [  8%]
+tests/test_adapters.py::test_redis_cache_adapter_fallback PASSED         [ 13%]
+tests/test_adapters.py::test_in_memory_repositories PASSED               [ 17%]
+tests/test_adapters.py::test_mock_payment_adapter PASSED                 [ 21%]
+tests/test_ai_agent_service.py::test_guardrail_fast_path PASSED          [ 26%]
+tests/test_api_endpoints.py::test_root_and_health PASSED                 [ 30%]
+tests/test_api_endpoints.py::test_catalogue_endpoints PASSED             [ 34%]
+tests/test_api_endpoints.py::test_payment_mock_checkout PASSED           [ 39%]
+tests/test_modules_architecture.py::test_modules_service_instantiation PASSED [ 43%]
+tests/test_modules_architecture.py::test_modules_schemas_validation PASSED [ 47%]
+tests/test_modules_architecture.py::test_email_templates_rendering PASSED [ 52%]
+tests/test_modules_architecture.py::test_modular_catalogue_endpoints PASSED [ 56%]
+tests/test_modules_architecture.py::test_modular_payments_endpoints PASSED [ 60%]
+tests/test_security_performance.py::test_security_headers_present PASSED [ 65%]
+tests/test_security_performance.py::test_input_validation_negative_amount_rejected PASSED [ 69%]
+tests/test_security_performance.py::test_rate_limiter_triggers_429 PASSED [ 73%]
+tests/test_security_performance.py::test_document_upload_max_size_enforced PASSED [ 78%]
+tests/test_security_performance.py::test_summary_caching PASSED          [ 82%]
+tests/test_telegram_service.py::test_telegram_link_code_direct_lookup PASSED [ 86%]
+tests/test_transaction_service.py::test_transaction_service_date_normalization PASSED [ 91%]
+tests/test_transaction_service.py::test_transaction_service_auto_tag_income PASSED [ 95%]
+tests/test_transaction_service.py::test_transaction_service_summary_calculation PASSED [100%]
+
+======================== 23 passed in 1.90s ========================
 ```
-
----
-
-## 📚 Technical Documentation Index
-
-For technical deep dives and architectural blueprints, explore the [`docs/`](docs/) directory:
-- 🏛️ **[01. System Architecture & High-Level Blueprint](docs/01_SYSTEM_ARCHITECTURE.md)**: Asynchronous FastAPI gateway, Supabase database schemas, and component interactions.
-- ⚡ **[02. Token & Cache Optimization Strategy](docs/02_TOKEN_AND_CACHE_OPTIMIZATION.md)**: High-density prompt serialization (80% cost cut) and Redis/In-memory caching.
-- 🛡️ **[03. AI Security Guardrails & Token Cryptography](docs/03_SECURITY_AND_GUARDRAILS.md)**: Multi-layer guardrails against prompt injection and Fernet AES symmetric token encryption.
-- 🧠 **[04. LangGraph Agent Workflow & Vector Memory](docs/04_AGENT_WORKFLOW_AND_MEMORY.md)**: State graph machine, Qdrant semantic vector memory, and structured action block engine.
-- 📡 **[05. REST API Specification & Endpoint Contracts](docs/05_API_DOCUMENTATION.md)**: OpenAPI contracts, request/response JSON schemas, rate limits, and auth requirements.
-- 🚀 **[06. Production Deployment & Incident Postmortems](docs/06_DEPLOYMENT.md)**: Azure App Service deployment guide, Oryx build optimizations, and production runbook.
-- 📑 **[Architectural Decision Records (ADRs)](docs/ENGINEERING_DECISIONS.md)**: Rationale for Hexagonal Architecture, Redis caching, and fast-path heuristics.
 
 ---
 
