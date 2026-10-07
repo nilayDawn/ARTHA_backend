@@ -160,11 +160,17 @@ class TransactionService:
         total_income = 0.0
         total_expenses = 0.0
         category_spending: dict[str, float] = {}
+        daily_trend: dict[str, float] = {}
+        active_months_set: set[str] = set()
 
         for tx in txs:
             amt = float(tx.get("amount") or 0.0)
             cat = str(tx.get("category") or "").strip()
             tx_type = str(tx.get("type") or "").strip().lower()
+            d_raw = str(tx.get("date") or "").strip()
+
+            if len(d_raw) >= 7 and d_raw[:4].isdigit():
+                active_months_set.add(d_raw[:7])
 
             if cat.lower() == "income" or tx_type == "income":
                 total_income += amt
@@ -173,16 +179,29 @@ class TransactionService:
                 c_key = cat if cat else "Other"
                 category_spending[c_key] = category_spending.get(c_key, 0.0) + amt
 
+                day_key = d_raw[:10] if len(d_raw) >= 10 else d_raw
+                if day_key:
+                    daily_trend[day_key] = round(daily_trend.get(day_key, 0.0) + amt, 2)
+
+        sorted_daily_trend = dict(sorted(daily_trend.items()))
+        sorted_active_months = sorted(list(active_months_set), reverse=True)
+
         savings = max(0.0, total_income - total_expenses)
         savings_rate = round((savings / total_income) * 100, 1) if total_income > 0 else 0.0
 
         result = {
             "total_income": total_income,
             "total_expenses": total_expenses,
+            "total_expense": total_expenses,
             "savings": savings,
+            "net_savings": savings,
             "savings_rate": savings_rate,
             "count": len(txs),
+            "transaction_count": len(txs),
             "category_spending": category_spending,
+            "category_breakdown": category_spending,
+            "daily_trend": sorted_daily_trend,
+            "active_months": sorted_active_months,
         }
         self.cache.set(cache_key, result, ttl_seconds=180)
         return result
