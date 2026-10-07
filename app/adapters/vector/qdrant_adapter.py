@@ -29,7 +29,7 @@ class QdrantVectorAdapter(VectorStorePort):
         self._initialized = False
 
         if self.url and self.api_key:
-            self.client = QdrantClient(url=self.url, api_key=self.api_key)
+            self.client = QdrantClient(url=self.url, api_key=self.api_key, timeout=2.0, check_compatibility=False)
 
     def initialize_store(self) -> None:
         if not self.client:

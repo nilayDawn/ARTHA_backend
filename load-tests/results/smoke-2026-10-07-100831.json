@@ -1,0 +1,594 @@
+{
+  "metadata": {
+    "scenario": "smoke",
+    "timestamp": "2026-10-07T04:38:31.956Z",
+    "baseUrl": "http://localhost:8000",
+    "hasAuth": true
+  },
+  "setup_data": {
+    "token": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjFmZGJmZjJkLTIzOWEtNGZjMS1iNmFmLTA4NmU3MWM2MTZkYyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2R4cGRoaGVhZnF5aWFheW95c2h2LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5YmU2MzEyZS0wMTc5LTRhZTktOTMxZi03NWIwZmNlZWYyYWYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzkxMzQ5OTExLCJpYXQiOjE3OTEzNDYzMTEsImVtYWlsIjoibG9hZHRlc3RfdXNlckBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJsb2FkdGVzdF91c2VyQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZ1bGxfbmFtZSI6IkxvYWQgVGVzdCBVc2VyIiwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI5YmU2MzEyZS0wMTc5LTRhZTktOTMxZi03NWIwZmNlZWYyYWYifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc5MTM0NjMxMX1dLCJzZXNzaW9uX2lkIjoiOGMwMGU0NWUtNTIxYS00ZTM3LTk3ODMtODM3YjJlNzIxMWVmIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.7fCZdHAuFF3nqf8zQ6BVtcL_hs4GDvTudqcHpchbquQCm58fFHcGWqpl8Lt5FRKWldBgJC_tGNGismMkofa8zg"
+  },
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [
+      {
+        "path": "::Health & Root Endpoints",
+        "id": "158060521f2822f6e737af8db9e0547a",
+        "groups": [],
+        "checks": [
+            {
+              "id": "34a57d8260a999db2d372fbea25b059e",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /health status is 200",
+              "path": "::Health & Root Endpoints::GET /health status is 200"
+            },
+            {
+              "name": "GET /health valid JSON body",
+              "path": "::Health & Root Endpoints::GET /health valid JSON body",
+              "id": "27acab4b7dfd138c9056fec91d3e7694",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET /health has required fields",
+              "path": "::Health & Root Endpoints::GET /health has required fields",
+              "id": "87bdcf8995dcc361b5c91dafdcea1701",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET / status is 200",
+              "path": "::Health & Root Endpoints::GET / status is 200",
+              "id": "f8eb36c60ecb94ecb88a000e6e208937",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET / valid JSON body",
+              "path": "::Health & Root Endpoints::GET / valid JSON body",
+              "id": "9526a1261dcd7fa77cca4c2101eeb331",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "path": "::Health & Root Endpoints::GET / has required fields",
+              "id": "1bf2423e1dcf165eb1cc3640cf6471c4",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET / has required fields"
+            }
+          ],
+        "name": "Health & Root Endpoints"
+      },
+      {
+        "name": "Catalogue Endpoints",
+        "path": "::Catalogue Endpoints",
+        "id": "412fccbde9f1662876d02d8b0560a36a",
+        "groups": [],
+        "checks": [
+            {
+              "name": "GET /catalogue/categories status is 200",
+              "path": "::Catalogue Endpoints::GET /catalogue/categories status is 200",
+              "id": "63ebef87728490b1916c1e7902707b00",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET /catalogue/categories valid JSON body",
+              "path": "::Catalogue Endpoints::GET /catalogue/categories valid JSON body",
+              "id": "42b010c2d246d483df8de7ac4acd30b3",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET /catalogue/categories has required fields",
+              "path": "::Catalogue Endpoints::GET /catalogue/categories has required fields",
+              "id": "5c31c48213123997a1848c40b76a762c",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET /catalogue/merchants status is 200",
+              "path": "::Catalogue Endpoints::GET /catalogue/merchants status is 200",
+              "id": "f7536bd65a7a1dcda0d31c37266cd874",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "fails": 0,
+              "name": "GET /catalogue/merchants valid JSON body",
+              "path": "::Catalogue Endpoints::GET /catalogue/merchants valid JSON body",
+              "id": "6b33e18802883dbb60fb6f5c65784da3",
+              "passes": 10
+            },
+            {
+              "id": "8d4ef80c5727f1c282c32de5cca3aa77",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /catalogue/merchants has required fields",
+              "path": "::Catalogue Endpoints::GET /catalogue/merchants has required fields"
+            },
+            {
+              "id": "61439aa8dde28d3ee82ba8eb051b6fd0",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /catalogue/budget-templates status is 200",
+              "path": "::Catalogue Endpoints::GET /catalogue/budget-templates status is 200"
+            },
+            {
+              "path": "::Catalogue Endpoints::GET /catalogue/budget-templates valid JSON body",
+              "id": "443611c85094e554cf1b00d72beae0f4",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /catalogue/budget-templates valid JSON body"
+            },
+            {
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /catalogue/budget-templates has required fields",
+              "path": "::Catalogue Endpoints::GET /catalogue/budget-templates has required fields",
+              "id": "040d74c0b19e0dc9029c5918dd388efa"
+            }
+          ]
+      },
+      {
+        "name": "Authenticated User & Ledger Endpoints",
+        "path": "::Authenticated User & Ledger Endpoints",
+        "id": "9944ac4f5c4bc191897d64b4829a1d61",
+        "groups": [],
+        "checks": [
+            {
+              "id": "22e46dc3ff263eddad43c259df021c94",
+              "passes": 9,
+              "fails": 1,
+              "name": "GET /auth/me status is 200",
+              "path": "::Authenticated User & Ledger Endpoints::GET /auth/me status is 200"
+            },
+            {
+              "fails": 0,
+              "name": "GET /auth/me valid JSON body",
+              "path": "::Authenticated User & Ledger Endpoints::GET /auth/me valid JSON body",
+              "id": "9436e80ae75587cd769666dc6a600894",
+              "passes": 10
+            },
+            {
+              "name": "GET /auth/me has required fields",
+              "path": "::Authenticated User & Ledger Endpoints::GET /auth/me has required fields",
+              "id": "0b19345a3dd4d2abd18a040b1ed6c486",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET /transactions status is 200",
+              "path": "::Authenticated User & Ledger Endpoints::GET /transactions status is 200",
+              "id": "25c8e5bf4d237af047b999f29bd4be49",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "path": "::Authenticated User & Ledger Endpoints::GET /transactions valid JSON body",
+              "id": "9c872c1db1fbc186442c3b3e03d38952",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /transactions valid JSON body"
+            },
+            {
+              "fails": 0,
+              "name": "GET /transactions has required fields",
+              "path": "::Authenticated User & Ledger Endpoints::GET /transactions has required fields",
+              "id": "d4a39ad8c579555f414dd6a4e3f995fd",
+              "passes": 10
+            },
+            {
+              "path": "::Authenticated User & Ledger Endpoints::GET /summary status is 200",
+              "id": "30016d0ecf02c53098c2df0ecbddde71",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /summary status is 200"
+            },
+            {
+              "name": "GET /summary valid JSON body",
+              "path": "::Authenticated User & Ledger Endpoints::GET /summary valid JSON body",
+              "id": "a03d8b547751ce7368dd716d95b8a4c5",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET /summary has required fields",
+              "path": "::Authenticated User & Ledger Endpoints::GET /summary has required fields",
+              "id": "0f931ee5ab1ea25933a6595553e828a8",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "name": "GET /budgets status is 200",
+              "path": "::Authenticated User & Ledger Endpoints::GET /budgets status is 200",
+              "id": "e6f60059f0c3fa9ea6a273d5d533bcec",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "id": "f48aebed4e1b41bb83b5c3fb17cf0a42",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /budgets valid JSON body",
+              "path": "::Authenticated User & Ledger Endpoints::GET /budgets valid JSON body"
+            },
+            {
+              "name": "GET /budgets has required fields",
+              "path": "::Authenticated User & Ledger Endpoints::GET /budgets has required fields",
+              "id": "f406eadf825b7ce3e2f3bf6465614152",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "fails": 0,
+              "name": "GET /goals status is 200",
+              "path": "::Authenticated User & Ledger Endpoints::GET /goals status is 200",
+              "id": "2b6ac953d9bbfd269e3f9eebd6f96177",
+              "passes": 10
+            },
+            {
+              "id": "b08ac11c15b5abb0311e62ef50c2f813",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /goals valid JSON body",
+              "path": "::Authenticated User & Ledger Endpoints::GET /goals valid JSON body"
+            },
+            {
+              "id": "e96ff183cd90bda6b84e15d603d62493",
+              "passes": 10,
+              "fails": 0,
+              "name": "GET /goals has required fields",
+              "path": "::Authenticated User & Ledger Endpoints::GET /goals has required fields"
+            },
+            {
+              "passes": 10,
+              "fails": 0,
+              "name": "POST /transactions status is 201",
+              "path": "::Authenticated User & Ledger Endpoints::POST /transactions status is 201",
+              "id": "c6d13ddf7c0fa33e9d5d885ff6a5c52b"
+            },
+            {
+              "name": "POST /transactions valid JSON body",
+              "path": "::Authenticated User & Ledger Endpoints::POST /transactions valid JSON body",
+              "id": "66636186d2311f7816d879b4088c3a96",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "id": "2ea63a7de886ebbd61ef63891e450e37",
+              "passes": 10,
+              "fails": 0,
+              "name": "POST /transactions has required fields",
+              "path": "::Authenticated User & Ledger Endpoints::POST /transactions has required fields"
+            },
+            {
+              "name": "DELETE /transactions/:id status is 200",
+              "path": "::Authenticated User & Ledger Endpoints::DELETE /transactions/:id status is 200",
+              "id": "63b541f42a69812a3b571860058f2696",
+              "passes": 10,
+              "fails": 0
+            },
+            {
+              "fails": 0,
+              "name": "DELETE /transactions/:id valid JSON body",
+              "path": "::Authenticated User & Ledger Endpoints::DELETE /transactions/:id valid JSON body",
+              "id": "1e758580358487156e2c3192bac88acc",
+              "passes": 10
+            },
+            {
+              "passes": 10,
+              "fails": 0,
+              "name": "DELETE /transactions/:id has required fields",
+              "path": "::Authenticated User & Ledger Endpoints::DELETE /transactions/:id has required fields",
+              "id": "2749fe183f7a940fd05c24c0d8f49408"
+            }
+          ]
+      }
+    ],
+    "checks": []
+  },
+  "options": {
+    "noColor": false,
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": ""
+  },
+  "state": {
+    "isStdOutTTY": true,
+    "isStdErrTTY": true,
+    "testRunDurationMs": 34217.333884
+  },
+  "metrics": {
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 66657,
+        "rate": 1948.0477417081513
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 1391.6274299999989,
+        "avg": 480.61472928571436,
+        "min": 0.96354,
+        "med": 479.111549,
+        "max": 2844.240712,
+        "p(90)": 1034.8932118000002
+      }
+    },
+    "http_req_blocked": {
+      "values": {
+        "med": 0.005561,
+        "max": 0.612345,
+        "p(90)": 0.008923,
+        "p(95)": 0.016922799999999964,
+        "avg": 0.016487516666666667,
+        "min": 0.000737
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 0.6669492999999999,
+        "avg": 0.2898515666666668,
+        "min": 0.027382,
+        "med": 0.2453035,
+        "max": 2.437535,
+        "p(90)": 0.49994130000000014
+      }
+    },
+    "app_errors": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.008333333333333333,
+        "passes": 1,
+        "fails": 119
+      }
+    },
+    "group_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 9.3617645,
+        "max": 7562.036498,
+        "p(90)": 6105.751125200001,
+        "p(95)": 7198.7914686999975,
+        "avg": 1923.4076571666665,
+        "min": 2.496685
+      }
+    },
+    "catalogue_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 3.7813779000000003,
+        "p(95)": 3.9473483999999996,
+        "avg": 2.301935066666667,
+        "min": 0.980481,
+        "med": 1.9160335,
+        "max": 4.22843
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0
+      }
+    },
+    "success_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "fails": 1,
+        "rate": 0.9916666666666667,
+        "passes": 119
+      }
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "passes": 359,
+        "fails": 1,
+        "rate": 0.9972222222222222
+      },
+      "thresholds": {
+        "rate>0.99": {
+          "ok": true
+        }
+      }
+    },
+    "checks_failed": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 1,
+        "rate": 0.029224953743915136
+      }
+    },
+    "summary_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 662.6033229,
+        "min": 474.102238,
+        "med": 600.663267,
+        "max": 1023.129745,
+        "p(90)": 844.2883294,
+        "p(95)": 933.7090371999998
+      }
+    },
+    "iteration_duration": {
+      "contains": "time",
+      "values": {
+        "max": 8596.187074,
+        "p(90)": 8596.1344051,
+        "p(95)": 8596.16073955,
+        "avg": 6771.038062199999,
+        "min": 4819.434017,
+        "med": 6712.0723204999995
+      },
+      "type": "trend"
+    },
+    "http_reqs": {
+      "contains": "default",
+      "values": {
+        "rate": 3.506994449269816,
+        "count": 120
+      },
+      "type": "counter"
+    },
+    "vus": {
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 2
+      },
+      "type": "gauge",
+      "contains": "default"
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.025896533333333326,
+        "min": 0.002477,
+        "med": 0.019334499999999998,
+        "max": 0.588465,
+        "p(90)": 0.0356785,
+        "p(95)": 0.041918399999999995
+      }
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 10,
+        "rate": 0.2922495374391514
+      }
+    },
+    "transaction_duration": {
+      "contains": "time",
+      "values": {
+        "med": 646.9486035,
+        "max": 1369.979104,
+        "p(90)": 861.0733263999998,
+        "p(95)": 1115.5262151999993,
+        "avg": 649.214232,
+        "min": 222.441621
+      },
+      "type": "trend"
+    },
+    "vus_max": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 2,
+        "min": 2,
+        "max": 2
+      }
+    },
+    "health_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 7.365970500000001,
+        "min": 1.318482,
+        "med": 3.4246455,
+        "max": 24.889853,
+        "p(90)": 24.789261800000002,
+        "p(95)": 24.8395574
+      }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 2843.773505,
+        "p(90)": 1028.7398569000004,
+        "p(95)": 1380.6610526499992,
+        "avg": 480.25995255,
+        "min": 0.825196,
+        "med": 477.3394435
+      }
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0.96354,
+        "med": 477.52142100000003,
+        "max": 2844.240712,
+        "p(90)": 1029.0114784000004,
+        "p(95)": 1380.8032669999993,
+        "avg": 480.57570065000004
+      },
+      "thresholds": {
+        "p(95)<800": {
+          "ok": false
+        },
+        "p(99)<1500": {
+          "ok": false
+        }
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.008333333333333333,
+        "passes": 1,
+        "fails": 119
+      },
+      "thresholds": {
+        "rate<0.01": {
+          "ok": true
+        }
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 89839,
+        "rate": 2625.540619399592
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0,
+        "med": 0,
+        "max": 0.168633,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.0035675333333333335
+      }
+    }
+  }
+}

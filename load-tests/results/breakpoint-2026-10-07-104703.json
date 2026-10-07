@@ -1,0 +1,573 @@
+{
+  "metadata": {
+    "scenario": "breakpoint",
+    "timestamp": "2026-10-07T05:17:03.280Z",
+    "baseUrl": "http://localhost:8000",
+    "hasAuth": true
+  },
+  "state": {
+    "testRunDurationMs": 260737.122051,
+    "isStdOutTTY": true,
+    "isStdErrTTY": true
+  },
+  "metrics": {
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 12919,
+        "rate": 49.547988788006386
+      }
+    },
+    "vus_max": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "min": 75,
+        "max": 75,
+        "value": 75
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0.00517,
+        "max": 1.291556,
+        "p(90)": 0.010309200000000001,
+        "p(95)": 0.012506,
+        "avg": 0.008334307299326578,
+        "min": 0.001063
+      }
+    },
+    "iterations": {
+      "contains": "default",
+      "values": {
+        "count": 12309,
+        "rate": 47.20846768260474
+      },
+      "type": "counter"
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 12682430,
+        "rate": 48640.67647996562
+      }
+    },
+    "success_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.189952782723121,
+        "passes": 2454,
+        "fails": 10465
+      }
+    },
+    "catalogue_duration": {
+      "values": {
+        "max": 450.122485,
+        "p(90)": 14.9947664,
+        "p(95)": 72.49412374999991,
+        "avg": 13.304156893709356,
+        "min": 0.685645,
+        "med": 3.148397
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "checks_failed": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 10465,
+        "rate": 40.136210439390574
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 797.6060851867745,
+        "min": 203.413594,
+        "med": 792.439957,
+        "max": 2056.616405,
+        "p(90)": 1117.772169,
+        "p(95)": 1226.9555143999999
+      }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 601.3514618,
+        "p(95)": 707.8439114999999,
+        "avg": 330.49503396872836,
+        "min": 0.464707,
+        "med": 323.810617,
+        "max": 1684.904237
+      }
+    },
+    "transaction_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 10.070381,
+        "med": 365.472832,
+        "max": 1504.86818,
+        "p(90)": 629.9210342,
+        "p(95)": 733.7761388999996,
+        "avg": 405.0661790936161
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "app_errors": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "fails": 2454,
+        "rate": 0.810047217276879,
+        "passes": 10465
+      }
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.729984260907707,
+        "passes": 28292,
+        "fails": 10465
+      },
+      "thresholds": {
+        "rate>0.85": {
+          "ok": false
+        }
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.810047217276879,
+        "passes": 10465,
+        "fails": 2454
+      },
+      "thresholds": {
+        "rate<0.15": {
+          "ok": false
+        }
+      }
+    },
+    "group_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 608.6415949999999,
+        "p(95)": 716.2831333999999,
+        "avg": 347.574768517183,
+        "min": 0.77254,
+        "med": 334.835512,
+        "max": 1685.548426
+      }
+    },
+    "health_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 211.444624,
+        "p(90)": 12.863614300000002,
+        "p(95)": 55.78560254999998,
+        "avg": 9.365621914754088,
+        "min": 0.537122,
+        "med": 2.23046
+      }
+    },
+    "summary_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 25.37537,
+        "med": 365.544993,
+        "max": 1685.210549,
+        "p(90)": 630.4872056,
+        "p(95)": 730.5411387999997,
+        "avg": 404.70430851648024
+      }
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 7052436,
+        "rate": 27048.070272941608
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.0012147623655081666,
+        "min": 0,
+        "med": 0,
+        "max": 0.496384
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 1.4117559999999967,
+        "avg": 0.4230148709652441,
+        "min": 0.013469,
+        "med": 0.250725,
+        "max": 15.643625,
+        "p(90)": 0.9448186000000001
+      }
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 708.1884799999993,
+        "avg": 330.94005208375285,
+        "min": 0.537122,
+        "med": 324.517852,
+        "max": 1685.210549,
+        "p(90)": 601.8117296
+      },
+      "thresholds": {
+        "p(95)<4000": {
+          "ok": true
+        }
+      }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 0.666681,
+        "p(90)": 0.03789200000000002,
+        "p(95)": 0.046082,
+        "avg": 0.02200324405913774,
+        "min": 0.003562,
+        "med": 0.017703
+      }
+    },
+    "vus": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 75
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 12.325140456397746,
+        "min": 0.537122,
+        "med": 2.8778805,
+        "max": 450.122485,
+        "p(90)": 14.329179700000081,
+        "p(95)": 67.56087724999999
+      }
+    }
+  },
+  "setup_data": {
+    "token": "eyJhbGciOiJFUzI1NiIsImtpZCI6IjFmZGJmZjJkLTIzOWEtNGZjMS1iNmFmLTA4NmU3MWM2MTZkYyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2R4cGRoaGVhZnF5aWFheW95c2h2LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5YmU2MzEyZS0wMTc5LTRhZTktOTMxZi03NWIwZmNlZWYyYWYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzkxMzQ5OTExLCJpYXQiOjE3OTEzNDYzMTEsImVtYWlsIjoibG9hZHRlc3RfdXNlckBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJsb2FkdGVzdF91c2VyQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZ1bGxfbmFtZSI6IkxvYWQgVGVzdCBVc2VyIiwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI5YmU2MzEyZS0wMTc5LTRhZTktOTMxZi03NWIwZmNlZWYyYWYifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc5MTM0NjMxMX1dLCJzZXNzaW9uX2lkIjoiOGMwMGU0NWUtNTIxYS00ZTM3LTk3ODMtODM3YjJlNzIxMWVmIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.7fCZdHAuFF3nqf8zQ6BVtcL_hs4GDvTudqcHpchbquQCm58fFHcGWqpl8Lt5FRKWldBgJC_tGNGismMkofa8zg"
+  },
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [
+      {
+        "groups": [],
+        "checks": [
+            {
+              "path": "::Financial Summary::GET /summary status is 200",
+              "id": "998da7ed329fa432e77ecb4da47b6649",
+              "passes": 0,
+              "fails": 3125,
+              "name": "GET /summary status is 200"
+            },
+            {
+              "fails": 0,
+              "name": "GET /summary valid JSON body",
+              "path": "::Financial Summary::GET /summary valid JSON body",
+              "id": "2414e009c269c5cda062577f4015c338",
+              "passes": 3125
+            },
+            {
+              "name": "GET /summary has required fields",
+              "path": "::Financial Summary::GET /summary has required fields",
+              "id": "701b7e463787d90580273e0763503f77",
+              "passes": 3125,
+              "fails": 0
+            }
+          ],
+        "name": "Financial Summary",
+        "path": "::Financial Summary",
+        "id": "a074374c36efc6befdf3887742ea0e49"
+      },
+      {
+        "name": "Health & Profile",
+        "path": "::Health & Profile",
+        "id": "e4ccd6675a868298e1ab820fe7b6028d",
+        "groups": [],
+        "checks": [
+            {
+              "fails": 0,
+              "name": "GET /health status is 200",
+              "path": "::Health & Profile::GET /health status is 200",
+              "id": "ca39bae246f06efa17b9de9b2f45f096",
+              "passes": 610
+            },
+            {
+              "name": "GET /health valid JSON body",
+              "path": "::Health & Profile::GET /health valid JSON body",
+              "id": "afef58a6d80672e0f480eca3a91627c8",
+              "passes": 610,
+              "fails": 0
+            },
+            {
+              "path": "::Health & Profile::GET /health has required fields",
+              "id": "2a19feedbbc29e6c006a68310320dd1b",
+              "passes": 610,
+              "fails": 0,
+              "name": "GET /health has required fields"
+            },
+            {
+              "fails": 610,
+              "name": "GET /auth/me status is 200",
+              "path": "::Health & Profile::GET /auth/me status is 200",
+              "id": "38b350a9b2215bb986340d0546aeb18e",
+              "passes": 0
+            },
+            {
+              "id": "c22e96f94868658bab15965ec8783232",
+              "passes": 610,
+              "fails": 0,
+              "name": "GET /auth/me valid JSON body",
+              "path": "::Health & Profile::GET /auth/me valid JSON body"
+            },
+            {
+              "name": "GET /auth/me has required fields",
+              "path": "::Health & Profile::GET /auth/me has required fields",
+              "id": "de281171aa31ffeb9857a5d3439b4849",
+              "passes": 610,
+              "fails": 0
+            }
+          ]
+      },
+      {
+        "id": "2dbea23aa278f2a1835a253f817255e0",
+        "groups": [],
+        "checks": [
+            {
+              "name": "GET /transactions status is 200",
+              "path": "::Read Transactions::GET /transactions status is 200",
+              "id": "e30bf5a42243f07eedb6977ee9853392",
+              "passes": 0,
+              "fails": 4903
+            },
+            {
+              "fails": 0,
+              "name": "GET /transactions valid JSON body",
+              "path": "::Read Transactions::GET /transactions valid JSON body",
+              "id": "bd45df0e3b2d34d87570f63f5763f632",
+              "passes": 4903
+            },
+            {
+              "passes": 4903,
+              "fails": 0,
+              "name": "GET /transactions has required fields",
+              "path": "::Read Transactions::GET /transactions has required fields",
+              "id": "b2dc371cff0a81e298c1f56ec5a2f0b8"
+            }
+          ],
+        "name": "Read Transactions",
+        "path": "::Read Transactions"
+      },
+      {
+        "path": "::Create & Cleanup Transaction",
+        "id": "a9e83a95c21529dac7fef1bc2ce53be3",
+        "groups": [],
+        "checks": [
+            {
+              "path": "::Create & Cleanup Transaction::POST /transactions status is 201",
+              "id": "0674a89dc4f5807e29c561adcd5729e1",
+              "passes": 0,
+              "fails": 1199,
+              "name": "POST /transactions status is 201"
+            },
+            {
+              "fails": 0,
+              "name": "POST /transactions valid JSON body",
+              "path": "::Create & Cleanup Transaction::POST /transactions valid JSON body",
+              "id": "331d4e37dbeb1afa8f3bfc3b2a91afb1",
+              "passes": 1199
+            },
+            {
+              "name": "POST /transactions has required fields",
+              "path": "::Create & Cleanup Transaction::POST /transactions has required fields",
+              "id": "322a8c198bf0fee130669f254ba63e48",
+              "passes": 1199,
+              "fails": 0
+            }
+          ],
+        "name": "Create & Cleanup Transaction"
+      },
+      {
+        "name": "Catalog Lookups",
+        "path": "::Catalog Lookups",
+        "id": "c976ebab0936d3a71162acd211a4d0ee",
+        "groups": [],
+        "checks": [
+            {
+              "passes": 615,
+              "fails": 0,
+              "name": "GET /api/v1/catalogue/categories status is 200",
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/categories status is 200",
+              "id": "c56d64c4b80746496234efae3962a297"
+            },
+            {
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/categories valid JSON body",
+              "id": "0d21d505da051d90538a0ac2fe655fb1",
+              "passes": 615,
+              "fails": 0,
+              "name": "GET /api/v1/catalogue/categories valid JSON body"
+            },
+            {
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/categories has required fields",
+              "id": "649b278d5899e6bc14970e58980f3b83",
+              "passes": 615,
+              "fails": 0,
+              "name": "GET /api/v1/catalogue/categories has required fields"
+            },
+            {
+              "passes": 608,
+              "fails": 0,
+              "name": "GET /api/v1/catalogue/merchants status is 200",
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/merchants status is 200",
+              "id": "b4dbee5a467b800a98dd8b5ea3f2a6b8"
+            },
+            {
+              "name": "GET /api/v1/catalogue/merchants valid JSON body",
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/merchants valid JSON body",
+              "id": "7f6dd6b185c01ab7280eafee9ad21639",
+              "passes": 608,
+              "fails": 0
+            },
+            {
+              "name": "GET /api/v1/catalogue/merchants has required fields",
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/merchants has required fields",
+              "id": "2e66ba2e3e764c54106da8d062ebd2a1",
+              "passes": 608,
+              "fails": 0
+            },
+            {
+              "name": "GET /api/v1/catalogue/budget-templates status is 200",
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/budget-templates status is 200",
+              "id": "8739399c8ae8ee96e44207d860721457",
+              "passes": 621,
+              "fails": 0
+            },
+            {
+              "name": "GET /api/v1/catalogue/budget-templates valid JSON body",
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/budget-templates valid JSON body",
+              "id": "be41e24545e82c05de47f36b2d32fa73",
+              "passes": 621,
+              "fails": 0
+            },
+            {
+              "name": "GET /api/v1/catalogue/budget-templates has required fields",
+              "path": "::Catalog Lookups::GET /api/v1/catalogue/budget-templates has required fields",
+              "id": "22a0eebfb7fea0e687346873bfe263e7",
+              "passes": 621,
+              "fails": 0
+            }
+          ]
+      },
+      {
+        "checks": [
+          {
+            "path": "::Budgets and Goals::GET /api/v1/goals status is 200",
+            "id": "c33aaf38f1eb8588bb7912973cb2fbbb",
+            "passes": 0,
+            "fails": 334,
+            "name": "GET /api/v1/goals status is 200"
+          },
+          {
+            "name": "GET /api/v1/goals valid JSON body",
+            "path": "::Budgets and Goals::GET /api/v1/goals valid JSON body",
+            "id": "002496c3d3aacccd5dcffe727f9d026e",
+            "passes": 334,
+            "fails": 0
+          },
+          {
+            "name": "GET /api/v1/goals has required fields",
+            "path": "::Budgets and Goals::GET /api/v1/goals has required fields",
+            "id": "c46270322ba808cd6dc0076de437bffd",
+            "passes": 334,
+            "fails": 0
+          },
+          {
+            "name": "GET /api/v1/budgets status is 200",
+            "path": "::Budgets and Goals::GET /api/v1/budgets status is 200",
+            "id": "33047341f33787308cf41ce09993c208",
+            "passes": 0,
+            "fails": 294
+          },
+          {
+            "id": "e23539a81b3d22d9d10afafff813f4ff",
+            "passes": 294,
+            "fails": 0,
+            "name": "GET /api/v1/budgets valid JSON body",
+            "path": "::Budgets and Goals::GET /api/v1/budgets valid JSON body"
+          },
+          {
+            "passes": 294,
+            "fails": 0,
+            "name": "GET /api/v1/budgets has required fields",
+            "path": "::Budgets and Goals::GET /api/v1/budgets has required fields",
+            "id": "d30f619c0719d5566023364da7152af3"
+          }
+        ],
+        "name": "Budgets and Goals",
+        "path": "::Budgets and Goals",
+        "id": "832ad23cc4f383560f10ae214ac26c58",
+        "groups": []
+      }
+    ],
+    "checks": []
+  },
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  }
+}

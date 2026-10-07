@@ -114,11 +114,10 @@ def get_payment_adapter() -> PaymentGatewayPort:
 # --- DOMAIN SERVICES FACTORIES ---
 
 @lru_cache
-def get_auth_service(
-    user_repo: UserRepositoryPort = Depends(get_user_repo),
-    cache: CachePort = Depends(get_cache_adapter),
-) -> AuthService:
-    return AuthService(user_repo=user_repo, cache=cache)
+def get_auth_service() -> AuthService:
+    return AuthService(user_repo=get_user_repo(), cache=get_cache_adapter())
+
+
 
 
 @lru_cache
