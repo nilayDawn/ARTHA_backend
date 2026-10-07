@@ -1,4 +1,5 @@
 import io
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -7,8 +8,7 @@ from app.adapters.database.memory_repo import InMemoryTransactionRepository
 from app.core.rate_limiter import RateLimiter
 from app.core.security import get_current_user
 from app.main import app
-from app.schemas.finance import BudgetCreate, TransactionCreate
-from app.services.transaction_service import TransactionService
+from app.modules.finance.service import TransactionService
 
 client = TestClient(app)
 

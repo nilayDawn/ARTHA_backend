@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from app.ports.database import (
@@ -20,7 +20,7 @@ class InMemoryTransactionRepository(TransactionRepositoryPort):
         if "id" not in item:
             item["id"] = str(uuid.uuid4())
         if "created_at" not in item:
-            item["created_at"] = datetime.now(timezone.utc).isoformat()
+            item["created_at"] = datetime.now(UTC).isoformat()
         self.transactions.append(item)
         return item
 

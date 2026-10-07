@@ -7,7 +7,6 @@ class VectorStorePort(ABC):
     @abstractmethod
     def initialize_store(self) -> None:
         """Sets up collection/indexes if not already configured."""
-        pass
 
     @abstractmethod
     def upsert_memory(
@@ -18,7 +17,6 @@ class VectorStorePort(ABC):
         vector: list[float],
     ) -> bool:
         """Stores a semantic vector memory scoped to user_id."""
-        pass
 
     @abstractmethod
     def search_memories(
@@ -28,4 +26,3 @@ class VectorStorePort(ABC):
         limit: int = 5,
     ) -> list[str]:
         """Searches top similar memory texts scoped to user_id."""
-        pass

@@ -120,7 +120,7 @@ def forgot_password(payload: PasswordResetRequest):
             "status": "success",
             "message": f"If an account with {payload.email} exists, password reset instructions have been sent.",
         }
-    except Exception as e:
+    except Exception:
         # Don't leak user existence for security
         return {
             "status": "success",

@@ -1,6 +1,8 @@
 from app.adapters.cache.memory_cache import MemoryCacheAdapter
-from app.adapters.database.memory_repo import InMemoryTransactionRepository, InMemoryUserRepository
-from app.services.telegram_service import TelegramService
+from app.adapters.database.memory_repo import (
+    InMemoryUserRepository,
+)
+from app.modules.telegram.service import TelegramService
 
 
 def test_telegram_link_code_direct_lookup():

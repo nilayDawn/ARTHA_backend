@@ -2,7 +2,7 @@ import datetime
 
 from app.adapters.cache.memory_cache import MemoryCacheAdapter
 from app.adapters.database.memory_repo import InMemoryTransactionRepository
-from app.services.transaction_service import TransactionService
+from app.modules.finance.service import TransactionService
 
 
 def test_transaction_service_date_normalization():

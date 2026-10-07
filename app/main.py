@@ -28,6 +28,16 @@ from app.utils.logger import logger
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    import anyio.to_thread
+
+    # Scale AnyIO threadpool capacity for synchronous blocking database operations
+    limiter = anyio.to_thread.current_default_thread_limiter()
+    limiter.total_tokens = settings.THREADPOOL_LIMIT
+    logger.info(
+        "Scaled AnyIO worker threadpool capacity to %d tokens for concurrent I/O.",
+        settings.THREADPOOL_LIMIT,
+    )
+
     logger.info("Initializing %s backend modular microservices...", settings.PROJECT_NAME)
     vector_adapter = get_vector_adapter()
     vector_adapter.initialize_store()

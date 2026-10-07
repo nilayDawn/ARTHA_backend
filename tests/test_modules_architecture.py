@@ -1,39 +1,27 @@
 from fastapi.testclient import TestClient
 
-from app.api.dependencies import (
-    get_auth_service,
-    get_budget_service,
-    get_catalogue_service,
-    get_document_service,
-    get_goal_service,
-    get_notification_service,
-    get_payment_service,
-    get_telegram_service,
-    get_transaction_service,
-)
 from app.core.security import get_current_user
 from app.main import app
-from app.modules.agent.schemas import ChatMessage, ChatRequest, ChatResponse
+from app.modules.agent.schemas import ChatMessage, ChatRequest
 from app.modules.agent.service import AIAgentService, MemoryService
-from app.modules.auth.schemas import UserSignIn, UserSignUp
+from app.modules.auth.schemas import UserSignUp
 from app.modules.auth.service import AuthService
 from app.modules.catalogue.service import CatalogueService
 from app.modules.documents.schemas import ExtractedTransaction
 from app.modules.documents.service import DocumentService
-from app.modules.finance.schemas import BudgetCreate, GoalCreate, TransactionCreate
+from app.modules.finance.schemas import TransactionCreate
 from app.modules.finance.service import (
     BudgetService,
     GoalService,
     TransactionService,
 )
-from app.modules.payments.service import PaymentService
 from app.modules.reports.service import NotificationService
 from app.modules.telegram.service import TelegramService
 from app.templates import render_email_template
 
 
 def test_modules_service_instantiation():
-    """Verify that all 8 domain microservices instantiate properly."""
+    """Verify that all 7 domain microservices instantiate properly."""
     assert AuthService is not None
     assert TransactionService is not None
     assert BudgetService is not None
@@ -43,7 +31,6 @@ def test_modules_service_instantiation():
     assert MemoryService is not None
     assert TelegramService is not None
     assert CatalogueService is not None
-    assert PaymentService is not None
     assert NotificationService is not None
 
 
@@ -120,29 +107,3 @@ def test_modular_catalogue_endpoints():
     templates = res.json()
     assert any("50/30/20" in t["template_name"] for t in templates)
 
-
-def test_modular_payments_endpoints():
-    """Verify payments domain checkout creation and subscription status."""
-    client = TestClient(app)
-
-    fake_user = {"id": "user-pay-123", "email": "payuser@artha.ai"}
-    app.dependency_overrides[get_current_user] = lambda: fake_user
-
-    try:
-        res = client.get("/api/v1/payments/subscription")
-        assert res.status_code == 200
-        data = res.json()
-        assert data["user_id"] == "user-pay-123"
-        assert "features" in data
-
-        checkout_res = client.post("/api/v1/payments/checkout", json={
-            "plan_id": "pro_monthly",
-            "success_url": "https://artha.ai/success",
-            "cancel_url": "https://artha.ai/cancel",
-        })
-        assert checkout_res.status_code == 200
-        checkout_data = checkout_res.json()
-        assert "session_id" in checkout_data
-        assert "checkout_url" in checkout_data
-    finally:
-        app.dependency_overrides.clear()

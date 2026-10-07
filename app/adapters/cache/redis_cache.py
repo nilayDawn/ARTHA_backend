@@ -73,16 +73,21 @@ class RedisCacheAdapter(CachePort):
 
         self._fallback_cache.delete(key)
 
-    def invalidate_user(self, user_id: str) -> None:
+    def invalidate_user(self, user_id: str, prefix: str | None = None) -> None:
         if self._redis_client:
             try:
-                # Scan for all keys containing the user_id pattern
-                pattern = f"*{user_id}*"
+                # Scan for all keys containing the user_id and optional prefix
+                pattern = f"*{prefix}*" if prefix else f"*{user_id}*"
                 keys = list(self._redis_client.scan_iter(match=pattern, count=100))
                 if keys:
                     self._redis_client.delete(*keys)
-                    logger.info("[REDIS INVALIDATED USER] UserID: %s (%d keys cleared)", user_id, len(keys))
+                    logger.info(
+                        "[REDIS INVALIDATED USER] UserID: %s Scope: %s (%d keys cleared)",
+                        user_id,
+                        prefix or "all",
+                        len(keys),
+                    )
             except Exception as e:
-                logger.warning("[REDIS ERROR] on invalidate_user(%s): %s", user_id, e)
+                logger.warning("[REDIS ERROR] on invalidate_user(%s, %s): %s", user_id, prefix, e)
 
-        self._fallback_cache.invalidate_user(user_id)
+        self._fallback_cache.invalidate_user(user_id, prefix)

@@ -12,12 +12,21 @@ from app.adapters.database.supabase_repo import (
 )
 from app.adapters.email.resend_adapter import ResendEmailAdapter
 from app.adapters.llm.gemini_adapter import GeminiLLMAdapter
-from app.adapters.payment.mock_adapter import MockPaymentAdapter
-from app.adapters.payment.stripe_adapter import StripePaymentAdapter
 from app.adapters.storage.supabase_storage import SupabaseStorageAdapter
 from app.adapters.vector.qdrant_adapter import QdrantVectorAdapter
 from app.core.config import settings
 from app.core.database import supabase_admin
+from app.modules.agent.service import AIAgentService, MemoryService
+from app.modules.auth.service import AuthService
+from app.modules.catalogue.service import CatalogueService
+from app.modules.documents.service import DocumentService
+from app.modules.finance.service import (
+    BudgetService,
+    GoalService,
+    TransactionService,
+)
+from app.modules.reports.service import NotificationService
+from app.modules.telegram.service import TelegramService
 from app.ports.cache import CachePort
 from app.ports.database import (
     BudgetRepositoryPort,
@@ -28,21 +37,8 @@ from app.ports.database import (
 )
 from app.ports.email import EmailProviderPort
 from app.ports.llm import LLMProviderPort
-from app.ports.payment import PaymentGatewayPort
 from app.ports.storage import StorageProviderPort
 from app.ports.vector_store import VectorStorePort
-from app.modules.agent.service import AIAgentService, MemoryService
-from app.modules.auth.service import AuthService
-from app.modules.catalogue.service import CatalogueService
-from app.modules.documents.service import DocumentService
-from app.modules.finance.service import (
-    BudgetService,
-    GoalService,
-    TransactionService,
-)
-from app.modules.payments.service import PaymentService
-from app.modules.reports.service import NotificationService
-from app.modules.telegram.service import TelegramService
 
 # --- ADAPTER FACTORIES (Singletons) ---
 
@@ -100,15 +96,6 @@ def get_vector_adapter() -> VectorStorePort:
 def get_email_adapter() -> EmailProviderPort:
     return ResendEmailAdapter()
 
-
-@lru_cache
-def get_payment_adapter() -> PaymentGatewayPort:
-    if settings.STRIPE_SECRET_KEY or settings.STRIPE_API_KEY:
-        return StripePaymentAdapter(
-            api_key=settings.STRIPE_SECRET_KEY or settings.STRIPE_API_KEY,
-            webhook_secret=settings.STRIPE_WEBHOOK_SECRET,
-        )
-    return MockPaymentAdapter()
 
 
 # --- DOMAIN SERVICES FACTORIES ---
@@ -218,12 +205,6 @@ def get_notification_service(
         goal_repo=goal_repo,
     )
 
-
-@lru_cache
-def get_payment_service(
-    gateway: PaymentGatewayPort = Depends(get_payment_adapter),
-) -> PaymentService:
-    return PaymentService(payment_gateway=gateway)
 
 
 @lru_cache

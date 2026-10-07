@@ -1,5 +1,3 @@
-import calendar
-from datetime import UTC, datetime
 from typing import Any
 
 from postgrest.exceptions import APIError
@@ -76,9 +74,9 @@ class SupabaseTransactionRepository(TransactionRepositoryPort):
         if type and type.strip():
             t_clean = type.strip().lower()
             if t_clean == "income":
-                query = query.or_("category.ilike.income,type.ilike.income")
+                query = query.ilike("category", "income")
             elif t_clean == "expense":
-                query = query.not_.or_("category.ilike.income,type.ilike.income")
+                query = query.not_.ilike("category", "income")
 
         query = query.order("date", desc=True)
         if limit:

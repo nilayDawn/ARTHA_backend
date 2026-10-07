@@ -1,4 +1,3 @@
-from app.modules.agent.guardrail import evaluate_security_guardrail
 from app.modules.agent.schemas import (
     ApiKeyValidationRequest,
     ApiKeyValidationResponse,
@@ -18,5 +17,4 @@ __all__ = [
     "ChatRequest",
     "ChatResponse",
     "MemoryService",
-    "evaluate_security_guardrail",
 ]

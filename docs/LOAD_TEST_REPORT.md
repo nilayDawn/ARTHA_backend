@@ -57,14 +57,14 @@ All scenarios (except standalone control tests) used realistic probabilistic wei
 
 ## 4. Tests Performed
 
-| Scenario | Concurrency (VUs) | Duration | Total Reqs | Throughput | Error % | Check Pass % | Result Assessment |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Smoke** | 2 | 34s | 120 | 3.51 req/s | 0.83% | 99.72% | **PASSED** (1 cold-start handshake drop, 100% after) |
-| **Normal Load** | 10 | 2m 20s | 777 | 5.54 req/s | **0.00%** | **100.0%** | **PASSED** (Zero errors; perfect functional stability) |
-| **Stress** | 10 → 25 → 50 | 3m 40s | 4,493 | 20.32 req/s | 1.27% | 99.58% | **PASSED** (Degradation knee observed above 25 VUs) |
-| **Spike** | 2 → 35 → 2 | 1m 50s | 1,039 | 9.43 req/s | 1.44% | 99.52% | **PASSED** (Immediate elastic recovery post-burst) |
-| **Soak** | 12 | 3m 50s | 1,766 | 7.65 req/s | **0.17%** | **99.94%** | **PASSED** (Zero latency creep; no connection leaks) |
-| **Breakpoint** | 15 → 30 → 50 → 75 | 4m 30s | 12,919 | **49.55 req/s** | 81.00%* | 73.00% | **COMPLETED** (*Engine handled 50 req/s; token expired) |
+| Scenario | Concurrency (VUs) | Duration | Total Reqs | Throughput | Error % | Check Pass % | Result Assessment | Detailed Report |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- | :---: |
+| **Smoke** | 2 | 34s | 120 | 3.51 req/s | 0.83% | 99.72% | **PASSED** (1 cold-start handshake drop, 100% after) | [smoke-report.md](performance/smoke-report.md) |
+| **Normal Load** | 10 | 2m 20s | 777 | 5.54 req/s | **0.00%** | **100.0%** | **PASSED** (Zero errors; perfect functional stability) | [load-report.md](performance/load-report.md) |
+| **Stress** | 10 → 25 → 50 | 3m 40s | 4,493 | 20.32 req/s | 1.27% | 99.58% | **PASSED** (Degradation knee observed above 25 VUs) | [stress-report.md](performance/stress-report.md) |
+| **Spike** | 2 → 35 → 2 | 1m 50s | 1,039 | 9.43 req/s | 1.44% | 99.52% | **PASSED** (Immediate elastic recovery post-burst) | [spike-report.md](performance/spike-report.md) |
+| **Soak** | 12 | 3m 50s | 1,766 | 7.65 req/s | **0.17%** | **99.94%** | **PASSED** (Zero latency creep; no connection leaks) | [soak-report.md](performance/soak-report.md) |
+| **Breakpoint** | 15 → 30 → 50 → 75 | 4m 30s | 12,919 | **49.55 req/s** | 81.00%* | 73.00% | **COMPLETED** (*Engine handled 50 req/s; token expired) | [breakpoint-report.md](performance/breakpoint-report.md) |
 
 ---
 

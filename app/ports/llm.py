@@ -13,7 +13,6 @@ class LLMProviderPort(ABC):
         model_name: str | None = None,
     ) -> str:
         """Generates conversational text or answers for given prompt/contents."""
-        pass
 
     @abstractmethod
     def generate_structured(
@@ -25,7 +24,6 @@ class LLMProviderPort(ABC):
         custom_api_key: str | None = None,
     ) -> str:
         """Runs multimodal vision OCR to extract structured JSON data according to schema."""
-        pass
 
     @abstractmethod
     def generate_embedding(
@@ -34,9 +32,7 @@ class LLMProviderPort(ABC):
         custom_api_key: str | None = None,
     ) -> list[float]:
         """Generates semantic dense embedding vector for text."""
-        pass
 
     @abstractmethod
     def validate_key(self, api_key: str) -> tuple[bool, str]:
         """Validates that a user-provided LLM API key is active and functional."""
-        pass

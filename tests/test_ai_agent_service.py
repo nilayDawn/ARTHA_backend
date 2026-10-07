@@ -4,12 +4,13 @@ from app.adapters.database.memory_repo import (
     InMemoryGoalRepository,
     InMemoryTransactionRepository,
 )
+from app.modules.agent.service import AIAgentService
+from app.modules.finance.service import (
+    BudgetService,
+    GoalService,
+    TransactionService,
+)
 from app.ports.llm import LLMProviderPort
-from app.services.ai_agent_service import AIAgentService
-from app.services.budget_service import BudgetService
-from app.services.goal_service import GoalService
-from app.services.memory_service import MemoryService
-from app.services.transaction_service import TransactionService
 
 
 class MockLLM(LLMProviderPort):

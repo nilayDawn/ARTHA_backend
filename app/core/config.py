@@ -34,11 +34,8 @@ class Settings(BaseSettings):
     # Redis Cache Configuration
     REDIS_URL: str | None = None
 
-    # Stripe Payments & Billing
-    STRIPE_SECRET_KEY: str | None = None
-    STRIPE_API_KEY: str | None = None
-    STRIPE_WEBHOOK_SECRET: str | None = None
-    STRIPE_PUBLISHABLE_KEY: str | None = None
+    # Worker Threadpool Concurrency
+    THREADPOOL_LIMIT: int = 100
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

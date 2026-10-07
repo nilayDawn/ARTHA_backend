@@ -1,5 +1,4 @@
 import time
-from typing import Callable
 
 from fastapi import Depends, HTTPException, Request, status
 

@@ -11,7 +11,6 @@ from app.modules.finance.service import (
     GoalService,
     TransactionService,
 )
-from app.modules.payments.service import PaymentService
 from app.modules.reports.service import NotificationService
 from app.modules.telegram.service import TelegramService
 
@@ -24,7 +23,6 @@ __all__ = [
     "GoalService",
     "MemoryService",
     "NotificationService",
-    "PaymentService",
     "TelegramService",
     "TransactionService",
 ]

@@ -1,14 +1,9 @@
-import time
 
 from app.adapters.cache.memory_cache import MemoryCacheAdapter
 from app.adapters.cache.redis_cache import RedisCacheAdapter
 from app.adapters.database.memory_repo import (
-    InMemoryBudgetRepository,
-    InMemoryGoalRepository,
     InMemoryTransactionRepository,
-    InMemoryUserRepository,
 )
-from app.adapters.payment.mock_adapter import MockPaymentAdapter
 
 
 def test_memory_cache_adapter_lifecycle():
@@ -59,17 +54,3 @@ def test_in_memory_repositories():
 
     tx_repo.delete_transaction("u1", tx["id"])
     assert len(tx_repo.get_transactions("u1")) == 0
-
-
-def test_mock_payment_adapter():
-    gateway = MockPaymentAdapter()
-    res = gateway.create_checkout_session(
-        user_id="u1",
-        user_email="test@example.com",
-        plan_id="pro_monthly",
-        success_url="https://app.com/success",
-        cancel_url="https://app.com/cancel",
-    )
-    assert "checkout_url" in res
-    assert res["status"] == "ready"
-    assert res["mock"] is True

@@ -9,7 +9,6 @@ from app.ports.database import (
     GoalRepositoryPort,
     TransactionRepositoryPort,
 )
-from app.utils.logger import logger
 
 
 class TransactionService:
@@ -59,39 +58,55 @@ class TransactionService:
             return "Income"
         return category
 
-    def create_transaction(self, user_id: str, data: dict[str, Any]) -> dict[str, Any]:
-        tx_data = dict(data)
-        tx_data["user_id"] = user_id
-        tx_data["date"] = self.normalize_date(str(tx_data.get("date", "")))
-        tx_data["category"] = self.auto_tag_income(
-            tx_data.get("merchant", ""),
-            tx_data.get("category", "General"),
-        )
-        if "amount" in tx_data:
-            tx_data["amount"] = float(tx_data["amount"])
+    @staticmethod
+    def resolve_month_bounds(
+        month: str | None = None,
+        start_date: str | None = None,
+        end_date: str | None = None,
+    ) -> tuple[str | None, str | None]:
+        """Resolves effective start and end dates from a YYYY-MM month parameter."""
+        eff_start = start_date
+        eff_end = end_date
+        if month and month.strip() and month.strip() != "ALL":
+            m_clean = month.strip()
+            if not eff_start:
+                eff_start = f"{m_clean}-01"
+            if not eff_end:
+                try:
+                    yr, mn = map(int, m_clean.split("-"))
+                    last_day = calendar.monthrange(yr, mn)[1]
+                    eff_end = f"{m_clean}-{last_day:02d}"
+                except Exception:
+                    pass
+        return eff_start, eff_end
 
+    def _prepare_transaction(self, user_id: str, data: dict[str, Any]) -> dict[str, Any]:
+        """Normalizes and prepares a transaction dictionary for repository storage."""
+        row = dict(data)
+        row["user_id"] = user_id
+        row["date"] = self.normalize_date(str(row.get("date", "")))
+        row["category"] = self.auto_tag_income(
+            row.get("merchant", ""),
+            row.get("category", "General"),
+        )
+        if "amount" in row:
+            row["amount"] = float(row["amount"])
+        return row
+
+    def create_transaction(self, user_id: str, data: dict[str, Any]) -> dict[str, Any]:
+        tx_data = self._prepare_transaction(user_id, data)
         created = self.tx_repo.create_transaction(tx_data)
-        self.cache.invalidate_user(user_id)
+        self.cache.invalidate_user(user_id, prefix=f"transactions:{user_id}")
+        self.cache.invalidate_user(user_id, prefix=f"summary:{user_id}")
         return created
 
     def bulk_create_transactions(self, user_id: str, items: list[dict[str, Any]]) -> list[dict[str, Any]]:
         if not items:
             return []
-        prepared = []
-        for it in items:
-            row = dict(it)
-            row["user_id"] = user_id
-            row["date"] = self.normalize_date(str(row.get("date", "")))
-            row["category"] = self.auto_tag_income(
-                row.get("merchant", ""),
-                row.get("category", "General"),
-            )
-            if "amount" in row:
-                row["amount"] = float(row["amount"])
-            prepared.append(row)
-
+        prepared = [self._prepare_transaction(user_id, it) for it in items]
         created = self.tx_repo.bulk_create_transactions(prepared)
-        self.cache.invalidate_user(user_id)
+        self.cache.invalidate_user(user_id, prefix=f"transactions:{user_id}")
+        self.cache.invalidate_user(user_id, prefix=f"summary:{user_id}")
         return created
 
     def get_transactions(
@@ -111,19 +126,7 @@ class TransactionService:
         if cached is not None:
             return cached
 
-        eff_start = start_date
-        eff_end = end_date
-        if month and month.strip() and month.strip() != "ALL":
-            m_clean = month.strip()
-            if not eff_start:
-                eff_start = f"{m_clean}-01"
-            if not eff_end:
-                try:
-                    yr, mn = map(int, m_clean.split("-"))
-                    last_day = calendar.monthrange(yr, mn)[1]
-                    eff_end = f"{m_clean}-{last_day:02d}"
-                except Exception:
-                    pass
+        eff_start, eff_end = self.resolve_month_bounds(month, start_date, end_date)
 
         results = self.tx_repo.get_transactions(
             user_id=user_id,
@@ -145,19 +148,7 @@ class TransactionService:
         start_date: str | None = None,
         end_date: str | None = None,
     ) -> dict[str, Any]:
-        eff_start = start_date
-        eff_end = end_date
-        if month and month.strip() and month.strip() != "ALL":
-            m_clean = month.strip()
-            if not eff_start:
-                eff_start = f"{m_clean}-01"
-            if not eff_end:
-                try:
-                    yr, mn = map(int, m_clean.split("-"))
-                    last_day = calendar.monthrange(yr, mn)[1]
-                    eff_end = f"{m_clean}-{last_day:02d}"
-                except Exception:
-                    pass
+        eff_start, eff_end = self.resolve_month_bounds(month, start_date, end_date)
 
         cache_key = f"summary:{user_id}:{month}:{eff_start}:{eff_end}"
         cached = self.cache.get(cache_key)
@@ -202,12 +193,15 @@ class TransactionService:
             data["date"] = self.normalize_date(str(data["date"]))
         res = self.tx_repo.update_transaction(user_id, tx_id, data)
         if res:
-            self.cache.invalidate_user(user_id)
+            self.cache.invalidate_user(user_id, prefix=f"transactions:{user_id}")
+            self.cache.invalidate_user(user_id, prefix=f"summary:{user_id}")
         return res
 
     def delete_transaction(self, user_id: str, tx_id: str) -> bool:
         success = self.tx_repo.delete_transaction(user_id, tx_id)
-        self.cache.invalidate_user(user_id)
+        if success:
+            self.cache.invalidate_user(user_id, prefix=f"transactions:{user_id}")
+            self.cache.invalidate_user(user_id, prefix=f"summary:{user_id}")
         return success
 
 
@@ -222,7 +216,7 @@ class BudgetService:
         budget_data = dict(data)
         budget_data["user_id"] = user_id
         res = self.budget_repo.create_budget(budget_data)
-        self.cache.invalidate_user(user_id)
+        self.cache.invalidate_user(user_id, prefix=f"budgets:{user_id}")
         return res
 
     def get_budgets(self, user_id: str, month: str | None = None) -> list[dict[str, Any]]:
@@ -237,7 +231,8 @@ class BudgetService:
 
     def delete_budget(self, user_id: str, budget_id: str) -> bool:
         success = self.budget_repo.delete_budget(user_id, budget_id)
-        self.cache.invalidate_user(user_id)
+        if success:
+            self.cache.invalidate_user(user_id, prefix=f"budgets:{user_id}")
         return success
 
 
@@ -254,7 +249,7 @@ class GoalService:
         if goal_data.get("deadline") and hasattr(goal_data["deadline"], "isoformat"):
             goal_data["deadline"] = goal_data["deadline"].isoformat()
         res = self.goal_repo.create_goal(goal_data)
-        self.cache.invalidate_user(user_id)
+        self.cache.invalidate_user(user_id, prefix=f"goals:{user_id}")
         return res
 
     def get_goals(self, user_id: str) -> list[dict[str, Any]]:
@@ -273,10 +268,11 @@ class GoalService:
             data["deadline"] = data["deadline"].isoformat()
         res = self.goal_repo.update_goal(user_id, goal_id, data)
         if res:
-            self.cache.invalidate_user(user_id)
+            self.cache.invalidate_user(user_id, prefix=f"goals:{user_id}")
         return res
 
     def delete_goal(self, user_id: str, goal_id: str) -> bool:
         success = self.goal_repo.delete_goal(user_id, goal_id)
-        self.cache.invalidate_user(user_id)
+        if success:
+            self.cache.invalidate_user(user_id, prefix=f"goals:{user_id}")
         return success

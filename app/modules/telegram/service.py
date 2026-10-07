@@ -73,7 +73,7 @@ class TelegramService:
 
         # Generate single-use link code
         new_code = f"FP-{secrets.randbelow(9000) + 1000}"
-        now = datetime.datetime.now(datetime.timezone.utc)
+        now = datetime.datetime.now(datetime.UTC)
         expires_at = now + datetime.timedelta(minutes=10)
 
         self.user_repo.set_telegram_link_code(user_id, new_code, expires_at.isoformat())
@@ -92,7 +92,7 @@ class TelegramService:
         if exp_str:
             try:
                 exp_dt = datetime.datetime.fromisoformat(exp_str.replace("Z", "+00:00"))
-                if exp_dt < datetime.datetime.now(datetime.timezone.utc):
+                if exp_dt < datetime.datetime.now(datetime.UTC):
                     return None
             except Exception:
                 pass
