@@ -50,7 +50,7 @@ async def upload_document(
             )
 
     file_bytes = bytearray()
-    chunk_size = 1024 * 1024
+    chunk_size = 1024 * 1024  # 1MB
     while True:
         chunk = await file.read(chunk_size)
         if not chunk:

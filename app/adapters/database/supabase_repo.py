@@ -49,7 +49,7 @@ class SupabaseTransactionRepository(TransactionRepositoryPort):
             cat_clean = category.strip()
             cat_lower = cat_clean.lower()
             if "food" in cat_lower or "dining" in cat_lower:
-                query = query.or_("category.ilike.%Food%,category.ilike.%Dining%,category.ilike.%Restaurant%")
+                query = query.or_("category.ilike.%Food%,category.ilike.%Dining%,category.ilike.%Restaurant%")      #ilike is case-insensitive, it matches substrings, so we can use % for wildcard matching, for example, "Food" will match "Food & Dining"
             elif "shop" in cat_lower:
                 query = query.or_("category.ilike.%Shop%,category.ilike.%Store%")
             elif "health" in cat_lower or "med" in cat_lower:
@@ -67,10 +67,12 @@ class SupabaseTransactionRepository(TransactionRepositoryPort):
             else:
                 query = query.ilike("category", f"%{cat_clean}%")
 
+        # Handle search and type filters, returns transactions where merchant or category contains the search string (case-insensitive)
         if search and search.strip():
             s_clean = search.strip()
             query = query.or_(f"merchant.ilike.%{s_clean}%,category.ilike.%{s_clean}%")
 
+        #returns transactions where category is "income" or type is "income" if type is "income", else returns transactions where category is not "income" and type is not "income"
         if type and type.strip():
             t_clean = type.strip().lower()
             if t_clean == "income":

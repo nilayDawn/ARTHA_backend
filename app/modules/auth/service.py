@@ -33,7 +33,7 @@ class AuthService:
                 self.user_repo.upsert_user(user_id=user_id, email=email, full_name=full_name)
                 logger.info("[AuthService] Synced new user profile for UserID: %s", user_id)
 
-            self.cache.set(cache_key, True, ttl_seconds=600)
+            self.cache.set(cache_key, True, ttl_seconds=600) # 10 minutes
             return {"id": user_id, "synced": True}
         except Exception as e:
             logger.warning("[AuthService] User sync error: %s", e)

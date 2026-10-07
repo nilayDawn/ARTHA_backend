@@ -10,16 +10,21 @@ class SupabaseStorageAdapter(StorageProviderPort):
 
     def __init__(self, client: Client, bucket_name: str | None = None):
         self.client = client
-        self.bucket_name = bucket_name or settings.BUCKET_NAME or "financial_documents"
+        self.bucket_name = bucket_name or settings.BUCKET_NAME 
         self._ensure_bucket()
 
     def _ensure_bucket(self):
+        if not self.bucket_name:
+            logger.warning("[Supabase Storage] No bucket name configured. Storage operations will fail.")
+            return
         try:
             self.client.storage.create_bucket(self.bucket_name, options={"public": True})
         except Exception:
-            pass
+            logger.info("[Supabase Storage] Bucket '%s' already exists or could not be created.", self.bucket_name)
 
     def upload_file(self, path: str, file_bytes: bytes, content_type: str) -> str:
+        if not self.bucket_name:
+            raise ValueError("Bucket name is not configured. Cannot upload file.")
         self.client.storage.from_(self.bucket_name).upload(
             path=path,
             file=file_bytes,
@@ -28,6 +33,8 @@ class SupabaseStorageAdapter(StorageProviderPort):
         return path
 
     def create_signed_url(self, path: str, expires_in_seconds: int = 3600) -> str:
+        if not self.bucket_name:
+            raise ValueError("Bucket name is not configured. Cannot create signed URL.")
         try:
             signed = self.client.storage.from_(self.bucket_name).create_signed_url(path, expires_in_seconds)
             if isinstance(signed, dict):
@@ -40,6 +47,8 @@ class SupabaseStorageAdapter(StorageProviderPort):
             return ""
 
     def delete_file(self, path: str) -> bool:
+        if not self.bucket_name:
+            raise ValueError("Bucket name is not configured. Cannot delete file.")
         try:
             self.client.storage.from_(self.bucket_name).remove([path])
             return True

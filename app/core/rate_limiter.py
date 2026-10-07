@@ -29,16 +29,16 @@ class RateLimiter:
         if self.by_ip:
             forwarded = request.headers.get("X-Forwarded-For")
             if forwarded:
-                client_id = forwarded.split(",")[0].strip()
+                client_id = forwarded.split(",")[0].strip() # Use first IP in X-Forwarded-For
             elif request.client:
-                client_id = request.client.host
+                client_id = request.client.host     # else fallback to direct client IP
         else:
             # Check user token or fall back to IP
             auth_header = request.headers.get("Authorization", "")
             if auth_header.startswith("Bearer "):
-                token = auth_header[7:].strip()
+                token = auth_header[7:].strip()     #slicing to remove "Bearer "
                 # Hash or short slice of token to identify authenticated user
-                client_id = f"user_{token[-16:]}" if len(token) >= 16 else f"user_{token}"
+                client_id = f"user_{token[-16:]}" if len(token) >= 16 else f"user_{token}"      #slice last 16 chars
             else:
                 forwarded = request.headers.get("X-Forwarded-For")
                 client_id = forwarded.split(",")[0].strip() if forwarded else (request.client.host if request.client else "unknown")
@@ -46,6 +46,7 @@ class RateLimiter:
         client_id = client_id or "anonymous"
         route_path = request.url.path
 
+        # set rate limit key for the client and the specific route
         cache_key = f"rate_limit:{route_path}:{client_id}"
         record = cache.get(cache_key)
 

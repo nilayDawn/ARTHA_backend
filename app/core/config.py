@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "ARTHA AI"
+    ENVIRONMENT: str = "development"
     API_V1_STR: str = "/api/v1"
     SUPABASE_URL: str | None
     SUPABASE_ANON_KEY: str | None
@@ -36,6 +37,9 @@ class Settings(BaseSettings):
 
     # Worker Threadpool Concurrency
     THREADPOOL_LIMIT: int = 100
+
+    # Allowed CORS Origins (comma-separated or *)
+    CORS_ORIGINS: str | None = "http://localhost:5173"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

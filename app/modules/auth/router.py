@@ -16,6 +16,7 @@ from app.modules.auth.service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
+# rate limiter is applied to sensitive endpoints to prevent abuse (e.g., brute-force attacks). It limits the number of requests from a single IP address within a specified time window. The RateLimiter dependency is used to enforce these limits on the sign-up, login, and password reset endpoints.
 
 @router.post(
     "/signup",

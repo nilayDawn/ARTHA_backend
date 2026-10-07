@@ -7,9 +7,10 @@ from app.utils.logger import logger
 
 class MemoryCacheAdapter(CachePort):
     """Thread-safe in-memory TTL cache implementation."""
+    # sample entry: {"key": (data, expiry_timestamp)}
 
     def __init__(self):
-        self._cache: dict[str, tuple[Any, float]] = {}
+        self._cache: dict[str, tuple[Any, float]] = {}  
 
     def get(self, key: str) -> Any | None:
         if key in self._cache:
@@ -33,6 +34,7 @@ class MemoryCacheAdapter(CachePort):
             logger.debug("[CACHE DELETED] Key: %s", key)
 
     def invalidate_user(self, user_id: str, prefix: str | None = None) -> None:
+        # if prefix is supplied, only keys containing both user_id and prefix are cleared, else all keys containing user_id are cleared
         if prefix:
             keys_to_delete = [k for k in list(self._cache.keys()) if user_id in k and prefix in k]
         else:

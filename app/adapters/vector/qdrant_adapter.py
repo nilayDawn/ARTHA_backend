@@ -23,8 +23,8 @@ class QdrantVectorAdapter(VectorStorePort):
     ):
         self.url = url or settings.QDRANT_URL
         self.api_key = api_key or settings.QDRANT_API_KEY
-        self.collection_name = collection_name or settings.COLLECTION_NAME or "user_memories"
-        self.vector_size = vector_size or settings.VECTOR_SIZE or 3072
+        self.collection_name = collection_name or settings.COLLECTION_NAME 
+        self.vector_size = vector_size or settings.VECTOR_SIZE 
         self.client: QdrantClient | None = None
         self._initialized = False
 
@@ -35,11 +35,13 @@ class QdrantVectorAdapter(VectorStorePort):
         if not self.client:
             logger.warning("[Qdrant] Client not configured. Skipping vector store initialization.")
             return
-
+        # Check if collection already exists, lhen return
         if self._initialized:
             return
 
         try:
+            if not self.collection_name or not self.vector_size:
+                raise ValueError("Collection name or vector size not configured. Cannot initialize vector store.")
             collections = self.client.get_collections().collections
             exists = any(c.name == self.collection_name for c in collections)
 
@@ -57,10 +59,10 @@ class QdrantVectorAdapter(VectorStorePort):
                 self.client.create_payload_index(
                     collection_name=self.collection_name,
                     field_name="user_id",
-                    field_schema=models.PayloadSchemaType.KEYWORD,
+                    field_schema=models.PayloadSchemaType.KEYWORD,    #use keyword type for sample payload field for filtering by user_id
                 )
             except Exception:
-                pass
+                logger.info("[Qdrant] Payload index for 'user_id' already exists or could not be created.")
 
             self._initialized = True
             logger.info("[Qdrant] Vector collection '%s' verified and indexed.", self.collection_name)
@@ -78,6 +80,9 @@ class QdrantVectorAdapter(VectorStorePort):
             return False
 
         try:
+            if not self.collection_name:
+                raise ValueError("Collection name or vector size not configured. Cannot upsert memory.")
+
             if not self._initialized:
                 self.initialize_store()
 
@@ -108,6 +113,9 @@ class QdrantVectorAdapter(VectorStorePort):
         query_vector: list[float],
         limit: int = 5,
     ) -> list[str]:
+        if not self.collection_name:
+            raise ValueError("Collection name or vector size not configured. Cannot search memories.")
+
         if not self.client:
             return []
 

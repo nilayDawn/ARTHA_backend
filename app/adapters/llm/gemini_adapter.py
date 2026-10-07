@@ -30,7 +30,7 @@ class GeminiLLMAdapter(LLMProviderPort):
             settings.GEMINI_API_KEY_2,
             settings.GEMINI_API_KEY_3,
         ]
-        self.system_keys = [k.strip() for k in raw_keys if k and k.strip()]
+        self.system_keys = [k.strip() for k in raw_keys if k and k.strip()]     #list of non-empty, stripped keys
         self.default_model = settings.MODEL_NAME or default_model
         self.embedding_model = embedding_model
 
@@ -93,12 +93,12 @@ class GeminiLLMAdapter(LLMProviderPort):
                 response = client.models.generate_content(
                     model=self.default_model,
                     contents=[
-                        genai.types.Part.from_bytes(data=file_bytes, mime_type=mime_type),
+                        genai.types.Part.from_bytes(data=file_bytes, mime_type=mime_type),    #tells Gemini to treat this as a file
                         prompt,
                     ],
                     config=genai.types.GenerateContentConfig(
                         response_mime_type="application/json",
-                        response_schema=schema_to_use,
+                        response_schema=schema_to_use,      
                         temperature=0.1,
                     ),
                 )

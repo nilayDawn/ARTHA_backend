@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-
+#abstract interface for caching (In-Memory, Redis, Memcached), when an external cache is used, the implementation of this interface will be provided by the adapter for that cache. The rest of the application will use this interface to interact with the cache without needing to know the details of the underlying cache implementation.
 class CachePort(ABC):
     """Abstract interface for caching (In-Memory, Redis, Memcached)."""
 

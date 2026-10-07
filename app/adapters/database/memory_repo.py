@@ -13,14 +13,17 @@ from app.ports.database import (
 
 class InMemoryTransactionRepository(TransactionRepositoryPort):
     def __init__(self):
-        self.transactions: list[dict[str, Any]] = []
+        self.transactions: list[dict[str, Any]] = []        #sample entry: {"id": "uuid", "user_id": "user123", "amount": 100.0, "date": "2024-01-01", ...}
 
     def create_transaction(self, data: dict[str, Any]) -> dict[str, Any]:
-        item = dict(data)
+        item = dict(data)  #convert to dict
+
+        #add default values if not present
         if "id" not in item:
             item["id"] = str(uuid.uuid4())
         if "created_at" not in item:
             item["created_at"] = datetime.now(UTC).isoformat()
+            
         self.transactions.append(item)
         return item
 

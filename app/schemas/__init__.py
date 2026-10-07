@@ -41,35 +41,35 @@ from app.modules.finance.schemas import (
 )
 
 __all__ = [
-    # Auth
-    "AuthTokenResponse",
-    "PasswordResetConfirm",
-    "PasswordResetRequest",
-    "UserProfileResponse",
-    "UserSignIn",
-    "UserSignUp",
-    # Finance
-    "BudgetCreate",
-    "BudgetResponse",
-    "GoalCreate",
-    "GoalResponse",
-    "GoalUpdate",
-    "TransactionCreate",
-    "TransactionResponse",
-    "TransactionUpdate",
-    # Documents
-    "BankStatementExtraction",
-    "DocumentResponse",
-    "DocumentUploadResponse",
-    "ExtractedTransaction",
     # Agent
     "ApiKeyValidationRequest",
     "ApiKeyValidationResponse",
+    # Auth
+    "AuthTokenResponse",
+    # Documents
+    "BankStatementExtraction",
+    # Finance
+    "BudgetCreate",
+    "BudgetResponse",
+    # Catalogue
+    "BudgetTemplate",
     "ChatMessage",
     "ChatRequest",
     "ChatResponse",
-    # Catalogue
-    "BudgetTemplate",
+    "DocumentResponse",
+    "DocumentUploadResponse",
+    "ExtractedTransaction",
+    "GoalCreate",
+    "GoalResponse",
+    "GoalUpdate",
     "MerchantMapping",
+    "PasswordResetConfirm",
+    "PasswordResetRequest",
     "SpendingCategory",
+    "TransactionCreate",
+    "TransactionResponse",
+    "TransactionUpdate",
+    "UserProfileResponse",
+    "UserSignIn",
+    "UserSignUp",
 ]

@@ -11,7 +11,7 @@ class CatalogueService:
     and budget allocation templates.
     """
 
-    DEFAULT_CATEGORIES = [
+    DEFAULT_CATEGORIES = [  # noqa: RUF012
         SpendingCategory(id="income", name="Income", icon="💰", color="#16a34a", description="Salaries, dividends, side-income, and deposits"),
         SpendingCategory(id="food", name="Food & Dining", icon="🍔", color="#f97316", description="Groceries, restaurants, takeaways, cafes"),
         SpendingCategory(id="shopping", name="Shopping", icon="🛍️", color="#8b5cf6", description="Clothing, electronics, household essentials"),
@@ -24,7 +24,7 @@ class CatalogueService:
         SpendingCategory(id="other", name="Other", icon="📦", color="#64748b", description="Miscellaneous expenses"),
     ]
 
-    MERCHANT_RULES = [
+    MERCHANT_RULES = [  # noqa: RUF012
         MerchantMapping(pattern="swiggy", suggested_category="Food & Dining"),
         MerchantMapping(pattern="zomato", suggested_category="Food & Dining"),
         MerchantMapping(pattern="starbucks", suggested_category="Food & Dining"),
@@ -39,7 +39,9 @@ class CatalogueService:
         MerchantMapping(pattern="spotify", suggested_category="Subscriptions"),
     ]
 
-    BUDGET_TEMPLATES = [
+    # TODO: Add more budget templates
+    #Budget templates provide users with predefined allocation strategies for their finances, helping them manage their spending and savings effectively. Each template includes a name, description, and a breakdown of allocations across various spending categories.
+    BUDGET_TEMPLATES = [  # noqa: RUF012
         BudgetTemplate(
             template_name="50/30/20 Rule",
             description="50% Needs (Food, Utilities, Transport), 30% Wants (Shopping, Entertainment), 20% Savings/Goals",

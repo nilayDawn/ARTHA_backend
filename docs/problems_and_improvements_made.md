@@ -21,9 +21,7 @@
 | **2** | **Single-Core Concurrency** | Single Uvicorn process ran on 1 CPU core and 1 GIL loop. | **RESOLVED** | Created dynamic multi-worker `gunicorn.conf.py` that auto-calculates workers for local & Azure App Service. |
 | **3** | **Cache Over-Invalidation** | Single transaction write flushed **all** keys for the user (including unrelated months, budgets, goals). | **RESOLVED** | Implemented scoped cache invalidation (`prefix`) across `CachePort`, `MemoryCacheAdapter`, and domain services. |
 | **4** | **PostgreSQL Table Scans** | Ledger queries filtered by user and date without composite B-Tree indexes. | **RESOLVED** | Created production SQL migration [`migrations/001_performance_indexes.sql`](../migrations/001_performance_indexes.sql). |
-| **6** | **Cross-Region WAN Latency** | 98% of latency was cross-country WAN round-trips from localhost to Supabase Cloud (~650ms vs 2.8ms in-memory). | **GUIDED** | Documented Azure Web App geographic colocation strategy. |
-| **7** | **Codebase Redundancy & Duplicate Shims** | 25+ duplicate shim files across `app/services`, `app/api/v1`, `app/schemas`, `app/agent`, and duplicated helper logic in services. | **RESOLVED** | Removed 26 duplicate/dead files, consolidated backwards-compatible re-exports into `__init__.py`, and extracted reusable helpers in `TransactionService`. |
-
+|
 ---
 
 ## 1. 🧵 Threadpool Starvation & AnyIO Worker Thread Tuning
@@ -67,11 +65,6 @@
 ---
 
 ## 2. ⚙️ Dynamic Multi-Worker Sizing: Local vs. Azure Web App
-
-### ❓ User Requirement & Analysis
-> *"can we determine the no of worker based on our system or of the system i deploy(azure web service)?"*
-
-**Yes, absolutely.** The optimal number of workers can and should be dynamically determined based on the system's available CPU cores and memory limits.
 
 ### 🧠 How Worker Sizing Works (Local vs. Azure Web App)
 
@@ -249,57 +242,7 @@ ON public.documents (user_id);
 
 ---
 
-## 6. 🌐 Network & Infrastructure: Cloud Region Colocation
 
-### 🔴 The Problem Identified
-* Our benchmark breakdown proved that the FastAPI ASGI framework processes requests in **12.2ms** (~50 req/s with 0% error).
-* However, endpoints talking to Supabase Cloud averaged **~650ms to 780ms**.
-* **Root Cause:** Geographic distance and WAN round trips between the test machine and the Supabase Cloud region (TCP handshake + TLS negotiation + PostgREST transfer).
-
-### 🟢 Actionable Improvement
-* When deploying your backend to **Azure Web App (App Service)**:
-  1. Check the region of your Supabase project (e.g., `Southeast Asia - Singapore`, `Central India - Pune`, or `US East - North Virginia`).
-  2. Deploy the Azure Web App in the **exact same region** (e.g., Azure `centralindia` if Supabase is in Mumbai/Pune, or `eastus` if Supabase is in US East).
-* **Benefit:** Reduces database network round trips from **~650ms down to ~15–30ms**, unlocking an immediate **10x to 20x latency reduction** across all ledger operations.
-
----
-
-## 7. 🧹 Codebase Deduplication, Shim Elimination & Reusable Helper Refactoring
-
-### 🔴 The Problem Identified
-* **26 Duplicate / Dead Files:**
-  * `app/agent/` (`graph.py`, `guardrail.py`, `tools.py`, `state.py`): Completely dead legacy directory superseded by `app/modules/agent/`.
-  * `app/services/`: Contained 4 dead legacy service files (`email.py`, `ocr.py`, `memory.py`, `telegram_auth.py`) plus 11 single-line shim files (`transaction_service.py`, `auth_service.py`, etc.) re-exporting classes already exported by `app/services/__init__.py`.
-  * `app/api/v1/`: Contained 8 single-line shim files (`finance.py`, `auth.py`, `chat.py`, etc.) that were never imported because `app/api/v1/router.py` mounts `app.modules.*.router` directly.
-  * `app/schemas/`: Contained 6 individual shim files re-exporting schemas already available in `app.modules.*.schemas`.
-  * `app/core/`: Contained 3 dead legacy files (`cache.py`, `vector_db.py`, `llm_setup.py`) bypassing the hexagonal architecture.
-* **Code Duplication in Domain Logic:**
-  * In `TransactionService`:
-    * Date bounds calculation (`month`, `start_date`, `end_date`) was duplicated across `get_transactions()` and `get_summary()`.
-    * Transaction dictionary preparation (date normalization, auto-income tagging, amount casting) was duplicated across `create_transaction()` and `bulk_create_transactions()`.
-
-### 🟢 Actionable Improvement Implemented
-1. **Removed 26 Duplicate and Dead Files:**
-   * Removed `app/agent/` entirely.
-   * Removed legacy `app/core/cache.py`, `app/core/vector_db.py`, `app/core/llm_setup.py`.
-   * Removed 15 dead/shim files from `app/services/`.
-   * Removed 8 redundant route shims from `app/api/v1/`.
-   * Removed 6 redundant schema shims from `app/schemas/`.
-2. **Unified Backward-Compatibility Hubs:**
-   * `app/schemas/__init__.py`: Clean, single re-export hub for all Pydantic models.
-   * `app/services/__init__.py`: Clean, single re-export hub for all 8 domain microservices.
-3. **Refactored `TransactionService` (`app/modules/finance/service.py`):**
-   * Extracted `resolve_month_bounds(month, start_date, end_date)` static method, reused by both `get_transactions()` and `get_summary()`.
-   * Extracted `_prepare_transaction(user_id, data)` helper, reused by both `create_transaction()` and `bulk_create_transactions()`.
-4. **Updated Test Suites:**
-   * Updated `test_transaction_service.py`, `test_ai_agent_service.py`, `test_telegram_service.py`, and `test_security_performance.py` to import directly from canonical `app.modules.*` paths.
-
-### 🎯 Measured Impact
-* Reduced file sprawl by **26 files**, simplifying code navigation.
-* Zero dead code or split-brain legacy implementations.
-* Clean Hexagonal directory layout with zero regression across all 23 test suites.
-
----
 
 ## 🏁 Summary of Verified Changes
 

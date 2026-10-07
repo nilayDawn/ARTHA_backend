@@ -45,18 +45,24 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    lifespan=lifespan,
+    docs_url="/docs" if settings.ENVIRONMENT != "production" else None,
+    redoc_url=None,
+)
 
-# Enable CORS for Frontend Development
-origins = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://gentle-grass-0ac410700.7.azurestaticapps.net",
-]
+# Enable CORS for Frontend Development and Production Deployments
+cors_origins_list = (
+    ["*"]
+    if settings.CORS_ORIGINS.strip() == "*"
+    else [origin.strip() for origin in settings.CORS_ORIGINS.split(",") if origin.strip()]
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=cors_origins_list,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$|^https://.*\.azurestaticapps\.net$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
